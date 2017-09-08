@@ -1,0 +1,7 @@
+﻿body {
+    margin: 0;
+    font-family: "Helvetica Neue","Lucida Grande","Lucida Sans Unicode",Arial,sans-serif;
+    line-height: 1.4em;
+    font-size: 1em;
+    background: #ffdead url(images/beach.jpg)repeat-x fixed;
+}

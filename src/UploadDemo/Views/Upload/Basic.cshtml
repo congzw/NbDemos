@@ -1,0 +1,100 @@
+﻿<h2>Upload Basic</h2>
+<hr/>
+
+@Demo1()
+@DemoWithOptions()
+@DemoWithProgress()
+
+@helper Demo1()
+{
+    <input id="fileupload1" type="file" name="files[]" data-url="/Upload/UploadHandler.ashx" multiple>
+    <div id="fileupload1Message"></div>
+    <hr />
+    <script>
+    $(function () {
+        var message$ = $('#fileupload1Message');
+        $('#fileupload1').fileupload({
+            dataType: 'json',
+            done: function (e, data) {
+                $.each(data.result, function (index, file) {
+                    $('<h3/>').text(file.name).appendTo(message$);
+                });
+            }
+        });
+    });
+    </script>
+}
+
+@helper DemoWithOptions()
+{
+    <input id="fileupload2" type="file" name="files[]" multiple>
+    <div id="fileupload2Message"></div>
+    <hr />
+    <script>
+    $(function () {
+        var message$ = $('#fileupload2Message');
+        $('#fileupload2').fileupload({
+            url: '/Upload/UploadHandler.ashx',
+            dataType: 'json',
+            done: function (e, data) {
+                $.each(data.result, function (index, file) {
+                    $('<h3/>').text(file.name).appendTo(message$);
+                });
+            }
+        });
+    });
+    </script>
+}
+
+@helper DemoWithProgress()
+{
+    <input id="fileupload3" type="file" name="files[]" multiple>
+    <div id="fileupload3Message"></div>
+    <div id="progress" class="progress">
+        <div class="progress-bar progress-bar-success"></div>
+    </div>
+
+    <style>
+        .bar {
+            height: 18px;
+            background: green;
+        }
+    </style>
+    <div id="simple-progress">
+        <div class="bar" style="width: 0;"></div>
+    </div>
+    <hr/>
+    
+    <script>
+        $(function () {
+            var message$ = $('#fileupload3Message');
+            $('#fileupload3').fileupload({
+                url: '/Upload/UploadHandler.ashx',
+                dataType: 'json',
+                done: function (e, data) {
+                    $.each(data.result, function (index, file) {
+                        //message$.append(' complete: ' + file.name);
+                        $('<h3/>').text(file.name).appendTo(message$);
+                    });
+                }
+                ,
+                progressall: function (e, data) {
+                    console.log(data);
+                    var progress = parseInt(data.loaded / data.total * 100, 10);
+                    $('#progress .progress-bar').css(
+                        'width',
+                        progress + '%'
+                    );
+
+                    message$.text('file processing ' + progress + '%');
+
+                    //demo simple process bar
+                    $('#simple-progress .bar').css(
+                        'width',
+                        progress + '%'
+                    );
+                }
+            });
+        });
+    </script>
+}

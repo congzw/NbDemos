@@ -1,0 +1,208 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{2E5A5110-2EC1-4ABE-8BA4-80B4F4C7E5C7}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>UploadDemo</RootNamespace>
+    <AssemblyName>UploadDemo</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Web.Razor">
+      <HintPath>..\..\lib\Microsoft.AspNet.Razor.3.2.2\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Webpages">
+      <HintPath>..\..\lib\Microsoft.AspNet.Webpages.3.2.2\lib\net45\System.Web.Webpages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Webpages.Deployment">
+      <HintPath>..\..\lib\Microsoft.AspNet.Webpages.3.2.2\lib\net45\System.Web.Webpages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Webpages.Razor">
+      <HintPath>..\..\lib\Microsoft.AspNet.Webpages.3.2.2\lib\net45\System.Web.Webpages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Helpers">
+      <HintPath>..\..\lib\Microsoft.AspNet.Webpages.3.2.2\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure">
+      <HintPath>..\..\lib\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc">
+      <HintPath>..\..\lib\Microsoft.AspNet.Mvc.5.2.2\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\css\bootstrap.css" />
+    <Content Include="Content\css\demo.css" />
+    <Content Include="Content\css\images\beach.jpg" />
+    <Content Include="Content\css\unify-blue.css" />
+    <Content Include="Content\libs\angular\angular.js" />
+    <Content Include="Content\libs\bootstrap\css\bootstrap.css" />
+    <Content Include="Content\libs\bootstrap\css\bootstrap.min.css" />
+    <Content Include="Content\libs\bootstrap\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\libs\bootstrap\js\bootstrap.js" />
+    <Content Include="Content\libs\bootstrap\js\bootstrap.min.js" />
+    <Content Include="Content\libs\jquery-file-upload\angularjs.html" />
+    <Content Include="Content\libs\jquery-file-upload\basic.html" />
+    <Content Include="Content\libs\jquery-file-upload\cors\postmessage.html" />
+    <Content Include="Content\libs\jquery-file-upload\cors\result.html" />
+    <Content Include="Content\libs\jquery-file-upload\css\demo-ie8.css" />
+    <Content Include="Content\libs\jquery-file-upload\css\demo.css" />
+    <Content Include="Content\libs\jquery-file-upload\css\jquery.fileupload-noscript.css" />
+    <Content Include="Content\libs\jquery-file-upload\css\jquery.fileupload-ui-noscript.css" />
+    <Content Include="Content\libs\jquery-file-upload\css\jquery.fileupload-ui.css" />
+    <Content Include="Content\libs\jquery-file-upload\css\jquery.fileupload.css" />
+    <Content Include="Content\libs\jquery-file-upload\css\style.css" />
+    <Content Include="Content\libs\jquery-file-upload\img\loading.gif" />
+    <Content Include="Content\libs\jquery-file-upload\img\progressbar.gif" />
+    <Content Include="Content\libs\jquery-file-upload\index.html" />
+    <Content Include="Content\libs\jquery-file-upload\jquery-ui.html" />
+    <Content Include="Content\libs\jquery-file-upload\js\cors\jquery.postmessage-transport.js" />
+    <Content Include="Content\libs\jquery-file-upload\js\cors\jquery.xdr-transport.js" />
+    <Content Include="Content\libs\jquery-file-upload\js\jquery.fileupload-angular.js" />
+    <Content Include="Content\libs\jquery-file-upload\js\jquery.fileupload-audio.js" />
+    <Content Include="Content\libs\jquery-file-upload\js\jquery.fileupload-image.js" />
+    <Content Include="Content\libs\jquery-file-upload\js\jquery.fileupload-jquery-ui.js" />
+    <Content Include="Content\libs\jquery-file-upload\js\jquery.fileupload-process.js" />
+    <Content Include="Content\libs\jquery-file-upload\js\jquery.fileupload-ui.js" />
+    <Content Include="Content\libs\jquery-file-upload\js\jquery.fileupload-validate.js" />
+    <Content Include="Content\libs\jquery-file-upload\js\jquery.fileupload-video.js" />
+    <Content Include="Content\libs\jquery-file-upload\js\jquery.fileupload.js" />
+    <Content Include="Content\libs\jquery-file-upload\js\jquery.iframe-transport.js" />
+    <Content Include="Content\libs\jquery-file-upload\js\vendor\jquery.ui.widget.js" />
+    <Content Include="Content\libs\jquery-file-upload\load-image\load-image-exif-map.js" />
+    <Content Include="Content\libs\jquery-file-upload\load-image\load-image-exif.js" />
+    <Content Include="Content\libs\jquery-file-upload\load-image\load-image-fetch.js" />
+    <Content Include="Content\libs\jquery-file-upload\load-image\load-image-meta.js" />
+    <Content Include="Content\libs\jquery-file-upload\load-image\load-image-orientation.js" />
+    <Content Include="Content\libs\jquery-file-upload\load-image\load-image-scale.js" />
+    <Content Include="Content\libs\jquery-file-upload\load-image\load-image.all.min.js" />
+    <Content Include="Content\libs\jquery-file-upload\load-image\load-image.js" />
+    <Content Include="Content\libs\jquery\jquery-1.9.1.js" />
+    <Content Include="Content\scripts\common.showCssjs.js" />
+    <Content Include="Global.asax" />
+    <Content Include="Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\DemoController.cs" />
+    <Compile Include="Controllers\UploadController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Libs\FilesStatus.cs" />
+    <Compile Include="Libs\UploadHandler.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\web.config" />
+    <Content Include="packages.config" />
+    <Content Include="Content\libs\bootstrap\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\libs\bootstrap\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Content\libs\bootstrap\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Content\libs\bootstrap\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Content\libs\jquery-file-upload\load-image\load-image.all.min.js.map" />
+    <Content Include="Upload\UploadHandler.ashx" />
+    <Content Include="Views\Demo\Index.cshtml" />
+    <Content Include="Views\Demo\_Layout.cshtml" />
+    <Content Include="Views\Demo\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\_Menus.cshtml" />
+    <Content Include="Views\Upload\Basic.cshtml" />
+    <Content Include="Views\Upload\BasicPlus.cshtml" />
+    <Content Include="Views\Upload\Index.cshtml" />
+    <Content Include="Views\Upload\_Layout.cshtml" />
+    <Content Include="Views\Upload\_ViewStart.cshtml" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Content\demos\" />
+    <Folder Include="Models\" />
+    <Folder Include="Upload\Files\" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>63830</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:63830/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
