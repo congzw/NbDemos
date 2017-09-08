@@ -146,6 +146,10 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\DemoController.cs" />
     <Compile Include="Controllers\UploadController.cs" />
+    <Compile Include="Extensions\HtmlExtensions.cs" />
+    <Compile Include="Extensions\HtmlRenderExtensions.cs" />
+    <Compile Include="Extensions\RazorExtensions.cs" />
+    <Compile Include="Extensions\WebPageBaseExtensions.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -171,6 +175,7 @@
     <Content Include="Views\Upload\Index.cshtml" />
     <Content Include="Views\Upload\_Layout.cshtml" />
     <Content Include="Views\Upload\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\_Accordion.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

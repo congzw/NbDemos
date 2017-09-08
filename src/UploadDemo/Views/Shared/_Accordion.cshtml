@@ -1,0 +1,38 @@
+﻿@using UploadDemo.Extensions
+<div id="accordion">
+    <h3>Home</h3>
+    <div>
+        <p>Home Desc...</p>
+        <ul>
+            <li>
+                <a href="@Url.Action("Index", "Demo")">Index</a>
+            </li>
+        </ul>
+    </div>
+    <h3>Upload Demos</h3>
+    <div>
+        <p>Upload Demos Desc...</p>
+        <ul>
+            <li>
+                <a href="@Url.Action("Index", "Upload")">Index</a>
+            </li>
+            <li>
+                <a href="@Url.Action("Index", "Upload", new {view = "Basic"})">Basic</a>
+            </li>
+            <li>
+                <a href="@Url.Action("Index", "Upload", new {view = "BasicPlus"})">BasicPlus</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+@using (Html.Delayed())
+{
+    <script>
+        $(function () {
+            $("#accordion").accordion({
+                heightStyle: "content"
+            });
+        });
+    </script>
+}

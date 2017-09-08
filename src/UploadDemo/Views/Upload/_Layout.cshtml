@@ -7,18 +7,25 @@
     <meta name="author" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link href="~/Content/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/libs/jquery-ui-1.11.3/jquery-ui.css" rel="stylesheet" />
     <script src="~/Content/libs/jquery/jquery-1.10.2.js"></script>
-    <script src="~/Content/libs/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
+    <script src="~/Content/libs/jquery-ui-1.11.3/jquery-ui.js"></script>
+    @*<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+    <script src="~/Content/libs/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>*@
+
+    <!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
     <script src="~/Content/libs/jquery-file-upload/js/jquery.iframe-transport.js"></script>
+    <!-- The basic File Upload plugin -->
     <script src="~/Content/libs/jquery-file-upload/js/jquery.fileupload.js"></script>
 </head>
 <body>
-    <div class="container">
-        @Html.Partial("_Menus")
-        <div id="content">
-            @RenderBody()
-        </div>
+<div class="container">
+    @Html.Partial("_Menus")
+    <div id="content">
+        @RenderBody()
     </div>
+</div>
     @RenderSection("scripts", false)
+    @Html.RenderDelayed()
 </body>
 </html>
