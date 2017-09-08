@@ -7,6 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UploadDemo", "UploadDemo\Up
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{0A4D7F0E-CB34-4646-9C2C-22AAE68CA8D1}"
 	ProjectSection(SolutionItems) = preProject
+		..\doc\demo-upload.md = ..\doc\demo-upload.md
 		..\readme.md = ..\readme.md
 		..\doc\todolist.md = ..\doc\todolist.md
 	EndProjectSection
