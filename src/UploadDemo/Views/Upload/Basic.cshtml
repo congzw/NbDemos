@@ -1,9 +1,17 @@
 ﻿<h2>Upload Basic</h2>
 <hr/>
+<div>
+    <blockquote>
+        <p>
+            File Upload widget with multiple file selection, drag&amp;drop support and progress bar for jQuery.<br>
+            Supports cross-domain, chunked and resumable file uploads.<br>
+            Works with any server-side platform (PHP, Python, Ruby on Rails, Java, Node.js, Go etc.) that supports standard HTML form file uploads.
+        </p>
+    </blockquote>
+</div>
+
 
 @Demo1()
-@DemoWithOptions()
-@DemoWithProgress()
 
 @helper Demo1()
 {
@@ -19,82 +27,9 @@
                 $.each(data.result, function (index, file) {
                     $('<h3/>').text(file.name).appendTo(message$);
                 });
+                $('<h3/>').text('upload complete.').appendTo(message$);
             }
         });
     });
-    </script>
-}
-
-@helper DemoWithOptions()
-{
-    <input id="fileupload2" type="file" name="files[]" multiple>
-    <div id="fileupload2Message"></div>
-    <hr />
-    <script>
-    $(function () {
-        var message$ = $('#fileupload2Message');
-        $('#fileupload2').fileupload({
-            url: '/Upload/UploadHandler.ashx',
-            dataType: 'json',
-            done: function (e, data) {
-                $.each(data.result, function (index, file) {
-                    $('<h3/>').text(file.name).appendTo(message$);
-                });
-            }
-        });
-    });
-    </script>
-}
-
-@helper DemoWithProgress()
-{
-    <input id="fileupload3" type="file" name="files[]" multiple>
-    <div id="fileupload3Message"></div>
-    <div id="progress" class="progress">
-        <div class="progress-bar progress-bar-success"></div>
-    </div>
-
-    <style>
-        .bar {
-            height: 18px;
-            background: green;
-        }
-    </style>
-    <div id="simple-progress">
-        <div class="bar" style="width: 0;"></div>
-    </div>
-    <hr/>
-    
-    <script>
-        $(function () {
-            var message$ = $('#fileupload3Message');
-            $('#fileupload3').fileupload({
-                url: '/Upload/UploadHandler.ashx',
-                dataType: 'json',
-                done: function (e, data) {
-                    $.each(data.result, function (index, file) {
-                        //message$.append(' complete: ' + file.name);
-                        $('<h3/>').text(file.name).appendTo(message$);
-                    });
-                }
-                ,
-                progressall: function (e, data) {
-                    console.log(data);
-                    var progress = parseInt(data.loaded / data.total * 100, 10);
-                    $('#progress .progress-bar').css(
-                        'width',
-                        progress + '%'
-                    );
-
-                    message$.text('file processing ' + progress + '%');
-
-                    //demo simple process bar
-                    $('#simple-progress .bar').css(
-                        'width',
-                        progress + '%'
-                    );
-                }
-            });
-        });
     </script>
 }

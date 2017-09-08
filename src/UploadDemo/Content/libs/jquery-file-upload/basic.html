@@ -23,22 +23,6 @@
         </div>
         <!-- The container for the uploaded files -->
         <div id="files" class="files"></div>
-        <br>
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Demo Notes</h3>
-            </div>
-            <div class="panel-body">
-                <ul>
-                    <li>The maximum file size for uploads in this demo is <strong>999 KB</strong> (default file size is unlimited).</li>
-                    <li>Only image files (<strong>JPG, GIF, PNG</strong>) are allowed in this demo (by default there is no file type restriction).</li>
-                    <li>Uploaded files will be deleted automatically after <strong>5 minutes or less</strong> (demo files are stored in memory).</li>
-                    <li>You can <strong>drag &amp; drop</strong> files from your desktop on this webpage (see <a href="https://github.com/blueimp/jQuery-File-Upload/wiki/Browser-support">Browser support</a>).</li>
-                    <li>Please refer to the <a href="https://github.com/blueimp/jQuery-File-Upload">project website</a> and <a href="https://github.com/blueimp/jQuery-File-Upload/wiki">documentation</a> for more information.</li>
-                    <li>Built with the <a href="http://getbootstrap.com/">Bootstrap</a> CSS framework and Icons from <a href="http://glyphicons.com/">Glyphicons</a>.</li>
-                </ul>
-            </div>
-        </div>
     </div>
     <script src="../jquery/jquery-1.9.1.js"></script>
     <script src="js/vendor/jquery.ui.widget.js"></script>
@@ -53,15 +37,42 @@
             // Change this to the location of your server-side upload handler:
             var url = '/Upload/UploadHandler.ashx';
 
+            console.log($.support);
+
+            var options = {
+                url: url,
+                dataType: 'json',
+                done: function (e, data) {
+                    //console.log(data.result);
+                    $.each(data.result, function (index, file) {
+                        $('<p/>').text(file.name).appendTo('#files');
+                    });
+                },
+                progressall: function (e, data) {
+                    var progress = parseInt(data.loaded / data.total * 100, 10);
+                    $('#progress .progress-bar').css(
+                        'width',
+                        progress + '%'
+                    );
+                }
+            };
+
+            $('#fileupload').fileupload(options)
+                .prop('disabled', !$.support.fileInput)
+                  .parent().addClass($.support.fileInput ? undefined : 'disabled');
+
+            //$(function () {
             //    $('#fileupload').fileupload({
             //        url: url,
             //        dataType: 'json',
-            //        done: function (e, data) {
-            //            console.log(data.result);
-            //            $.each(data.result, function (index, file) {
-            //                $('<p/>').text(file.name).appendTo('#files');
-            //            });
+            //        add: function (e, data) {
+            //            data.context = $('<p/>').text('Uploading...').appendTo(document.body);
+            //            data.submit(); //auto uploading
             //        },
+            //        done: function (e, data) {
+            //            data.context.text('Upload finished.');
+            //        }
+            //        ,
             //        progressall: function (e, data) {
             //            var progress = parseInt(data.loaded / data.total * 100, 10);
             //            $('#progress .progress-bar').css(
@@ -70,31 +81,9 @@
             //            );
             //        }
             //    }).prop('disabled', !$.support.fileInput)
-            //      .parent().addClass($.support.fileInput ? undefined : 'disabled');
+            //              .parent().addClass($.support.fileInput ? undefined : 'disabled');
 
-            $(function () {
-                $('#fileupload').fileupload({
-                    url: url,
-                    dataType: 'json',
-                    add: function (e, data) {
-                        data.context = $('<p/>').text('Uploading...').appendTo(document.body);
-                        data.submit(); //auto uploading
-                    },
-                    done: function (e, data) {
-                        data.context.text('Upload finished.');
-                    }
-                    ,
-                    progressall: function (e, data) {
-                        var progress = parseInt(data.loaded / data.total * 100, 10);
-                        $('#progress .progress-bar').css(
-                            'width',
-                            progress + '%'
-                        );
-                    }
-                }).prop('disabled', !$.support.fileInput)
-                          .parent().addClass($.support.fileInput ? undefined : 'disabled');
-
-            });
+            //});
         });
 
     </script>
