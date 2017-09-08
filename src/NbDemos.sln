@@ -5,6 +5,12 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UploadDemo", "UploadDemo\UploadDemo.csproj", "{2E5A5110-2EC1-4ABE-8BA4-80B4F4C7E5C7}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{0A4D7F0E-CB34-4646-9C2C-22AAE68CA8D1}"
+	ProjectSection(SolutionItems) = preProject
+		..\readme.md = ..\readme.md
+		..\doc\todolist.md = ..\doc\todolist.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
