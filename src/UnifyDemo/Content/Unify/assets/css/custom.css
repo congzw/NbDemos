@@ -1,0 +1,8 @@
+/* Add here all nb custeom css for unify (customizations) */
+
+/*Boxed Layout
+------------------------------------*/
+body.dark.boxed-layout {
+  box-shadow: 0 0 5px #191919;
+  background: url(../../img/patterns/3.png) repeat;
+}

@@ -1,0 +1,47 @@
+﻿@{
+    var assets = UnifyHelper.GetAssetPath();
+    var title = ViewBag.Title ?? "NbCloud";
+}
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+<head>
+    @UnifyHelper.Head_Meta()
+    <title>@title</title>
+    @UnifyHelper.Head_Css_Global_Compulsory()
+    @UnifyHelper.Head_Css_HeaderAndFooter()
+    @UnifyHelper.Head_Css_Plugins()
+    @UnifyHelper.Head_Css_Theme()
+    <!-- CSS Customization -->
+    <link rel="stylesheet" href="@assets/css/custom.css">
+</head>
+<body>
+    <div class="wrapper">
+        @Html.Partial("_Header")
+        @Html.Partial("_Breadcrumbs")
+        <div class="container">
+            @RenderBody()
+        </div>
+        @Html.Partial("_Footer")
+    </div><!--/wrapper-->
+    @UnifyHelper.Js_Global_Compulsory()
+    @UnifyHelper.Js_Plugins()
+    <!-- JS Customization -->
+    <script type="text/javascript" src="@assets/js/custom.js"></script>
+    <!-- JS Page Level -->
+    <script type="text/javascript" src="@assets/js/app.js"></script>
+    <script type="text/javascript" src="@assets/js/plugins/style-switcher.js"></script>
+    <script type="text/javascript" src="@assets/js/plugins/parallax-slider.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+            App.init();
+            StyleSwitcher.initStyleSwitcher();
+            ParallaxSlider.initParallaxSlider();
+        });
+    </script>
+    @UnifyHelper.Js_Global_Fix()
+</body>
+</html>

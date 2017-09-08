@@ -139,6 +139,7 @@
     <Content Include="Content\libs\jquery-ui-1.11.3\jquery-ui.js" />
     <Content Include="Content\libs\jquery\jquery-1.10.2.js" />
     <Content Include="Content\scripts\common.showCssjs.js" />
+    <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Web.config" />
   </ItemGroup>

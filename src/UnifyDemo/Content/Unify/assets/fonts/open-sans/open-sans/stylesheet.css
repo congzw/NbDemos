@@ -1,0 +1,28 @@
+@font-face {
+	font-family: 'Open Sans';
+	font-style: normal;
+	font-weight: 400;
+	src: url(fonts/open-sans400normal.eot);
+	src: local('Open Sans'),local('OpenSans'), url(fonts/open-sans400normal.eot?#iefix) format('embedded-opentype'), url(fonts/open-sans400normal.woff) format('woff');
+}
+@font-face {
+	font-family: 'Open Sans';
+	font-style: normal;
+	font-weight: 300;
+	src: url(fonts/open-sans300normal.eot);
+	src: local('Open Sans Light'),local('OpenSans-Light'), url(fonts/open-sans300normal.eot?#iefix) format('embedded-opentype'), url(fonts/open-sans300normal.woff) format('woff');
+}
+@font-face {
+	font-family: 'Open Sans';
+	font-style: normal;
+	font-weight: 600;
+	src: url(fonts/open-sans600normal.eot);
+	src: local('Open Sans Semibold'),local('OpenSans-Semibold'), url(fonts/open-sans600normal.eot?#iefix) format('embedded-opentype'), url(fonts/open-sans600normal.woff) format('woff');
+}
+@font-face {
+	font-family: 'Open Sans';
+	font-style: normal;
+	font-weight: 300;
+	src: url(fonts/open-sans300normal.eot);
+	src: local('Open Sans Light'),local('OpenSans-Light'), url(fonts/open-sans300normal.eot?#iefix) format('embedded-opentype'), url(fonts/open-sans300normal.woff) format('woff');
+}
