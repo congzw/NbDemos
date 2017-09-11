@@ -1,4 +1,5 @@
-﻿@{
+﻿@using UnifyDemo.Helpers
+@{
     var assets = UnifyHelper.GetAssetPath();
     var title = ViewBag.Title ?? "NbCloud";
 }
@@ -21,7 +22,7 @@
 <body>
     <div class="wrapper">
         @Html.Partial("_Header")
-        @Html.Partial("_Breadcrumbs")
+        @Html.PartialIf("_Breadcrumbs", !this.HideBreadcrumbs())
         <div class="container">
             @RenderBody()
         </div>

@@ -418,11 +418,18 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\DashRouteHandler.cs" />
+    <Compile Include="Helpers\HtmlHelperExtensions.cs" />
+    <Compile Include="Helpers\Settings.cs" />
+    <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\AngularTemplateHelper.cs" />
+    <Compile Include="Helpers\BootstrapHelpers.cs" />
+    <Compile Include="Helpers\UnifyPageHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -493,6 +500,8 @@
     <Content Include="Views\Shared\_HeaderNav.cshtml" />
     <Content Include="Views\Shared\_HeaderTop.cshtml" />
     <Content Include="Views\Home\IEFixDemo.cshtml" />
+    <Content Include="Views\Shared\_Slider.cshtml" />
+    <Content Include="Views\Shared\_CopyRight.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
