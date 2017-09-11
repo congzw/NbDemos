@@ -22,7 +22,7 @@
 <body>
     <div class="wrapper">
         @Html.Partial("_Header")
-        @Html.PartialIf("_Breadcrumbs", !this.HideBreadcrumbs())
+        @this.RenderSectionOrPartial("_Breadcrumbs")
         <div class="container">
             @RenderBody()
         </div>

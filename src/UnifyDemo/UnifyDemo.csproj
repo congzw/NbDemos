@@ -429,7 +429,7 @@
     </Compile>
     <Compile Include="Helpers\AngularTemplateHelper.cs" />
     <Compile Include="Helpers\BootstrapHelpers.cs" />
-    <Compile Include="Helpers\UnifyPageHelper.cs" />
+    <Compile Include="Helpers\RazorPageHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
