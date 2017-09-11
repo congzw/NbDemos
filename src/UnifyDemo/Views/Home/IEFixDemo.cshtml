@@ -9,7 +9,7 @@
 <a href="https://en.wikipedia.org/wiki/Conditional_comment">wiki</a>
 <a href="https://msdn.microsoft.com/en-us/library/ms537512(v=vs.85).aspx">msdn</a>
 <a href="https://msdn.microsoft.com/en-us/library/hh801214(v=vs.85).aspx">Conditional comments are no longer supported(IE10)</a>
-<hr/>
+<hr />
 
 <pre>&lt;!--[if condition]&gt;
 (what to output if the condition is true)
@@ -34,7 +34,7 @@
         referring to an extra style sheet.
     </li>
 </ol>
-<hr/>
+<hr />
 
 <table class="table-striped table-bordered">
     <tbody>
@@ -56,6 +56,28 @@
         </tr>
     </tbody>
 </table>
+<hr />
+
+<h2>downlevel-revealed conditional comments</h2>
+<pre><span class="cp">&lt;![if !IE]&gt;</span>
+<span class="p">&lt;</span><span class="nt">link</span> <span class="na">href</span><span class="o">=</span><span class="s">"non-ie.css"</span> <span class="na">rel</span><span class="o">=</span><span class="s">"stylesheet"</span><span class="p">&gt;</span>
+<span class="cp">&lt;![endif]&gt;</span>
+</pre>
+<hr />
+
+<h2>alternative technique downlevel-revealed conditional comments(valid w3c)</h2>
+<pre><span class="c">&lt;!--[if !IE]&gt;--&gt;</span>
+<span class="p">&lt;</span><span class="nt">link</span> <span class="na">href</span><span class="o">=</span><span class="s">"non-ie.css"</span> <span class="na">rel</span><span class="o">=</span><span class="s">"stylesheet"</span><span class="p">&gt;</span>
+<span class="c">&lt;!--&lt;![endif]--&gt;</span>
+</pre>
+
+<p>
+    While somewhat confusing in structure, this specific syntax is valid (X)HTML and is useful for conditional sections intended specifically for non-IE browsers; if the condition evaluates to <i>true</i> (for example, if writing code meant to display on non-IE browsers <i>and</i> on some versions of IE), IE will then display the "--&gt;" present before the HTML content. This problem is easily solved by prepending "&lt;!" to the initial "--&gt;" as follows:
+</p>
+<pre><span class="c">&lt;!--[if gt IE 6]&gt;&lt;!--&gt;</span>
+This code displays on non-IE browsers and on IE 7 or higher.
+<span class="c">&lt;!--&lt;![endif]--&gt;</span>
+</pre>
 <hr />
 
 <table class="table-striped">
@@ -104,7 +126,7 @@
     </tbody>
 </table>
 
-<hr/>
+<hr />
 <!--[if !IE]><!--> 除IE外都可识别 <!--<![endif]-->
 <!--[if IE]> 所有的IE可识别 <![endif]-->
 <!--[if IE 6]> 仅IE6可识别 <![endif]-->
@@ -116,11 +138,10 @@
 <!--[if IE 8]> 仅IE8可识别 <![endif]-->
 <!--[if IE 9]> 仅IE9可识别 <![endif]-->
 
-<hr/>
+<hr />
 <!--[if IE 6]>
 Special instructions for IE 6 here
 <![endif]-->
-
 <!--[if IE 6]>
-    
+
 <![endif]-->
