@@ -26,11 +26,10 @@ namespace UnifyDemo.Helpers
         /// <summary>
         /// 用指定的部分页渲染@section
         /// </summary>
-        /// <typeparam name="TModel"></typeparam>
         /// <param name="page"></param>
         /// <param name="name"></param>
         /// <returns></returns>
-        public static IHtmlString RenderSectionWithPartial<TModel>(this WebViewPage<TModel> page, string name)
+        public static IHtmlString RenderSectionWithPartial(this WebViewPage page, string name)
         {
             //@section _Xxx
             //{
@@ -46,11 +45,10 @@ namespace UnifyDemo.Helpers
         /// <summary>
         /// 隐藏指定的@section
         /// </summary>
-        /// <typeparam name="TModel"></typeparam>
         /// <param name="page"></param>
         /// <param name="name"></param>
         /// <returns></returns>
-        public static IHtmlString HideSection<TModel>(this WebViewPage<TModel> page, string name)
+        public static IHtmlString HideSection(this WebViewPage page, string name)
         {
             //@section _Xxx
             //{
@@ -58,7 +56,7 @@ namespace UnifyDemo.Helpers
             //}
             page.DefineSection(name, () =>
             {
-                
+
             });
             return null;
         }

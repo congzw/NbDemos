@@ -1,11 +1,12 @@
 ﻿@using UnifyDemo.Helpers
 @{
 }
+@this.RenderSectionWithPartial("_Slider")
+@this.HideSection("_Breadcrumbs")
+
 <h2>Home Index</h2>
 <hr />
 @for (int i = 0; i < 20; i++)
 {
     <h2>DEMO</h2>
 }
-@this.RenderSectionWithPartial("_Slider")
-@this.HideSection("_Breadcrumbs")
