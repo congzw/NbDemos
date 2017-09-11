@@ -6,6 +6,13 @@ namespace UnifyDemo.Helpers
 {
     public static class RazorPageHelper
     {
+        /// <summary>
+        /// 如果@section未定义，则渲染部分页
+        /// </summary>
+        /// <typeparam name="TModel"></typeparam>
+        /// <param name="page"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public static IHtmlString RenderSectionOrPartial<TModel>(this WebViewPage<TModel> page, string name)
         {
             var renderSection = page.RenderSection(name, false);
