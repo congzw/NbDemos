@@ -492,6 +492,7 @@
     <Content Include="Views\Shared\_Breadcrumbs.cshtml" />
     <Content Include="Views\Shared\_HeaderNav.cshtml" />
     <Content Include="Views\Shared\_HeaderTop.cshtml" />
+    <Content Include="Views\Home\IEFixDemo.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
