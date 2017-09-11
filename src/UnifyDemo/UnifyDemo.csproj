@@ -420,6 +420,7 @@
   <ItemGroup>
     <Compile Include="Helpers\DashRouteHandler.cs" />
     <Compile Include="Helpers\HtmlHelperExtensions.cs" />
+    <Compile Include="Helpers\HtmlRenderExtensions.cs" />
     <Compile Include="Helpers\Settings.cs" />
     <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -502,6 +503,8 @@
     <Content Include="Views\Home\IEFixDemo.cshtml" />
     <Content Include="Views\Shared\_Slider.cshtml" />
     <Content Include="Views\Shared\_CopyRight.cshtml" />
+    <Content Include="Views\Shared\Plugins\_StyleSwitcher.cshtml" />
+    <Content Include="Views\Shared\Plugins\_ParallaxSlider.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

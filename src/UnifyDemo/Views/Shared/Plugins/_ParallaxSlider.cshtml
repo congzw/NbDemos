@@ -1,0 +1,14 @@
+﻿@{ 
+    //todo
+    var assets = UnifyHelper.GetAssetPath();
+}
+
+@using (Html.Delayed())
+{
+    <script type="text/javascript" src="@assets/js/plugins/parallax-slider.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+            ParallaxSlider.initParallaxSlider();
+        });
+    </script>
+}

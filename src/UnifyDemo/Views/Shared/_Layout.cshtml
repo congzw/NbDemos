@@ -1,5 +1,4 @@
-﻿@using UnifyDemo.Helpers
-@{
+﻿@{
     var assets = UnifyHelper.GetAssetPath();
     var title = ViewBag.Title ?? "NbCloud";
 }
@@ -35,15 +34,13 @@
     <script type="text/javascript" src="@assets/js/custom.js"></script>
     <!-- JS Page Level -->
     <script type="text/javascript" src="@assets/js/app.js"></script>
-    <script type="text/javascript" src="@assets/js/plugins/style-switcher.js"></script>
-    <script type="text/javascript" src="@assets/js/plugins/parallax-slider.js"></script>
     <script type="text/javascript">
         jQuery(document).ready(function () {
             App.init();
-            StyleSwitcher.initStyleSwitcher();
-            ParallaxSlider.initParallaxSlider();
         });
     </script>
+
+    @Html.RenderDelayed()
     @UnifyHelper.Js_Global_Fix()
 </body>
 </html>

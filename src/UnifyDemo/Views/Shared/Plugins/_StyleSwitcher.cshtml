@@ -1,0 +1,13 @@
+﻿@{
+    //todo
+    var assets = UnifyHelper.GetAssetPath();
+}
+@using (Html.Delayed())
+{
+    <script type="text/javascript" src="@assets/js/plugins/style-switcher.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+            StyleSwitcher.initStyleSwitcher();
+        });
+    </script>
+}
