@@ -1,0 +1,221 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{3DEFD22D-341F-4BE1-8D9F-FA5760CEFFB6}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ScrollerDemo</RootNamespace>
+    <AssemblyName>ScrollerDemo</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Web.Razor">
+      <HintPath>..\..\lib\Microsoft.AspNet.Razor.3.2.2\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Webpages">
+      <HintPath>..\..\lib\Microsoft.AspNet.Webpages.3.2.2\lib\net45\System.Web.Webpages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Webpages.Deployment">
+      <HintPath>..\..\lib\Microsoft.AspNet.Webpages.3.2.2\lib\net45\System.Web.Webpages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Webpages.Razor">
+      <HintPath>..\..\lib\Microsoft.AspNet.Webpages.3.2.2\lib\net45\System.Web.Webpages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Helpers">
+      <HintPath>..\..\lib\Microsoft.AspNet.Webpages.3.2.2\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure">
+      <HintPath>..\..\lib\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc">
+      <HintPath>..\..\lib\Microsoft.AspNet.Mvc.5.2.2\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\demos\index.html" />
+    <Content Include="Content\libs\jquery\jquery-1.10.2.js" />
+    <Content Include="Content\libs\scrollbar\.gitignore" />
+    <Content Include="Content\libs\scrollbar\examples\ajax.html" />
+    <Content Include="Content\libs\scrollbar\examples\ajax_example.html" />
+    <Content Include="Content\libs\scrollbar\examples\auto_hide_scrollbar_demo.html" />
+    <Content Include="Content\libs\scrollbar\examples\auto_scrolling_example.html" />
+    <Content Include="Content\libs\scrollbar\examples\bootstrap_examples-extended.html" />
+    <Content Include="Content\libs\scrollbar\examples\bootstrap_examples.html" />
+    <Content Include="Content\libs\scrollbar\examples\callbacks_example.html" />
+    <Content Include="Content\libs\scrollbar\examples\colorbox\colorbox.css" />
+    <Content Include="Content\libs\scrollbar\examples\colorbox\images\border.png" />
+    <Content Include="Content\libs\scrollbar\examples\colorbox\images\controls.png" />
+    <Content Include="Content\libs\scrollbar\examples\colorbox\images\loading.gif" />
+    <Content Include="Content\libs\scrollbar\examples\colorbox\images\loading_background.png" />
+    <Content Include="Content\libs\scrollbar\examples\colorbox\images\overlay.png" />
+    <Content Include="Content\libs\scrollbar\examples\colorbox\jquery.colorbox-min.js" />
+    <Content Include="Content\libs\scrollbar\examples\colorbox_demo.html" />
+    <Content Include="Content\libs\scrollbar\examples\complete_examples.html" />
+    <Content Include="Content\libs\scrollbar\examples\disable_destroy_example.html" />
+    <Content Include="Content\libs\scrollbar\examples\fluid_scrollbar_example.html" />
+    <Content Include="Content\libs\scrollbar\examples\full_page_demo.html" />
+    <Content Include="Content\libs\scrollbar\examples\grid_and_snap_while_scrolling_example.html" />
+    <Content Include="Content\libs\scrollbar\examples\iframe_example.html" />
+    <Content Include="Content\libs\scrollbar\examples\images\img1.jpg" />
+    <Content Include="Content\libs\scrollbar\examples\images\img2.jpg" />
+    <Content Include="Content\libs\scrollbar\examples\images\img3.jpg" />
+    <Content Include="Content\libs\scrollbar\examples\images\img4.jpg" />
+    <Content Include="Content\libs\scrollbar\examples\images\img5.jpg" />
+    <Content Include="Content\libs\scrollbar\examples\images\img6.jpg" />
+    <Content Include="Content\libs\scrollbar\examples\images\img7.jpg" />
+    <Content Include="Content\libs\scrollbar\examples\infinite_scroll_example.html" />
+    <Content Include="Content\libs\scrollbar\examples\init_hidden_example.html" />
+    <Content Include="Content\libs\scrollbar\examples\init_position_example.html" />
+    <Content Include="Content\libs\scrollbar\examples\jquery_ui_accordion_example.html" />
+    <Content Include="Content\libs\scrollbar\examples\jquery_ui_autocomplete_example.html" />
+    <Content Include="Content\libs\scrollbar\examples\jquery_ui_dialog_example.html" />
+    <Content Include="Content\libs\scrollbar\examples\jquery_ui_resizable_example.html" />
+    <Content Include="Content\libs\scrollbar\examples\jquery_ui_sortable_example.html" />
+    <Content Include="Content\libs\scrollbar\examples\jquery_ui_tabs_example.html" />
+    <Content Include="Content\libs\scrollbar\examples\keyboard_nav_example.html" />
+    <Content Include="Content\libs\scrollbar\examples\loading_each_script_separately.html" />
+    <Content Include="Content\libs\scrollbar\examples\loading_each_script_separately_via_cdn.html" />
+    <Content Include="Content\libs\scrollbar\examples\loading_scripts_via_cdn.html" />
+    <Content Include="Content\libs\scrollbar\examples\logo-alt.png" />
+    <Content Include="Content\libs\scrollbar\examples\logo.png" />
+    <Content Include="Content\libs\scrollbar\examples\max-height_example.html" />
+    <Content Include="Content\libs\scrollbar\examples\max-width_example.html" />
+    <Content Include="Content\libs\scrollbar\examples\multiple_scrollbars_example.html" />
+    <Content Include="Content\libs\scrollbar\examples\nested_scrollbars_demo.html" />
+    <Content Include="Content\libs\scrollbar\examples\nested_scrollbars_demo_alt.html" />
+    <Content Include="Content\libs\scrollbar\examples\nested_scrollbars_demo_alt_2.html" />
+    <Content Include="Content\libs\scrollbar\examples\rtl_direction_demo.html" />
+    <Content Include="Content\libs\scrollbar\examples\scrollbar_themes_demo.html" />
+    <Content Include="Content\libs\scrollbar\examples\scrollTo_demo.html" />
+    <Content Include="Content\libs\scrollbar\examples\scroll_buttons_and_snap_scrolling_examples.html" />
+    <Content Include="Content\libs\scrollbar\examples\simple_example.html" />
+    <Content Include="Content\libs\scrollbar\examples\simple_example_all_params.html" />
+    <Content Include="Content\libs\scrollbar\examples\style.css" />
+    <Content Include="Content\libs\scrollbar\examples\textarea_example.html" />
+    <Content Include="Content\libs\scrollbar\jquery.mCustomScrollbar.concat.min.js" />
+    <Content Include="Content\libs\scrollbar\jquery.mCustomScrollbar.css" />
+    <Content Include="Content\libs\scrollbar\jquery.mCustomScrollbar.js" />
+    <Content Include="Content\libs\scrollbar\jquery.mCustomScrollbar.min.css" />
+    <Content Include="Content\libs\scrollbar\js\minified\jquery-1.11.0.min.js" />
+    <Content Include="Content\libs\scrollbar\js\minified\jquery-1.9.1.min.js" />
+    <Content Include="Content\libs\scrollbar\js\minified\jquery-2.1.0.min.js" />
+    <Content Include="Content\libs\scrollbar\js\minified\jquery-ui-1.10.4.min.js" />
+    <Content Include="Content\libs\scrollbar\js\minified\jquery.mCustomScrollbar.min.js" />
+    <Content Include="Content\libs\scrollbar\js\minified\jquery.mousewheel-3.0.6.min.js" />
+    <Content Include="Content\libs\scrollbar\js\minified\jquery.mousewheel.min.js" />
+    <Content Include="Content\libs\scrollbar\js\uncompressed\jquery.mCustomScrollbar.js" />
+    <Content Include="Content\libs\scrollbar\js\uncompressed\jquery.mousewheel-3.0.6.js" />
+    <Content Include="Content\libs\scrollbar\js\uncompressed\jquery.mousewheel.js" />
+    <Content Include="Content\libs\scrollbar\LICENSE.txt" />
+    <Content Include="Content\libs\scrollbar\mCSB_buttons.png" />
+    <Content Include="Global.asax" />
+    <Content Include="Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\web.config" />
+    <Content Include="packages.config" />
+    <Content Include="Content\libs\scrollbar\bower.json" />
+    <Content Include="Content\libs\scrollbar\js\minified\jquery.mCustomScrollbar.min.js.gz" />
+    <Content Include="Content\libs\scrollbar\package.json" />
+    <Content Include="Content\libs\scrollbar\readme.md" />
+    <Content Include="Content\libs\scrollbar\source-files\mCSB_buttons.psd" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Controllers\" />
+    <Folder Include="Models\" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>4914</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:4914/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

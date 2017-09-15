@@ -7,6 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UploadDemo", "UploadDemo\Up
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{0A4D7F0E-CB34-4646-9C2C-22AAE68CA8D1}"
 	ProjectSection(SolutionItems) = preProject
+		..\doc\demo-scroller.md = ..\doc\demo-scroller.md
 		..\doc\demo-unify.md = ..\doc\demo-unify.md
 		..\doc\demo-upload.md = ..\doc\demo-upload.md
 		..\readme.md = ..\readme.md
@@ -14,6 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{0A4D7F0E-CB3
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnifyDemo", "UnifyDemo\UnifyDemo.csproj", "{8B6838F8-3903-490D-B164-C5794A196740}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScrollerDemo", "ScrollerDemo\ScrollerDemo.csproj", "{3DEFD22D-341F-4BE1-8D9F-FA5760CEFFB6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,6 +32,10 @@ Global
 		{8B6838F8-3903-490D-B164-C5794A196740}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8B6838F8-3903-490D-B164-C5794A196740}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8B6838F8-3903-490D-B164-C5794A196740}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DEFD22D-341F-4BE1-8D9F-FA5760CEFFB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DEFD22D-341F-4BE1-8D9F-FA5760CEFFB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DEFD22D-341F-4BE1-8D9F-FA5760CEFFB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DEFD22D-341F-4BE1-8D9F-FA5760CEFFB6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

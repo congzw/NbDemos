@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>index</title>
+    <link href="../libs/scrollbar/jquery.mCustomScrollbar.css" rel="stylesheet" />
+</head>
+<body>
+
+    <div>
+        <div class="content">
+            <h2>DEMO</h2>
+            <h2>DEMO</h2>
+            <h2>DEMO</h2>
+            <h2>DEMO</h2>
+            <h2>DEMO</h2>
+            <h2>DEMO</h2>
+            <h2>DEMO</h2>
+            <h2>DEMO</h2>
+            <h2>DEMO</h2>
+            <h2>DEMO</h2>
+            <h2>DEMO</h2>
+            <h2>DEMO</h2>
+            <h2>DEMO</h2>
+            <h2>DEMO</h2>
+        </div>
+    </div>
+
+    <script src="../libs/jquery/jquery-1.10.2.js"></script>
+    <script src="../libs/scrollbar/jquery.mCustomScrollbar.js"></script>
+    <script>
+        (function ($) {
+            $(window).on("load", function () {
+                $(".content").mCustomScrollbar({
+                    axis: "yx" // x, y, yx
+                    , theme: "dark"
+                    , setHeight: "300" // 300, "300px",  "300" is ok
+                    , scrollbarPosition: "inside" //"inside", "outside".
+                    , scrollButtons: {
+                        enable: true
+                        , scrollType: "stepless" //stepless, 
+                    }
+                    , advanced: {
+                         autoScrollOnFocus: "string"
+                    }
+                });
+
+                $(".content").mCustomScrollbar();
+            });
+        })(jQuery);
+    </script>
+</body>
+</html>
