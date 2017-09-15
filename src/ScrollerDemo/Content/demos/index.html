@@ -26,11 +26,12 @@
     </div>
 
     <script src="../libs/jquery/jquery-1.10.2.js"></script>
+    <script src="../libs/jquery/jquery.mousewheel.js"></script>
     <script src="../libs/scrollbar/jquery.mCustomScrollbar.js"></script>
     <script>
         (function ($) {
             $(window).on("load", function () {
-                $(".content").mCustomScrollbar({
+                var mCustomScrollbar = $(".content").mCustomScrollbar({
                     axis: "yx" // x, y, yx
                     , theme: "dark"
                     , setHeight: "300" // 300, "300px",  "300" is ok
@@ -40,11 +41,11 @@
                         , scrollType: "stepless" //stepless, 
                     }
                     , advanced: {
-                         autoScrollOnFocus: "string"
+                        autoScrollOnFocus: "string"
                     }
                 });
-
-                $(".content").mCustomScrollbar();
+                //console.log(mCustomScrollbar);
+                $('.content').mCustomScrollbar("scrollTo", "bottom");
             });
         })(jQuery);
     </script>

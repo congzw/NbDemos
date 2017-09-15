@@ -82,6 +82,7 @@
   <ItemGroup>
     <Content Include="Content\demos\index.html" />
     <Content Include="Content\libs\jquery\jquery-1.10.2.js" />
+    <Content Include="Content\libs\jquery\jquery.mousewheel.js" />
     <Content Include="Content\libs\scrollbar\.gitignore" />
     <Content Include="Content\libs\scrollbar\examples\ajax.html" />
     <Content Include="Content\libs\scrollbar\examples\ajax_example.html" />
