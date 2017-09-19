@@ -42,7 +42,10 @@
                 this.today = nowValue.getDay();
                 this.tomorrow = this.today + 1;
             })
-            .config(function() {
+            //.config(function (startTime) {
+            //    console.log("Services module config: " + startTime); //Error: [$injector:unpr] Unknown provider: startTime
+            //})
+            .config(function () {
                 console.log("Services module config: (no time)");
             })
             .run(function (startTime) {
