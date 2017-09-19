@@ -80,6 +80,29 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Pro-Angularjs\Chapter 09\angular.js" />
+    <Content Include="Content\Pro-Angularjs\Chapter 09\bootstrap-theme.css" />
+    <Content Include="Content\Pro-Angularjs\Chapter 09\bootstrap.css" />
+    <Content Include="Content\Pro-Angularjs\Chapter 09\controllers.js" />
+    <Content Include="Content\Pro-Angularjs\Chapter 09\example.html" />
+    <Content Include="Content\Pro-Angularjs\Chapter 09\filters.js" />
+    <Content Include="Content\Pro-Angularjs\Chapter 09\Listing 01.html" />
+    <Content Include="Content\Pro-Angularjs\Chapter 09\Listing 02.html" />
+    <Content Include="Content\Pro-Angularjs\Chapter 09\Listing 03.html" />
+    <Content Include="Content\Pro-Angularjs\Chapter 09\Listing 04.html" />
+    <Content Include="Content\Pro-Angularjs\Chapter 09\Listing 05.html" />
+    <Content Include="Content\Pro-Angularjs\Chapter 09\Listing 06.html" />
+    <Content Include="Content\Pro-Angularjs\Chapter 09\Listing 07.html" />
+    <Content Include="Content\Pro-Angularjs\Chapter 09\Listing 08.html" />
+    <Content Include="Content\Pro-Angularjs\Chapter 09\Listing 09.html" />
+    <Content Include="Content\Pro-Angularjs\Chapter 09\Listing 10.html" />
+    <Content Include="Content\Pro-Angularjs\Chapter 09\Listing 11.html" />
+    <Content Include="Content\Pro-Angularjs\Chapter 09\Listing 12.html" />
+    <Content Include="Content\Pro-Angularjs\Chapter 09\Listing 13.html" />
+    <Content Include="Content\Pro-Angularjs\Chapter 09\Listing 14.js" />
+    <Content Include="Content\Pro-Angularjs\Chapter 09\Listing 15.js" />
+    <Content Include="Content\Pro-Angularjs\Chapter 09\Listing 16.html" />
+    <Content Include="Content\Pro-Angularjs\Chapter 09\Listing 17.html" />
     <Content Include="Content\libs\angular\angular-animate.js" />
     <Content Include="Content\libs\angular\angular-touch.js" />
     <Content Include="Content\libs\angular\angular.js" />
@@ -97,6 +120,7 @@
     <Content Include="Content\libs\bootstrap\js\bootstrap.min.js" />
     <Content Include="Content\libs\bootstrap\js\npm.js" />
     <Content Include="Content\libs\demos\modal.html" />
+    <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Web.config" />
   </ItemGroup>
