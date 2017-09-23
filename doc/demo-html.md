@@ -55,3 +55,8 @@
 - enctype
 - target 
 - height 和 width
+
+## HTML5
+
+HTML5 类型的输入控件：
+text、password、datetime、datetime-local、date、month、time、week、number、email、url、search、tel 和 color。
