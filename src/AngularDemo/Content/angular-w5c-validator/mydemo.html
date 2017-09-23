@@ -4,29 +4,29 @@
     <title>mydemo</title>
     <link href="../libs/bootstrap/css/bootstrap.css" rel="stylesheet" />
     <link href="lib/highlight/8.0/styles/default.css" rel="stylesheet">
+    <link href="css/mydemo.css" rel="stylesheet" />
 </head>
 <body>
 
     <div ng-app="mainApp">
         <div class="container">
             <h2>{{1 + 1}}</h2>
-            <hr />
+            <hr/>
         </div>
-        <div class="container" data-ng-controller="validateCtrl" ng-cloak="">
-            <form class="form-horizontal w5c-form demo-form" role="form" w5c-form-validate="vm.validateOptions" novalidate name="validateForm">
+
+        <div class="container" data-ng-controller="demoFormCtrl as vm" ng-cloak="">
+            <form class="form-horizontal w5c-form demo-form" role="form" w5c-form-validate="vm.validateOptions" novalidate name="demoForm">
                 <div class="form-group row">
-                    <label class="col-sm-3" for="validateForm_email">邮箱</label>
+                    <label class="col-sm-3 control-label" for="demoForm_email">邮箱</label>
                     <div class="col-sm-9">
-                        <input type="email" id="validateForm_email" name="email" ng-model="entity.email" required="" class="form-control" placeholder="输入邮箱">
+                        <input type="email" id="demoForm_email" name="email" ng-model="vm.email" ng-minlength="1" ng-maxlength="10" required="" class="form-control" placeholder="输入邮箱">
                     </div>
                 </div>
-
-                <div class="form-group">
+                <div class="form-group row">
                     <div class="col-sm-offset-3 col-sm-9">
-                        <button type="button" w5c-form-submit="vm.saveEntity()" ng-disabled="validateForm.$invalid" class="btn btn-success"> 验证</button>
-                        <button type="button" ng-click="validateForm.reset()" class="btn btn-default">重置</button>
+                        <button type="button" w5c-form-submit="vm.saveEntity()" ng-disabled="demoForm.$invalid" class="btn btn-success"> 验证</button>
+                        <button type="button" ng-click="demoForm.reset()" class="btn btn-default">重置</button>
                     </div>
-
                 </div>
             </form>
         </div>
@@ -39,30 +39,18 @@
     <script src="src/directive.js"></script>
     <script>
         var mainApp = angular.module("mainApp", ["w5c.validator", "ui.bootstrap", "hljs"]);
-
         mainApp.config(["w5cValidatorProvider", function (w5cValidatorProvider) {
+                w5cValidatorProvider.setRules({
+                    email: {
+                        required: "输入的邮箱地址不能为空哦",
+                        email: "输入邮箱地址格式不正确哦"
+                    }
+                });
+            }]);
+        mainApp.controller("demoFormCtrl", function ($scope) {
 
-            // 全局配置
-            w5cValidatorProvider.config({
-                blurTrig: false,
-                showError: true,
-                removeError: true
-
-            });
-            w5cValidatorProvider.setRules({
-                email: {
-                    required: "输入的邮箱地址不能为空哦",
-                    email: "输入邮箱地址格式不正确哦"
-                }
-            });
-        }]);
-
-        mainApp.controller("validateCtrl", function ($scope) {
-
-            var vm = $scope.vm = {
-                entity: {}
-            };
-
+            var vm = this;
+            
             //每个表单的配置，如果不设置，默认和全局配置相同
             vm.validateOptions = {
                 blurTrig: true
@@ -70,6 +58,7 @@
 
             vm.saveEntity = function ($event) {
                 //do somethings for bz
+                console.log('this === $scope: ' + this === $scope);
                 alert("Save Successfully!!!");
             };
         });

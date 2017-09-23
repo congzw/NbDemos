@@ -81,6 +81,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\angular-w5c-validator\css\css.css" />
+    <Content Include="Content\angular-w5c-validator\css\mydemo.css" />
     <Content Include="Content\angular-w5c-validator\css\style.css" />
     <Content Include="Content\angular-w5c-validator\css\style.less" />
     <Content Include="Content\angular-w5c-validator\index-local.html" />
