@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>mydemo</title>
+    <link href="../libs/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link href="lib/highlight/8.0/styles/default.css" rel="stylesheet">
+</head>
+<body>
+
+    <div ng-app="mainApp">
+        <div class="container">
+            <h2>{{1 + 1}}</h2>
+            <hr />
+        </div>
+        <div class="container" data-ng-controller="validateCtrl" ng-cloak="">
+            <form class="form-horizontal w5c-form demo-form" role="form" w5c-form-validate="vm.validateOptions" novalidate name="validateForm">
+                <div class="form-group row">
+                    <label class="col-sm-3" for="validateForm_email">邮箱</label>
+                    <div class="col-sm-9">
+                        <input type="email" id="validateForm_email" name="email" ng-model="entity.email" required="" class="form-control" placeholder="输入邮箱">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-9">
+                        <button type="button" w5c-form-submit="vm.saveEntity()" ng-disabled="validateForm.$invalid" class="btn btn-success"> 验证</button>
+                        <button type="button" ng-click="validateForm.reset()" class="btn btn-default">重置</button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="lib/angular/1.4.8/angular.js"></script>
+    <script src="lib/angular-ui/ui-bootstrap/0.9.0/ui-bootstrap-tpls.js"></script>
+    <script src="lib/highlight/8.0/highlight.pack.js"></script>
+    <script src="lib/angular-highlightjs/angular-highlightjs.js"></script>
+    <script src="src/w5cValidator.js"></script>
+    <script src="src/directive.js"></script>
+    <script>
+        var mainApp = angular.module("mainApp", ["w5c.validator", "ui.bootstrap", "hljs"]);
+
+        mainApp.config(["w5cValidatorProvider", function (w5cValidatorProvider) {
+
+            // 全局配置
+            w5cValidatorProvider.config({
+                blurTrig: false,
+                showError: true,
+                removeError: true
+
+            });
+            w5cValidatorProvider.setRules({
+                email: {
+                    required: "输入的邮箱地址不能为空哦",
+                    email: "输入邮箱地址格式不正确哦"
+                }
+            });
+        }]);
+
+        mainApp.controller("validateCtrl", function ($scope) {
+
+            var vm = $scope.vm = {
+                entity: {}
+            };
+
+            //每个表单的配置，如果不设置，默认和全局配置相同
+            vm.validateOptions = {
+                blurTrig: true
+            };
+
+            vm.saveEntity = function ($event) {
+                //do somethings for bz
+                alert("Save Successfully!!!");
+            };
+        });
+
+
+    </script>
+</body>
+</html>

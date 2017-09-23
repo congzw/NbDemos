@@ -1,7 +1,6 @@
 (function () {
 
-    function W5cFormValidateCtrl($scope, $element, $attrs,
-                                 w5cValidator, $parse, $timeout) {
+    function W5cFormValidateCtrl($scope, $element, $attrs, w5cValidator, $parse, $timeout) {
         var _self = this;
         var _formElem = $element[0];
         this.formCtrl = null;
@@ -261,8 +260,7 @@
     }
 
     angular.module("w5c.validator")
-        .directive("w5cFormValidate", [
-            function () {
+        .directive("w5cFormValidate", [function () {
                 return {
                     require: ['w5cFormValidate', '^?form'],
                     controller: [
