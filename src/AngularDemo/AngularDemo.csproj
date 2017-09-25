@@ -157,6 +157,7 @@
     <Content Include="Content\angular-w5c-validator\lib\highlight\8.0\styles\school_book.png" />
     <Content Include="Content\angular-w5c-validator\lib\jquery\1.11.0\jquery.js" />
     <Content Include="Content\angular-w5c-validator\mydemo.html" />
+    <Content Include="Content\angular-w5c-validator\myform.html" />
     <Content Include="Content\angular-w5c-validator\repeat.html" />
     <Content Include="Content\angular-w5c-validator\src\directive.js" />
     <Content Include="Content\angular-w5c-validator\src\w5cValidator.js" />
@@ -279,14 +280,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\FooController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\Angulars\AngularFormHelper.cs" />
     <Compile Include="Helpers\Angulars\AngularHelperExtension.cs" />
     <Compile Include="Helpers\Angulars\AngularModelHelper.cs" />
     <Compile Include="Helpers\Angulars\AngularNgRepeatHelper.cs" />
     <Compile Include="Helpers\Angulars\AngularJsonExtensions.cs" />
+    <Compile Include="Helpers\Angulars\temp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Views\Foo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config" />
@@ -300,6 +305,8 @@
     <Content Include="Content\libs\bootstrap\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\libs\bootstrap\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="Content\libs\bootstrap\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Views\Foo\Index.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -310,7 +317,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\angular-ui\ui-bootstrap\" />
-    <Folder Include="Controllers\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <PropertyGroup>

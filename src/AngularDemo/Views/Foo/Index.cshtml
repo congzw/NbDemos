@@ -1,0 +1,100 @@
+﻿@using AngularDemo.Helpers.Angulars
+@model AngularDemo.Views.Foo
+@{
+    ViewBag.Title = "title";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section scripts
+{
+    <script src="~/Content/libs/angular/angular.js"></script>
+    <script src="~/Content/libs/angular/ui-bootstrap/ui-bootstrap-tpls-0.12.0.js"></script>
+    <script src="~/Content/angular-w5c-validator/lib/highlight/8.0/highlight.pack.js"></script>
+    <script src="~/Content/angular-w5c-validator/lib/angular-highlightjs/angular-highlightjs.js"></script>
+    <script src="~/Content/angular-w5c-validator/src/w5cValidator.js"></script>
+    <script src="~/Content/angular-w5c-validator/src/directive.js"></script>
+    <script>
+        var mainApp = angular.module("mainApp", ["w5c.validator", "ui.bootstrap", "hljs"]);
+        mainApp.config([
+            "w5cValidatorProvider", function(w5cValidatorProvider) {
+
+                // 全局配置
+                w5cValidatorProvider.config({
+                    blurTrig: true,
+                    showError: true,
+                    removeError: true
+
+                });
+
+                w5cValidatorProvider.setRules({
+                    email: {
+                        required: "输入的邮箱地址不能为空哦",
+                        email: "输入邮箱地址格式不正确哦"
+                    }
+                });
+            }
+        ]);
+        mainApp.controller("demoCtrl", function() {
+            var vm = this;
+            vm.foo = { name: "hello", description: "world" };
+        });
+
+        mainApp.controller("demoFormCtrl", function($scope) {
+
+            var vm = this;
+            //每个表单的配置，如果不设置，默认和全局配置相同
+            vm.validateOptions = {
+                blurTrig: true
+            };
+
+            vm.saveEntity = function($event) {
+                //do somethings for bz
+                console.log('this === $scope: ' + this === $scope);
+                alert("Save Successfully!!!");
+            };
+
+            vm.cancel = function (form) {
+                this.foo = {email:"", description:""};
+                if (form) {
+                    form.reset();
+                }
+                console.log(vm.foo);
+            };
+        });
+    </script>
+
+}
+<div class="container" ng-app="mainApp">
+    @DemoForForm()
+    <hr />
+    @DemoForW5C()
+</div>
+
+@helper DemoForForm()
+{
+        var vm = Html.Angular().ModelFor("vm.foo");
+    <div ng-controller="demoCtrl as vm">
+        <h2>{{vm.foo | json}}</h2>
+        <hr />
+        <form class="form-horizontal" role="form" name="vm_foo_form">
+            @vm.WithFormGroupFor(x => x.Name).Required()
+            @vm.WithFormGroupFor(x => x.Description).Required()
+        </form>
+    </div>
+}
+
+@helper DemoForW5C()
+{
+    var vm = Html.Angular().ModelFor("vm.foo");
+    <form class="form-horizontal w5c-form demo-form" role="form" w5c-form-validate="vm.validateOptions" novalidate name="vm_foo_form">
+        @vm.WithFormGroupFor(x => x.Name).Required()
+        @vm.WithFormGroupFor(x => x.Email).Email().Required()
+        @vm.WithFormGroupFor(x => x.Description).Required()
+        <div class="form-group row">
+            <div class="col-sm-offset-3 col-sm-9">
+                <button type="button" w5c-form-submit="vm.saveEntity()" ng-disabled="vm_foo_form.$invalid" class="btn btn-success"> 验证</button>
+                <button type="button" ng-click="vm.cancel(vm_foo_form)" class="btn btn-default">重置</button>
+            </div>
+        </div>
+    </form>
+}
