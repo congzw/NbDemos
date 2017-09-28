@@ -343,6 +343,8 @@
     <Compile Include="Helpers\Angulars\AngularModelHelper.cs" />
     <Compile Include="Helpers\Angulars\AngularNgRepeatHelper.cs" />
     <Compile Include="Helpers\Angulars\AngularJsonExtensions.cs" />
+    <Compile Include="Helpers\Angulars\Forms\AngularFormGroup.cs" />
+    <Compile Include="Helpers\Angulars\Forms\AngularForm.cs" />
     <Compile Include="Helpers\Angulars\temp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Views\Foo.cs" />
@@ -385,16 +387,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
-          <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>23152</DevelopmentServerPort>
-          <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:23152/</IISUrl>
-          <NTLMAuthentication>False</NTLMAuthentication>
-          <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>
-          </CustomServerUrl>
-          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+          <SaveServerSettingsInUserFile>True</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
     </VisualStudio>

@@ -1,10 +1,10 @@
 ﻿@using AngularDemo.Helpers.Angulars
+@using AngularDemo.Helpers.Angulars.Forms
 @model AngularDemo.Views.Foo
 @{
     ViewBag.Title = "title";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 @section scripts
 {
     <script src="~/Content/libs/angular/angular.js"></script>
@@ -16,7 +16,7 @@
     <script>
         var mainApp = angular.module("mainApp", ["w5c.validator", "ui.bootstrap", "hljs"]);
         mainApp.config([
-            "w5cValidatorProvider", function(w5cValidatorProvider) {
+            "w5cValidatorProvider", function (w5cValidatorProvider) {
 
                 // 全局配置
                 w5cValidatorProvider.config({
@@ -34,12 +34,12 @@
                 });
             }
         ]);
-        mainApp.controller("demoCtrl", function() {
+        mainApp.controller("demoCtrl", function () {
             var vm = this;
             vm.foo = { name: "hello", description: "world" };
         });
 
-        mainApp.controller("demoFormCtrl", function($scope) {
+        mainApp.controller("demoFormCtrl", function () {
 
             var vm = this;
             //每个表单的配置，如果不设置，默认和全局配置相同
@@ -47,14 +47,14 @@
                 blurTrig: true
             };
 
-            vm.saveEntity = function($event) {
+            vm.saveEntity = function ($event) {
                 //do somethings for bz
-                console.log('this === $scope: ' + this === $scope);
                 alert("Save Successfully!!!");
             };
 
             vm.cancel = function (form) {
-                this.foo = {email:"", description:""};
+                console.log(form);
+                this.foo = { email: "", description: "" };
                 if (form) {
                     form.reset();
                 }
@@ -62,17 +62,17 @@
             };
         });
     </script>
-
 }
 <div class="container" ng-app="mainApp">
     @DemoForForm()
     <hr />
     @DemoForW5C()
+    <hr />
+    @AngularForm()
 </div>
-
 @helper DemoForForm()
 {
-        var vm = Html.Angular().ModelFor("vm.foo");
+    var vm = Html.Angular().ModelFor("vm.foo");
     <div ng-controller="demoCtrl as vm">
         <h2>{{vm.foo | json}}</h2>
         <hr />
@@ -82,7 +82,6 @@
         </form>
     </div>
 }
-
 @helper DemoForW5C()
 {
     var vm = Html.Angular().ModelFor("vm.foo");
@@ -97,4 +96,33 @@
             </div>
         </div>
     </form>
+}
+
+@helper AngularForm()
+{
+    var vm = Html.Angular().ModelFor("vm.foo");
+
+    <div ng-controller="demoFormCtrl as vm">
+        <h2>{{vm.foo | json}}</h2>
+        <hr />
+        @using (vm.AngularFormBuilder().Config(x =>
+        x.AddClasses("form-horizontal", "w5c-form", "demo-form")
+            .Attr("role", "form")
+            //.Attr("w5c-form-validate", "vm.validateOptions")
+            .Attr("w5c-form-validate", "")
+            .Attr("novalidate", null)
+        ).Build())
+        {
+            @vm.AngularFormGroupBuilder(x => x.Name).ConfigForBootstrap().Required().Label("名称").Build()
+            @vm.WithFormGroupFor(x => x.Name).Required()
+            @vm.WithFormGroupFor(x => x.Email).Email().Required()
+            @vm.WithFormGroupFor(x => x.Description).Required()
+            <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-9">
+                    <button type="button" w5c-form-submit="vm.saveEntity()" ng-disabled="vm_foo_form.$invalid" class="btn btn-success"> 验证</button>
+                    <button type="button" ng-click="vm.cancel(vm_foo_form)" class="btn btn-default">重置</button>
+                </div>
+            </div>
+        }
+    </div>
 }

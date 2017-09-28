@@ -3,19 +3,20 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Web;
 using System.Web.Mvc;
+using AngularDemo.Helpers.Angulars.Forms;
 using HtmlTags;
 
 namespace AngularDemo.Helpers.Angulars
 {
     public class AngularModelHelper<TModel>
     {
-        protected HtmlHelper Helper;
-        private readonly string _expressionPrefix;
+        public HtmlHelper Helper;
+        public string ExpressionPrefix { get; private set; }
 
         public AngularModelHelper(HtmlHelper helper, string expressionPrefix)
         {
             Helper = helper;
-            _expressionPrefix = expressionPrefix;
+            ExpressionPrefix = expressionPrefix;
         }
 
         /// <summary>
@@ -100,10 +101,19 @@ namespace AngularDemo.Helpers.Angulars
             return new AngularNgRepeatHelper<TSubModel>(Helper, variableName, propertyExpression, warpTagName, hasClosingTag);
         }
 
+        //public AngularFormBuilder<TModel> AngularFormBuilder()
+        //{
+        //    return new AngularFormBuilder<TModel>(Helper, ExpressionPrefix);
+        //}
+
+        //public AngularFormGroupBuilder<TModel, TProp> AngularFormGroupBuilder<TProp>(Expression<Func<TModel, TProp>> property)
+        //{
+        //    return new AngularFormGroupBuilder<TModel, TProp>(property, Helper, ExpressionPrefix);
+        //}
 
         public AngularFormHelper<TModel> W5CForm(bool horizontal = false, string w5cFormValidate = null)
         {
-            return new AngularFormHelper<TModel>(Helper, _expressionPrefix, horizontal, w5cFormValidate);
+            return new AngularFormHelper<TModel>(Helper, ExpressionPrefix, horizontal, w5cFormValidate);
         }
         
         // [x => x.Name] ----->  [_expressionPrefix.name]
@@ -111,8 +121,8 @@ namespace AngularDemo.Helpers.Angulars
         {
             var camelCaseName = property.Name();
 
-            var expression = !string.IsNullOrEmpty(_expressionPrefix)
-                ? _expressionPrefix + "." + camelCaseName
+            var expression = !string.IsNullOrEmpty(ExpressionPrefix)
+                ? ExpressionPrefix + "." + camelCaseName
                 : camelCaseName;
 
             return expression;
@@ -121,7 +131,7 @@ namespace AngularDemo.Helpers.Angulars
         // [x => x.Name] ----->  [Model_name]
         protected string CreateUniqueNameWithPrefix(string name, string repalceDotWith = "_")
         {
-            var uniqueName = _expressionPrefix + "." + name;
+            var uniqueName = ExpressionPrefix + "." + name;
             if (string.IsNullOrWhiteSpace(repalceDotWith))
             {
                 return uniqueName;
@@ -150,7 +160,7 @@ namespace AngularDemo.Helpers.Angulars
         /// <returns></returns>
         public AngularFormGroup<TModel, TProp> WithFormGroupFor<TProp>(Expression<Func<TModel, TProp>> property)
         {
-            return new AngularFormGroup<TModel, TProp>(property, _expressionPrefix);
+            return new AngularFormGroup<TModel, TProp>(property, ExpressionPrefix);
         }
     }
 
