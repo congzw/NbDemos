@@ -1,0 +1,18 @@
+﻿@{
+    ViewBag.Title = "主页";
+    var isAuthenticated = User.Identity.IsAuthenticated;
+}
+
+<h2>DEMO ACCOUNT: admin:123</h2>
+<hr />
+
+@if (isAuthenticated)
+{
+    <h2>
+        当前用户： @User.Identity.Name</h2>
+}
+else
+{
+    <h2>
+        当前用户：未登录</h2>
+}
