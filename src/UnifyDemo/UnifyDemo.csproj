@@ -413,6 +413,7 @@
     <Content Include="Content\Unify\assets\plugins\bootstrap\js\npm.js" />
     <Content Include="Content\Unify\assets\plugins\respond.js" />
     <Content Include="Content\Unify\assets\plugins\smoothScroll.js" />
+    <Content Include="Content\Unify\shortcode_form_modals.html" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Web.config" />
@@ -505,6 +506,7 @@
     <Content Include="Views\Shared\_CopyRight.cshtml" />
     <Content Include="Views\Shared\Plugins\_StyleSwitcher.cshtml" />
     <Content Include="Views\Shared\Plugins\_ParallaxSlider.cshtml" />
+    <Content Include="Views\Home\shortcode_form_modals.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -515,6 +517,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
+    <Folder Include="Views\Shared\Widgets\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
