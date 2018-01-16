@@ -1,0 +1,62 @@
+<html>
+<head>
+    <link href="assets/custom.css" rel="stylesheet" />
+    <link href="assets/flipclock.css" rel="stylesheet" />
+    <script src="../jquery/jquery.js"></script>
+    <script src="assets/flipclock.min.js"></script>
+    <title>DEMO</title>
+</head>
+<body>
+    <div class="clock" ></div>
+    <div class="message"></div>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            var date = new Date('2018-02-11 05:02:12 pm');
+            
+            var clock = $('.clock').FlipClock({
+                clockFace: 'TwentyFourHourClock'
+            });
+
+
+            console.log(clock.buildDate);
+            //var clock = $('.clock').FlipClock(3600 * 24 * 3, {
+            //    clockFace: 'DailyCounter',
+            //    countdown: true
+            //});
+
+            //var clock = $('.clock').FlipClock(3600 * 24 * 3, {
+            //    clockFace: 'DailyCounter',
+            //    countdown: true,
+            //    showSeconds: false
+            //});
+
+            //var date = new Date('2018-02-11 05:02:12 pm');
+            //var clock = $('.clock').FlipClock(date, {
+            //    clockFace: 'TwentyFourHourClock'
+            //});
+
+
+            //// Instantiate a counter
+            //var clock = new FlipClock($('.clock'), {
+            //    clockFace: 'HourlyCounter',
+            //    autoStart: true
+            //});
+            //setTimeout(function () {
+            //    clock.loadClockFace('MinuteCounter');
+            //}, 3000);
+            //setTimeout(function () {
+            //    clock.loadClockFace('HourlyCounter');
+            //}, 7000);
+            //setTimeout(function () {
+            //    clock.loadClockFace('Counter', {
+            //        autoStart: true
+            //    });
+            //}, 10000);
+
+        });
+    </script>
+
+</body>
+</html>

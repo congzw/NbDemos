@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>DEMO</title>
+    <script src="MyClock.js"></script>
+</head>
+<body>
+    <h2 id='myClock'></h2>
+    <hr />
+    <h2 id='myClock2'></h2>
+    <script type="text/javascript">
+        var systemDate = new Date('2019-2-17 12:20:00');
+        var helper = MyClock.init(systemDate, 'myClock', { withDayOfWeek: true, withDate: true, withColor: true });
+        helper.beginTick();
+
+        var systemDate2 = new Date('2001-2-17 15:55:55');
+        var helper2 = MyClock.init(systemDate2, 'myClock2', { withDate: true });
+        helper2.beginTick();
+    </script>
+
+</body>
+</html>
