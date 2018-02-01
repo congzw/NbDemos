@@ -28,6 +28,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsDemo", "JsDemo\JsDemo.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfDemo", "WpfDemo\WpfDemo.csproj", "{580078E4-0F31-43FC-847E-49DEC969D910}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AngularUIDemo", "AngularUIDemo\AngularUIDemo.csproj", "{92CD9919-EC3A-42A3-A0B2-FDC5D4967A52}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -62,6 +64,10 @@ Global
 		{580078E4-0F31-43FC-847E-49DEC969D910}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{580078E4-0F31-43FC-847E-49DEC969D910}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{580078E4-0F31-43FC-847E-49DEC969D910}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92CD9919-EC3A-42A3-A0B2-FDC5D4967A52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92CD9919-EC3A-42A3-A0B2-FDC5D4967A52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92CD9919-EC3A-42A3-A0B2-FDC5D4967A52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92CD9919-EC3A-42A3-A0B2-FDC5D4967A52}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
