@@ -1,0 +1,23 @@
+﻿@{
+    var title = ViewBag.Title;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>@title</title>
+    @LayuiHelper.Head_Css_Global()
+    @RenderSection("styles", false)
+</head>
+<body>
+    <div class="layui-container">
+        @RenderBody()
+    </div>
+    @LayuiHelper.Body_Js_Global()
+    @RenderSection("scripts", false)
+    @Html.RenderDelayed()
+</body>
+</html>

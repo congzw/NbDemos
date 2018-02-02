@@ -1,0 +1,30 @@
+﻿@functions
+{
+    public static string GetLayuiBasePath()
+    {
+        //todo switch with cdn
+        var basePath = "/Content/libs/layui";
+        return basePath;
+    }
+
+    public static string GetLayoutPath()
+    {
+        //todo read from config
+        var layout = "~/Views/Shared/Layui/_Layout.cshtml";
+        return layout;
+    }
+}
+
+@helper Head_Css_Global()
+{
+    var basePath = GetLayuiBasePath();
+    <link rel="shortcut icon" href="~/favicon.ico">
+    <link href="@basePath/css/layui.css" rel="stylesheet" />
+}
+
+@helper Body_Js_Global()
+{
+    var basePath = GetLayuiBasePath();
+    <script src="~/Content/libs/jquery/jquery-1.10.2.js"></script>
+    <script src="@basePath/layui.all.js"></script>
+}

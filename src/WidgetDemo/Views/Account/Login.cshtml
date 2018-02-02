@@ -1,0 +1,65 @@
+﻿@{
+    var title = ViewBag.Title;
+    var serverNow = MyDateHelper.Resolve().Now();
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>@title</title>
+    @LayuiHelper.Head_Css_Global()
+    <link href="~/Content/features/account/login.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="layui-canvs"></div>
+    <div class="layui-layout layui-layout-login">
+        <h1>
+            <strong>系统登录</strong>
+            <span id="serverClock"></span>
+        </h1>
+        <div class="layui-user-icon larry-login">
+            <input type="text" placeholder="账号" class="login_txtbx" />
+        </div>
+        <div class="layui-pwd-icon larry-login">
+            <input type="password" placeholder="密码" class="login_txtbx" />
+        </div>
+        @*<div class="layui-val-icon larry-login">
+            <div class="layui-code-box">
+                <input type="text" id="code" name="code" placeholder="验证码" maxlength="4" class="login_txtbx">
+                <img src="~/Content/features/account/images/verifyimg.png" alt="" class="verifyImg" id="verifyImg" onclick="javascript:this.src='xxx'+Math.random();">
+            </div>
+        </div>*@
+        <div class="layui-submit larry-login">
+            <input type="button" value="立即登陆" class="submit_btn" />
+        </div>
+        <div class="layui-login-text">
+            <p>© 2016-2018 中庆纳博 版权所有</p>
+            <p>中庆纳博 <a href="http://localhost" title="">zqnb.com</a></p>
+        </div>
+    </div>
+    @LayuiHelper.Body_Js_Global()
+    <script src="~/Content/libs/jquery/jparticle.jquery.js"></script>
+    <script src="~/Content/libs/MyClock/MyClock.js"></script>
+    <script>
+        (function ($) {
+            'use strict';
+            var canvs$ = $(".layui-canvs");
+            canvs$.width($(window).width());
+            canvs$.height($(window).height());
+            canvs$.jParticle({
+                background: "#141414",
+                color: "#E6E6E6"
+            });
+            
+            var serverDate = new Date('@serverNow');
+            //console.log(serverDate);
+            var helper = MyClock.init(serverDate, 'serverClock', { withDayOfWeek: true, withDate: true, withColor: false });
+            helper.beginTick();
+
+        }(jQuery));
+    </script>
+</body>
+</html>
