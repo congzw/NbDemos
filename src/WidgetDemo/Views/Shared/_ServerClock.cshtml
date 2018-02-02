@@ -1,0 +1,17 @@
+﻿@{
+    var serverNow = MyDateHelper.Resolve().Now();
+}
+@using (Html.Delayed())
+{
+    <span id="serverClock"></span>
+    <script src="~/Content/libs/MyClock/MyClock.js"></script>
+    <script type="text/javascript">
+        (function () {
+            "use strict";
+            var serverDate = new Date('@serverNow');
+            //console.log(serverDate);
+            var helper = MyClock.init(serverDate, 'serverClock', { withDayOfWeek: true, withDate: true, withColor: false });
+            helper.beginTick();
+        }());
+    </script>
+}
