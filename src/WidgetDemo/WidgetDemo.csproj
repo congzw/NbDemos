@@ -277,6 +277,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\features\shared\nav\" />
     <Folder Include="Content\scripts\" />
   </ItemGroup>
   <PropertyGroup>

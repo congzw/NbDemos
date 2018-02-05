@@ -32,6 +32,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AngularUIDemo", "AngularUID
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WidgetDemo", "WidgetDemo\WidgetDemo.csproj", "{8D824AA7-AF26-4505-8DE1-C1856D5261D1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BundleDemo", "BundleDemo\BundleDemo.csproj", "{95E947CB-4A00-4228-9D5F-96B2E401D91C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,6 +76,10 @@ Global
 		{8D824AA7-AF26-4505-8DE1-C1856D5261D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D824AA7-AF26-4505-8DE1-C1856D5261D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D824AA7-AF26-4505-8DE1-C1856D5261D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95E947CB-4A00-4228-9D5F-96B2E401D91C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95E947CB-4A00-4228-9D5F-96B2E401D91C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95E947CB-4A00-4228-9D5F-96B2E401D91C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95E947CB-4A00-4228-9D5F-96B2E401D91C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
