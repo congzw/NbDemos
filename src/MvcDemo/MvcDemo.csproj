@@ -85,6 +85,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\libs\JQuery\jquery-1.10.2.js" />
+    <Content Include="Content\libs\SweetAlert\sweetalert-dev.js" />
+    <Content Include="Content\libs\SweetAlert\sweetalert-nbFix.js" />
+    <Content Include="Content\libs\SweetAlert\sweetalert.css" />
+    <Content Include="Content\libs\SweetAlert\sweetalert.min.js" />
     <Content Include="Content\libs\SweetAlert\sweetalert2.css" />
     <Content Include="Content\libs\SweetAlert\sweetalert2.js" />
     <Content Include="Content\libs\SweetAlert\sweetalert2.min.css" />
@@ -114,6 +118,7 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\_SweetAlert.cshtml" />
+    <Content Include="Views\Shared\_SweetAlert2.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

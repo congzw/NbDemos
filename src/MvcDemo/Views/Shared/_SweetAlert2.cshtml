@@ -6,17 +6,15 @@
     //{
     //    return;
     //}
-    
-    var theAlert =  new SweetAlert("success", "HelloWorld!");
+    var theAlert = new SweetAlert("success", "HelloWorld!");
     var swJson = Html.Raw(JsonConvert.SerializeObject(new
     {
         type = theAlert.AlertType,
         title = theAlert.AlertTitle,
         showConfirmButton = false,
-        //closeOnClickOutside = true,
         timer = 2000
     }));
-    var scriptUrl = Url.Content("~/Content/libs/SweetAlert/sweetalert-nbFix.js");
+    
 }
 <script type="text/javascript">
     "use strict";
@@ -35,7 +33,7 @@
             var newscript = document.createElement('script');
             newscript.type = 'text/javascript';
             newscript.async = true;
-            newscript.src = '@scriptUrl';
+            newscript.src = '/Content/libs/SweetAlert/sweetalert2.js';
             (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(newscript);
         }
 
