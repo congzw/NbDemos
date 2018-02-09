@@ -34,6 +34,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WidgetDemo", "WidgetDemo\Wi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BundleDemo", "BundleDemo\BundleDemo.csproj", "{95E947CB-4A00-4228-9D5F-96B2E401D91C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcDemo", "MvcDemo\MvcDemo.csproj", "{F31FDCF8-F5D3-41F5-9B43-7267C4E75A11}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -80,6 +82,10 @@ Global
 		{95E947CB-4A00-4228-9D5F-96B2E401D91C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{95E947CB-4A00-4228-9D5F-96B2E401D91C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{95E947CB-4A00-4228-9D5F-96B2E401D91C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F31FDCF8-F5D3-41F5-9B43-7267C4E75A11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F31FDCF8-F5D3-41F5-9B43-7267C4E75A11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F31FDCF8-F5D3-41F5-9B43-7267C4E75A11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F31FDCF8-F5D3-41F5-9B43-7267C4E75A11}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

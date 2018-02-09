@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <link href="~/Content/libs/SweetAlert/sweetalert2.css" rel="stylesheet" />
+    <script src="~/Content/libs/SweetAlert/sweetalert2.js"></script>
+</head>
+<body ng-app="failtrackerApp">
+    <div class="container body-content">
+        @*@Html.Partial("_AlertsDemo")*@
+        <div class="container alert-container"></div>
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+        </footer>
+    </div>
+    @RenderSection("scripts", required: false)
+    @Html.Partial("_SweetAlert")
+</body>
+</html>
