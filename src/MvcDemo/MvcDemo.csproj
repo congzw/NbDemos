@@ -108,6 +108,7 @@
     <Compile Include="Infrastructure\SweetAlerts\SweetAlert.cs" />
     <Compile Include="Infrastructure\SweetAlerts\SweetAlertDecoratorResult.cs" />
     <Compile Include="Infrastructure\SweetAlerts\SweetAlertExtensions.cs" />
+    <Compile Include="Infrastructure\Tasks\IRun.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
