@@ -162,6 +162,11 @@
     <Content Include="Content\angular-w5c-validator\src\directive.js" />
     <Content Include="Content\angular-w5c-validator\src\w5cValidator.js" />
     <Content Include="Content\angular-w5c-validator\validate.form.html" />
+    <Content Include="Content\demos\005.html" />
+    <Content Include="Content\demos\004.html" />
+    <Content Include="Content\demos\003.html" />
+    <Content Include="Content\demos\002.html" />
+    <Content Include="Content\demos\001.html" />
     <Content Include="Content\jquery-ui-1.12.1\AUTHORS.txt" />
     <Content Include="Content\jquery-ui-1.12.1\external\jquery\jquery.js" />
     <Content Include="Content\jquery-ui-1.12.1\images\ui-icons_444444_256x240.png" />
@@ -180,6 +185,7 @@
     <Content Include="Content\jquery-ui-1.12.1\jquery-ui.theme.css" />
     <Content Include="Content\jquery-ui-1.12.1\jquery-ui.theme.min.css" />
     <Content Include="Content\jquery-ui-1.12.1\LICENSE.txt" />
+    <Content Include="Content\libs\angular\angular-route.js" />
     <Content Include="Content\libs\jquery\jquery-ui.css" />
     <Content Include="Content\libs\jquery\jquery-ui.js" />
     <Content Include="Content\libs\jquery\jquery-ui.min.css" />

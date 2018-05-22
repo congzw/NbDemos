@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>ng-view and route</title>
+    <script src="../libs/angular/angular.js"></script>
+    <script src="../libs/angular/angular-route.js"></script>
+    <script>
+
+        //controller定义为module的一部分
+        var myApp = angular.module('myApp', ['ngRoute']);
+
+        myApp.config(['$routeProvider', function ($routeProvider) {
+            $routeProvider
+                .when('/', { controller: 'SimpleController', template: '<h3>Hello!</h3>' })
+                .when('/route1', { controller: 'SimpleController', template: '<h3>{{Message}}</h3>' })
+                .when('/route2', { controller: 'ComplexController', template: '<h3>{{Message}}</h3>' })
+                .otherwise({
+                  redirectTo: '/'
+              });
+        }]);
+
+        myApp.controller('SimpleController', function ($scope) {
+            $scope.Message = "hello, angularJs.";
+            console.log('SimpleController');
+        });
+
+        myApp.controller('ComplexController', function ($scope) {
+            $scope.Message = "hello, angularJs. Complex";
+            console.log('ComplexController');
+        });
+    </script>
+</head>
+<body>
+
+    <div ng-app='myApp'>
+        <h2>{{1 + 1}}</h2>
+
+        <a href="#/route1">route1</a>
+        <hr />
+        <a href="#/route2">route2</a>
+        <hr />
+        <a href="#/route3">route3</a>
+        <hr />
+        <div ng-view>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>ng-init and controller</title>
+    <script src="../libs/angular/angular.js"></script>
+    <script>
+
+        //controller定义为module的一部分
+        var myApp = angular.module('myApp', []);
+        myApp.controller('SimpleController', function SimpleController($scope) {
+            $scope.Message = "hello, angularJs.";
+        });
+    </script>
+</head>
+<body>
+
+    <div ng-app='myApp'>
+        <h2>{{1 + 1}}</h2>
+        <hr />
+        <div ng-controller="SimpleController" ng-init="Message='Aha, override by ng-init!';Message2='Foo'">
+            <p>
+                {{Message}}
+            </p>
+            <p>
+                {{Message2}}
+            </p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>module and controller</title>
+    <script src="../libs/angular/angular.js"></script>
+    <script>
+
+        //controller定义为module的一部分
+        var myApp = angular.module('myApp', []);
+        myApp.controller('SimpleController', function SimpleController($scope) {
+            $scope.Message = "hello, angularJs.";
+        });
+        
+        var myApp2 = angular.module('myApp2', []);
+        myApp2.controller('SimpleController', function SimpleController($scope) {
+            $scope.Message = "hello, angularJs. From myApp2! ";
+        });
+    </script>
+</head>
+<body>
+
+    <!--<div ng-app='myApp'>
+        <h2>{{1 + 1}}</h2>
+        <hr />
+        <div ng-controller="SimpleController">
+            <p>
+                {{Message}}
+            </p>
+        </div>
+    </div>-->
+
+    <div ng-app='myApp2'>
+        <h2>{{1 + 1}}</h2>
+        <hr />
+        <div ng-controller="SimpleController">
+            <p>
+                {{Message}}
+            </p>
+        </div>
+    </div>
+</body>
+</html>
