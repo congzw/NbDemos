@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>driective</title>
+    <script src="../libs/angular/angular.js"></script>
+    <script>
+
+        //controller定义为module的一部分
+        var myApp = angular.module('myApp', []);
+
+        myApp.directive('nbTitle', function () {
+            return {
+                link: function (scope, element, attrs, controller) {
+                    //console.log(scope); //ChildScope {$id: "003", this: ChildScope, $$listeners: {…}, $$listenerCount: {…}, $parent: Scope, …}
+                    //console.log(element); //JQLite [span]
+                    //console.log(attrs); //Attributes {$$element: JQLite(1), $attr: {…}, nbTitle: ""}
+                    //console.log(controller); //undefined
+                    element[0].focus();
+                    element[0].style.backgroundColor = 'red';
+                }
+            };
+        });
+
+        myApp.controller('SimpleController', function ($scope) {
+            $scope.Message = "hello, angularJs.";
+            console.log('SimpleController');
+        });
+    </script>
+</head>
+<body>
+    <div ng-app='myApp'>
+        <div ng-controller="SimpleController">
+            <h2>{{1 + 1}}</h2>
+            <p><button>foo</button></p>
+            <p><button nb-title>bar</button></p>
+        </div>
+    </div>
+</body>
+</html>

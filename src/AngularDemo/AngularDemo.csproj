@@ -162,6 +162,8 @@
     <Content Include="Content\angular-w5c-validator\src\directive.js" />
     <Content Include="Content\angular-w5c-validator\src\w5cValidator.js" />
     <Content Include="Content\angular-w5c-validator\validate.form.html" />
+    <Content Include="Content\demos\007.html" />
+    <Content Include="Content\demos\006.html" />
     <Content Include="Content\demos\005.html" />
     <Content Include="Content\demos\004.html" />
     <Content Include="Content\demos\003.html" />
