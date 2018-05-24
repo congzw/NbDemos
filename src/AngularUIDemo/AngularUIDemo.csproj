@@ -57,6 +57,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bootstrap-master\demo\001.html" />
     <Content Include="packages.config" />
     <Content Include="Content\bootstrap-master\README.md" />
     <None Include="Web.Debug.config">

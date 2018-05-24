@@ -16,7 +16,7 @@
                     nbTab.selected = true;
                 }
 
-                this.addPane = function (nbTab) {
+                this.addTab = function (nbTab) {
                     if (nbTabs.length === 0) $scope.select(nbTab);
                     nbTabs.push(nbTab);
                 }
@@ -40,7 +40,7 @@
                 transclude: true,
                 scope: { title: '@' },
                 link: function (scope, element, attrs, tabsController) {
-                    tabsController.addPane(scope);
+                    tabsController.addTab(scope);
                 },
                 template:
                     '<div class="tab-pane" ng-class="{active: selected}" ng-transclude>' +
