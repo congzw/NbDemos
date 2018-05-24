@@ -8,5 +8,11 @@ namespace UnifyDemo.Controllers
         {
             return View(view);
         }
+
+        [HttpPost]
+        public ActionResult PostData(FormCollection form)
+        {
+            return View("Blah");
+        }
     }
 }

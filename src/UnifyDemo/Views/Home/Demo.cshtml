@@ -1,0 +1,46 @@
+﻿@{
+    var assets = UnifyHelper.GetAssetPath();
+    var title = ViewBag.Title ?? "NbCloud";
+    this.Layout = null;
+}
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <title>@title</title>
+    <link href="@assets/plugins/jqueryui/jquery-ui.css" rel="stylesheet" />
+    <script src="@assets/plugins/jquery/jquery.js"></script>
+    <script src="@assets/plugins/jqueryui/jquery-ui.js"></script>
+</head>
+<body>
+    <form id="demo" action="~/Home/PostData" method="POST">
+
+        <fieldset>
+            <legend>Hotel Ratings: </legend>
+            <label for="id-1">2 Star</label>
+            <input type="checkbox" name="name-1" id="id-1">
+            <label for="id-2">3 Star</label>
+            <input type="checkbox" name="name-2" id="id-2">
+            <label for="checkbox-3">4 Star</label>
+            <input type="checkbox" name="checkbox-3" id="checkbox-3">
+            <label for="checkbox-4">5 Star</label>
+            <input type="checkbox" name="checkbox-4" id="checkbox-4">
+        </fieldset>
+
+        <footer>
+            <button type="submit">Submit</button>
+        </footer>
+    </form>
+    
+    <script>
+        $(function () {
+            $("#demo input").checkboxradio();
+        });
+    </script>
+
+</body>
+</html>

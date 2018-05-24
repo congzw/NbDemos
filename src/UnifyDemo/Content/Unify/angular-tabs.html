@@ -1,0 +1,99 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>angular tabs</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="~/favicon.ico">
+
+    <!-- CSS Global Compulsory -->
+    <link rel="stylesheet" href="assets/plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <!-- JS Global Compulsory -->
+    <script src="../libs/angular1.2/angular.js"></script>
+    <script src="../scripts/zqnb.js"></script>
+    <script src="../scripts/zqnb.mainApp.js"></script>
+    <script>
+        (function () {
+            "use strict";
+            var mainApp = zqnb.mainApp;
+            mainApp.directive('nbTabs', function () {
+                return {
+                    restrict: 'EA',
+                    transclude: true,
+                    scope: { nbTabsClass: '@' },
+                    controller: function ($scope, $element) {
+                        var nbTabs = $scope.nbTabs = [];
+
+                        $scope.select = function (nbTab) {
+                            angular.forEach(nbTabs, function (nbTab) {
+                                nbTab.selected = false;
+                            });
+                            nbTab.selected = true;
+                        }
+
+                        this.addTab = function (nbTab) {
+                            if (nbTabs.length === 0) $scope.select(nbTab);
+                            nbTabs.push(nbTab);
+                        }
+                    },
+                    template:
+                        '<div class="{{nbTabsClass}}">' +
+                            '<ul class="nav nav-tabs">' +
+                            '<li ng-repeat="nbTab in nbTabs" ng-class="{active:nbTab.selected}">' +
+                            '<a href="javascript:void(0)" ng-click="select(nbTab)">{{nbTab.title}}</a>' +
+                            '</li>' +
+                            '</ul>' +
+                            '<div class="tab-content" ng-transclude></div>' +
+                            '</div>',
+                    replace: true
+                };
+            })
+                .directive('nbTab', function () {
+                    return {
+                        require: '^nbTabs',
+                        restrict: 'EA',
+                        transclude: true,
+                        scope: { title: '@' },
+                        link: function (scope, element, attrs, tabsController) {
+                            tabsController.addTab(scope);
+                        },
+                        template:
+                            '<div class="tab-pane" ng-class="{active: selected}" ng-transclude>' +
+                                '</div>',
+                        replace: true
+                    };
+                });
+
+        }());
+    </script>
+    <script>
+        (function () {
+            'use strict';
+            var mainApp = zqnb.mainApp;
+
+            mainApp.controller('demoCtrl', function ($scope) {
+                var tabs = $scope.tabs = [{ title: 'foo', message: 'FOO' }, { title: 'bar', message: 'BAR' }, { title: 'blah', message: 'BLAH' }];
+            });
+
+        }());
+    </script>
+    <!--[if lt IE 9]>
+        <script src="assets/plugins/respond.js"></script>
+        <script src="assets/plugins/html5shiv.js"></script>
+        <script src="assets/plugins/placeholder-IE-fixes.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div ng-app="mainApp">
+        <div ng-controller="demoCtrl">
+            <div nb-tabs nb-tabs-class="tab-v2">
+                <div ng-repeat="tab in tabs" nb-tab title="{{tab.title}}">
+                    <h2>{{tab.message}}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -80,6 +80,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\libs\angular1.2\angular.js" />
+    <Content Include="Content\libs\angular1.2\ui-bootstrap\readme.txt" />
+    <Content Include="Content\libs\angular1.2\ui-bootstrap\ui-bootstrap-tpls-0.10.0.min.js" />
+    <Content Include="Content\libs\angular1.2\ui-bootstrap\ui-bootstrap-tpls-0.10rating.js" />
+    <Content Include="Content\libs\angular1.2\ui-bootstrap\ui-bootstrap-tpls-0.11.0.min.js" />
+    <Content Include="Content\libs\angular1.2\ui-bootstrap\ui-bootstrap-tpls-0.12.0.js" />
+    <Content Include="Content\scripts\zqnb.js" />
+    <Content Include="Content\scripts\zqnb.mainApp.js" />
+    <Content Include="Content\scripts\zqnb.mainApp.unify.js" />
+    <Content Include="Content\Unify\angular-tabs.html" />
     <Content Include="Content\Unify\assets\img\demo.jpg" />
     <Content Include="Content\Unify\assets\img\img.jpg" />
     <Content Include="Content\Unify\assets\img\logo-2.png" />
@@ -367,6 +377,14 @@
     <Content Include="Content\Unify\assets\plugins\jquery.easing.min.js" />
     <Content Include="Content\Unify\assets\plugins\jquery.mixitup.min.js" />
     <Content Include="Content\Unify\assets\plugins\jquery.parallax.js" />
+    <Content Include="Content\Unify\assets\plugins\jqueryui\images\ui-icons_444444_256x240.png" />
+    <Content Include="Content\Unify\assets\plugins\jqueryui\images\ui-icons_555555_256x240.png" />
+    <Content Include="Content\Unify\assets\plugins\jqueryui\images\ui-icons_777620_256x240.png" />
+    <Content Include="Content\Unify\assets\plugins\jqueryui\images\ui-icons_777777_256x240.png" />
+    <Content Include="Content\Unify\assets\plugins\jqueryui\images\ui-icons_cc0000_256x240.png" />
+    <Content Include="Content\Unify\assets\plugins\jqueryui\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="Content\Unify\assets\plugins\jqueryui\jquery-ui.css" />
+    <Content Include="Content\Unify\assets\plugins\jqueryui\jquery-ui.js" />
     <Content Include="Content\Unify\assets\plugins\jquery\jquery-migrate.js" />
     <Content Include="Content\Unify\assets\plugins\jquery\jquery-migrate.min.js" />
     <Content Include="Content\Unify\assets\plugins\jquery\jquery.js" />
@@ -412,7 +430,30 @@
     <Content Include="Content\Unify\assets\plugins\bootstrap\js\bootstrap.min.js" />
     <Content Include="Content\Unify\assets\plugins\bootstrap\js\npm.js" />
     <Content Include="Content\Unify\assets\plugins\respond.js" />
+    <Content Include="Content\Unify\assets\plugins\sky-forms-pro\documentation\css\main.css" />
+    <Content Include="Content\Unify\assets\plugins\sky-forms-pro\documentation\img\thumbnail.png" />
+    <Content Include="Content\Unify\assets\plugins\sky-forms-pro\documentation\index.html" />
+    <Content Include="Content\Unify\assets\plugins\sky-forms-pro\documentation\js\main.js" />
+    <Content Include="Content\Unify\assets\plugins\sky-forms-pro\skyforms\captcha\button.png" />
+    <Content Include="Content\Unify\assets\plugins\sky-forms-pro\skyforms\css\font-awesome.css" />
+    <Content Include="Content\Unify\assets\plugins\sky-forms-pro\skyforms\css\sky-forms-ie8-rtl.css" />
+    <Content Include="Content\Unify\assets\plugins\sky-forms-pro\skyforms\css\sky-forms-ie8.css" />
+    <Content Include="Content\Unify\assets\plugins\sky-forms-pro\skyforms\css\sky-forms-rtl.css" />
+    <Content Include="Content\Unify\assets\plugins\sky-forms-pro\skyforms\css\sky-forms.css" />
+    <Content Include="Content\Unify\assets\plugins\sky-forms-pro\skyforms\custom\custom-sky-forms-rtl.css" />
+    <Content Include="Content\Unify\assets\plugins\sky-forms-pro\skyforms\custom\custom-sky-forms.css" />
+    <Content Include="Content\Unify\assets\plugins\sky-forms-pro\skyforms\icons\fontawesome-webfont.svg" />
+    <Content Include="Content\Unify\assets\plugins\sky-forms-pro\skyforms\js\jquery-ui.min.js" />
+    <Content Include="Content\Unify\assets\plugins\sky-forms-pro\skyforms\js\jquery.form.min.js" />
+    <Content Include="Content\Unify\assets\plugins\sky-forms-pro\skyforms\js\jquery.maskedinput.min.js" />
+    <Content Include="Content\Unify\assets\plugins\sky-forms-pro\skyforms\js\jquery.min.js" />
+    <Content Include="Content\Unify\assets\plugins\sky-forms-pro\skyforms\js\jquery.modal.js" />
+    <Content Include="Content\Unify\assets\plugins\sky-forms-pro\skyforms\js\jquery.placeholder.min.js" />
+    <Content Include="Content\Unify\assets\plugins\sky-forms-pro\skyforms\js\jquery.validate.min.js" />
+    <Content Include="Content\Unify\assets\plugins\sky-forms-pro\skyforms\js\sky-forms-ie8.js" />
     <Content Include="Content\Unify\assets\plugins\smoothScroll.js" />
+    <Content Include="Content\Unify\jqueryui-form-checkbox.html" />
+    <Content Include="Content\Unify\shortcode_form_states.html" />
     <Content Include="Content\Unify\shortcode_form_modals.html" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
@@ -507,6 +548,15 @@
     <Content Include="Views\Shared\Plugins\_StyleSwitcher.cshtml" />
     <Content Include="Views\Shared\Plugins\_ParallaxSlider.cshtml" />
     <Content Include="Views\Home\shortcode_form_modals.cshtml" />
+    <Content Include="Views\Shared\Widgets\Form1.cshtml" />
+    <Content Include="Content\Unify\assets\plugins\sky-forms-pro\skyforms\captcha\font\anorexia.ttf" />
+    <Content Include="Content\Unify\assets\plugins\sky-forms-pro\skyforms\captcha\image.php" />
+    <Content Include="Content\Unify\assets\plugins\sky-forms-pro\skyforms\captcha\process.php" />
+    <Content Include="Content\Unify\assets\plugins\sky-forms-pro\skyforms\icons\fontawesome-webfont.eot" />
+    <Content Include="Content\Unify\assets\plugins\sky-forms-pro\skyforms\icons\fontawesome-webfont.ttf" />
+    <Content Include="Content\Unify\assets\plugins\sky-forms-pro\skyforms\icons\fontawesome-webfont.woff" />
+    <Content Include="Content\Unify\assets\plugins\sky-forms-pro\skyforms\icons\FontAwesome.otf" />
+    <Content Include="Views\Home\Demo.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -517,7 +567,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
-    <Folder Include="Views\Shared\Widgets\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
