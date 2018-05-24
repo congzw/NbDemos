@@ -1,0 +1,97 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>tabs</title>
+    <link href="../libs/bootstrap/bootstrap.css" rel="stylesheet" />
+    <script src="../libs/angular1.6/angular.js"></script>
+    <script>
+        angular.module('components', [])
+            .directive('nbTabs', function () {
+                return {
+                    restrict: 'EA',
+                    transclude: true,
+                    scope: {},
+                    controller: function ($scope, $element) {
+                        var nbTabs = $scope.nbTabs = [];
+
+                        $scope.select = function (nbTab) {
+                            angular.forEach(nbTabs, function (nbTab) {
+                                nbTab.selected = false;
+                            });
+                            nbTab.selected = true;
+                        }
+
+                        this.addPane = function (nbTab) {
+                            if (nbTabs.length == 0) $scope.select(nbTab);
+                            nbTabs.push(nbTab);
+                        }
+                    },
+                    template:
+                        '<div class="tabbable">' +
+                            '<ul class="nav nav-tabs">' +
+                            '<li ng-repeat="nbTab in nbTabs" ng-class="{active:nbTab.selected}">' +
+                            '<a href="" ng-click="select(nbTab)">{{nbTab.title}}</a>' +
+                            '</li>' +
+                            '</ul>' +
+                            '<div class="tab-content" ng-transclude></div>' +
+                            '</div>',
+                    replace: true
+                };
+            })
+            .directive('nbTab', function () {
+                return {
+                    require: '^nbTabs',
+                    restrict: 'E',
+                    transclude: true,
+                    scope: { title: '@' },
+                    link: function (scope, element, attrs, tabsController) {
+                        tabsController.addPane(scope);
+                    },
+                    template:
+                        '<div class="tab-pane" ng-class="{active: selected}" ng-transclude>' +
+                            '</div>',
+                    replace: true
+                };
+            })
+    </script>
+
+    <script>
+        angular.module('app', ['components'])
+
+.controller('BeerCounter', function ($scope, $locale) {
+    $scope.beers = [0, 1, 2, 3, 4, 5, 6];
+    if ($locale.id === 'en-us') {
+        $scope.beerForms = {
+            0: 'no beers',
+            one: '{} beer',
+            other: '{} beers'
+        };
+    } else {
+        $scope.beerForms = {
+            0: 'žiadne pivo',
+            one: '{} pivo',
+            few: '{} pivá',
+            other: '{} pív'
+        };
+    }
+});
+
+    </script>
+</head>
+<body ng-app="app">
+    <div nb-tabs>
+        <nb-tab title="Localization">
+            <span>Date: {{ '2012-04-01' | date:'fullDate' }}</span><br>
+            <span>Currency: {{ 123456 | currency }}</span><br>
+            <span>Number: {{ 98765.4321 | number }}</span><br>
+        </nb-tab>
+        <nb-tab title="Pluralization">
+            <div ng-controller="BeerCounter">
+                <div ng-repeat="beerCount in beers">
+                    <ng-pluralize count="beerCount" when="beerForms"></ng-pluralize>
+                </div>
+            </div>
+        </nb-tab>
+    </div>
+</body>
+</html>

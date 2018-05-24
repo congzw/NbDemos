@@ -193,6 +193,19 @@
     <Content Include="Content\libs\jquery\jquery-ui.min.css" />
     <Content Include="Content\libs\jquery\jquery-ui.min.js" />
     <Content Include="Content\libs\jquery\jquery.js" />
+    <Content Include="MyAngularDemos\Content\demos\tabs.html" />
+    <Content Include="MyAngularDemos\Content\demos\unify-tabs.html" />
+    <Content Include="MyAngularDemos\Content\demos\zqnb.mainApp.unify.js" />
+    <Content Include="MyAngularDemos\Content\demos\zqnb.mainApp.js" />
+    <Content Include="MyAngularDemos\Content\demos\zqnb.js" />
+    <Content Include="MyAngularDemos\Content\libs\angular1.2\angular.js" />
+    <Content Include="MyAngularDemos\Content\libs\angular1.2\ui-bootstrap\readme.txt" />
+    <Content Include="MyAngularDemos\Content\libs\angular1.2\ui-bootstrap\ui-bootstrap-tpls-0.10.0.min.js" />
+    <Content Include="MyAngularDemos\Content\libs\angular1.2\ui-bootstrap\ui-bootstrap-tpls-0.10rating.js" />
+    <Content Include="MyAngularDemos\Content\libs\angular1.2\ui-bootstrap\ui-bootstrap-tpls-0.11.0.min.js" />
+    <Content Include="MyAngularDemos\Content\libs\angular1.2\ui-bootstrap\ui-bootstrap-tpls-0.12.0.js" />
+    <Content Include="MyAngularDemos\Content\libs\angular1.6\angular.js" />
+    <Content Include="MyAngularDemos\Content\libs\angular1.6\angular.min.js" />
     <Content Include="Content\Pro-Angularjs\Chapter 09\angular.js" />
     <Content Include="Content\Pro-Angularjs\Chapter 09\bootstrap-theme.css" />
     <Content Include="Content\Pro-Angularjs\Chapter 09\bootstrap.css" />
@@ -338,6 +351,7 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Helpers\Angulars\readme.txt" />
+    <Content Include="MyAngularDemos\Content\libs\bootstrap\bootstrap.css" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>

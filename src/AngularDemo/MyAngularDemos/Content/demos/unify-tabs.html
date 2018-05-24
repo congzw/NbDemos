@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>tabs</title>
+    <link href="../libs/bootstrap/bootstrap.css" rel="stylesheet" />
+    <script src="../libs/angular1.2/angular.js"></script>
+    <script src="zqnb.js"></script>
+    <script src="zqnb.mainApp.js"></script>
+    <script src="zqnb.mainApp.unify.js"></script>
+    <script>
+        (function () {
+            'use strict';
+            var mainApp = zqnb.mainApp;
+
+            mainApp.controller('demoCtrl', function ($scope) {
+
+                $scope.Foo = [0, 1, 2, 3, 4, 5, 6];
+            });
+
+        }());
+    </script>
+</head>
+<body ng-app="mainApp">
+
+    <div ng-controller="demoCtrl">
+        <div nb-tabs>
+            <div ng-repeat="item in Foo" nb-tab title="Tab {{item}}">
+                <h2>{{item}}</h2>
+            </div>
+            <div nb-tab title="Bar">
+                <span>Date: {{ '2012-04-01' | date:'fullDate' }}</span><br>
+                <span>Currency: {{ 123456 | currency }}</span><br>
+                <span>Number: {{ 98765.4321 | number }}</span><br>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
