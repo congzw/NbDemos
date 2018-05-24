@@ -5,7 +5,7 @@
         return {
             restrict: 'EA',
             transclude: true,
-            scope: {},
+            scope: { nbTabsClass: '@' },
             controller: function ($scope, $element) {
                 var nbTabs = $scope.nbTabs = [];
 
@@ -22,10 +22,10 @@
                 }
             },
             template:
-                '<div class="tabbable">' +
+                '<div class="{{nbTabsClass}}">' +
                     '<ul class="nav nav-tabs">' +
                     '<li ng-repeat="nbTab in nbTabs" ng-class="{active:nbTab.selected}">' +
-                    '<a href="" ng-click="select(nbTab)">{{nbTab.title}}</a>' +
+                    '<a href="javascript:void(0)" ng-click="select(nbTab)">{{nbTab.title}}</a>' +
                     '</li>' +
                     '</ul>' +
                     '<div class="tab-content" ng-transclude></div>' +
