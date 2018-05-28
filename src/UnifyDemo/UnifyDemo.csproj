@@ -80,6 +80,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\css\layout_template.css" />
     <Content Include="Content\libs\angular1.2\angular.js" />
     <Content Include="Content\libs\angular1.2\ui-bootstrap\readme.txt" />
     <Content Include="Content\libs\angular1.2\ui-bootstrap\ui-bootstrap-tpls-0.10.0.min.js" />
@@ -455,6 +456,8 @@
     <Content Include="Content\Unify\jqueryui-form-checkbox.html" />
     <Content Include="Content\Unify\shortcode_form_states.html" />
     <Content Include="Content\Unify\shortcode_form_modals.html" />
+    <Content Include="Content\Unify\angular-dics.html" />
+    <Content Include="Content\Unify\yi_live.html" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Web.config" />
