@@ -18,90 +18,483 @@
     <link href="assets/plugins/font-awesome/css/font-awesome.css" rel="stylesheet" />
     <link href="assets/css/theme-colors/blue.css" rel="stylesheet" />
     <link href="/Content/css/layout_template.css" rel="stylesheet">
+    <style>
+        .search-block .term-box .term {
+            float: left;
+            margin-right: 2em;
+            padding: 5px 15px;
+            background-color: #ddd;
+            color: #7c8082;
+        }
+
+        .search-block .nav > li > a {
+            padding: 3px 12px;
+        }
+
+        .search-block .term-box:not(:last-child) {
+            border-bottom: 1px dashed #ddd;
+        }
+
+        .search-block .term-box {
+            overflow: hidden;
+            padding: 15px;
+        }
+    </style>
+
+    <!-- JS Global Compulsory -->
+    <script src="../libs/angular1.2/angular.js"></script>
+    <script src="../scripts/zqnb.js"></script>
+    <script src="../scripts/zqnb.mainApp.js"></script>
+    <script src="../scripts/zqnb.mainApp.unify.js"></script>
+    <script>
+        (function () {
+            'use strict';
+            var mainApp = zqnb.mainApp;
+
+            mainApp.factory('dicCatalogAppService', ['$http', '$q', function ($http, $q) {
+                var serviceUrl = '/Content/scripts/GetDicCatalogs.js';
+                return {
+                    getDicCatalogs: function () {
+                        return $http.get(serviceUrl);
+                    }
+                }
+                //var getDicCatalogs = function () {
+                //    var deferred = $q.defer();
+                //    $http.get(serviceUrl)
+                //        .success(deferred.resolve)
+                //        .error(deferred.reject);
+                //    return deferred.promise;
+                //}
+                //return {
+                //    getDicCatalogs: getDicCatalogs
+                //};
+            }]);
+
+            //check string equals
+            var equalIgnoreCase = function (str, str2) {
+                if (str === null || str2 === null) {
+                    return true;
+                }
+                if (typeof str !== 'string' || typeof str2 !== 'string') {
+                    return false;
+                }
+                if (str === '' && str2 === '') {
+                    return true;
+                }
+                return (str2.toUpperCase() === str.toUpperCase());
+            };
+            var nbContains = function (values, valueToCheck) {
+                if (!values || !valueToCheck) {
+                    return false;
+                }
+                for (var i = 0; i < values.length; i++) {
+                    if (equalIgnoreCase(values[i], valueToCheck)) {
+                        return true;
+                    }
+                }
+                return false;
+            };
+
+
+            var containItem = function (items, itemToCheck) {
+                if (!items || !itemToCheck) {
+                    return false;
+                }
+                for (var i = 0; i < items.length; i++) {
+                    if (equalIgnoreCase(items[i].Code, itemToCheck.Code)) {
+                        return true;
+                    }
+                }
+                return false;
+            };
+
+            mainApp.directive('nbDicCatalog', function () {
+                return {
+                    restrict: 'EA',
+                    transclude: true,
+                    scope: {},
+                    controller: function ($scope, $element) {
+
+                        var dicCatalog = $scope.$parent.dicCatalog;
+                        var phases = dicCatalog;
+                        dicCatalog.SelectedCode = '';
+
+                        $scope.showFilter = function (item) {
+                            var result = !nbContains(dicCatalog.HideCodes, item.Code);
+                            return result;
+                        };
+
+                        $scope.select = function (selectItem) {
+                            angular.forEach(dicCatalog.Items, function (selectItem) {
+                                selectItem.selected = false;
+                            });
+                            selectItem.selected = true;
+                            dicCatalog.SelectedCode = selectItem.Code;
+                        }
+                    },
+                    template:
+                        '<div class="term-box">' +
+                            '<span class="term">{{dicCatalog.Name}}</span>' +
+                            '<ul class="nav nav-pills overflow-h">' +
+                            '<li ng-repeat="item in dicCatalog.Items | filter: showFilter" ng-class="{active: item.selected}">' +
+                            '<a href="javascript:void(0)" ng-click="select(item)">{{item.Name}}</a>' +
+                            '</li>' +
+                            '</ul>' +
+                            '</div>' +
+                        '<div class="term-box">' +
+                            '<span class="term">{{dicCatalog.Name}}</span>' +
+                            '<ul class="nav nav-pills overflow-h">' +
+                            '<li ng-repeat="item in dicCatalog.Items | filter: showFilter" ng-class="{active: item.selected}">' +
+                            '<a href="javascript:void(0)" ng-click="select(item)">{{item.Name}}</a>' +
+                            '</li>' +
+                            '</ul>' +
+                            '</div>',
+                    replace: true
+                };
+            });
+
+            mainApp.directive('nbDicCatalogBox', function () {
+                return {
+                    restrict: 'EA',
+                    transclude: true,
+                    scope: { dicCatalog: '=' },
+                    controller: function ($scope, $element) {
+                        var dicCatalog = $scope.dicCatalog;
+                        dicCatalog.SelectedCode = '';
+
+                        //dicCatalog.Items[0].selected = true;
+                        //console.log(dicCatalog);
+                        //var emptyItem = { Code: "", Name: "全部" };
+                        ////todo replace with html use
+                        //dicCatalog.Name = '学段';
+                        //dicCatalog.HideCodes = ['Phase0'];
+                        //dicCatalog.Items = [emptyItem, { Code: "Phase0", Name: "幼儿园" }, { Code: "Phase1", Name: "小学" }, { Code: "Phase2", Name: "幼儿园" }, { Code: "Phase0", Name: "幼儿园" }];
+                        $scope.showFilter = function (item) {
+                            var result = !nbContains(dicCatalog.HideCodes, item.Code);
+                            //console.log(item.Code + ': ' + result);
+                            return result;
+                        };
+
+                        $scope.select = function (selectItem) {
+                            angular.forEach(dicCatalog.Items, function (selectItem) {
+                                selectItem.selected = false;
+                            });
+                            selectItem.selected = true;
+                            dicCatalog.SelectedCode = selectItem.Code;
+                        }
+                    },
+                    template:
+                        '<div class="term-box">' +
+                            '<span class="term">{{dicCatalog.Name}}</span>' +
+                            '<ul class="nav nav-pills overflow-h">' +
+                            '<li ng-repeat="item in dicCatalog.Items | filter: showFilter" ng-class="{active: item.selected}">' +
+                            '<a href="javascript:void(0)" ng-click="select(item)">{{item.Name}}</a>' +
+                            '</li>' +
+                            '</ul>' +
+                            '</div>',
+
+                    //<div class="term-box">
+                    //    <span class="term">学段</span>
+                    //    <ul class="nav nav-pills overflow-h">
+                    //        <li class="active"><a href="#" data-toggle="tab">全部</a></li>
+                    //        <li><a href="#" data-toggle="tab"> 小学</a></li>
+                    //        <li><a href="#" data-toggle="tab"> 初中</a></li>
+                    //        <li><a href="#" data-toggle="tab"> 高中</a></li>
+                    //    </ul>
+                    //</div>
+
+                    //template:
+                    //    '<div class="term-box">' +
+                    //        '<span class="term">{{dicCatalog.Name}}</span>' +
+                    //        '<ul class="nav nav-pills overflow-h">' +
+                    //        '<li ng-repeat="dicItem in dicCatalog.dicItems | filter: showFilter" ng-class="{active: dicItem.selected}">' +
+                    //        '<a href="javascript:void(0)" ng-click="select(dicItem)">{{dicItem.Name}}</a>' +
+                    //        '</li>' +
+                    //        '</ul>' +
+                    //        '</div>',
+                    replace: true
+                };
+            });
+
+            mainApp.controller('demoCtrl', function ($scope, dicCatalogAppService) {
+
+                var vm = this;
+
+                var createEmptyItem = function () {
+                    return { Code: "", Name: "全部", selected: true };
+                };
+                var changeSelect = function (items, item) {
+                    angular.forEach(items, function (item) {
+                        item.selected = false;
+                    });
+                    item.selected = true;
+                }
+
+                var emptyPhase = createEmptyItem();
+                var emptySubject = createEmptyItem();
+                var emptyGrade = createEmptyItem();
+
+                vm.currentPhase = emptyPhase;
+                vm.currentSubject = emptySubject;
+                vm.currentGrade = emptyGrade;
+
+                vm.selectPhase = function (item) {
+                    changeSelect(vm.phases, item);
+                    vm.currentPhase = item;
+                }
+                vm.selectSubject = function (item) {
+                    changeSelect(vm.subjects, item);
+                    vm.currentSubject = item;
+                }
+                vm.selectGrade = function (item) {
+                    changeSelect(vm.grades, item);
+                    vm.currentGrade = item;
+                }
+                vm.searchCodes = function () {
+                    return [vm.currentPhase.Code, vm.currentSubject.Code,vm.currentGrade.Code];
+                }
+                
+                //vm.searchCodes = function () {
+                //    return {
+                //        PhaseCode: vm.currentPhase.Code,
+                //        SubjectCode: vm.currentSubject.Code,
+                //        GradeCode: vm.currentGrade.Code
+                //    };
+                //}
+
+                dicCatalogAppService.getDicCatalogs().success(function (data) {
+                    vm.dicCatalogs = data;
+                    //console.log(data);
+
+                    //todo
+                    var phases = [];
+                    phases.push(createEmptyItem());
+                    angular.forEach(data, function (value, key) {
+                        phases.push({ Code: value.Code, Name: value.Name });
+                    });
+                    console.log(phases);
+                    vm.phases = phases;
+
+                    //todo
+                    var subjects = [];
+                    subjects.push(createEmptyItem());
+                    angular.forEach(data, function (value, key) {
+
+                        angular.forEach(value.Subjects, function (value, key) {
+
+                            if (!containItem(subjects, value)) {
+                                subjects.push({ Code: value.Code, Name: value.Name });
+                            }
+                        });
+                    });
+                    console.log(subjects);
+                    vm.subjects = subjects;
+
+                    //todo
+                    var grades = [];
+                    grades.push(createEmptyItem());
+                    angular.forEach(data, function (value, key) {
+
+                        angular.forEach(value.Grades, function (value, key) {
+
+                            if (!containItem(grades, value)) {
+                                grades.push({ Code: value.Code, Name: value.Name });
+                            }
+                        });
+                    });
+                    console.log(grades);
+                    vm.grades = grades;
+                });
+
+                var getDicCatalogPhase = function () {
+
+                    var dicCatalog = {};
+                    var emptyItem = { Code: "", Name: "全部", selected: true };
+                    dicCatalog.SelectedCode = '';
+                    dicCatalog.Name = '学段';
+                    dicCatalog.HideCodes = ['Phase0'];
+                    dicCatalog.Items = [emptyItem, { Code: "Phase0", Name: "幼儿园" }, { Code: "Phase1", Name: "小学" }, { Code: "Phase2", Name: "初中" }, { Code: "Phase3", Name: "高中" }];
+                    return dicCatalog;
+                };
+
+                vm.phaseDicCatalog = getDicCatalogPhase();
+                var tabs = $scope.tabs = [{ title: 'foo', message: 'FOO' }, { title: 'bar', message: 'BAR' }, { title: 'blah', message: 'BLAH' }];
+            });
+
+        }());
+    </script>
+    <!--[if lt IE 9]>
+        <script src="assets/plugins/respond.js"></script>
+        <script src="assets/plugins/html5shiv.js"></script>
+        <script src="assets/plugins/placeholder-IE-fixes.js"></script>
+    <![endif]-->
 
 </head>
-<body class="header-fixed header-fixed-space-default">
+<body>
     <div class="wrapper">
-        <div>
+        <div ng-app="mainApp">
             <div class="container">
-                <div class="form-search margin-bottom-25">
-                    <!-- skyform-->
-                    <form action="" id="sky-form" class="sky-form">
-                        <!-- 下拉菜单-->
-                        <ul class="search-dropdown col margin-top-bottom">
-                            <li class="dropdown">
-                                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
-                                    学科
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li class="active">
-                                        <a href="#">全部</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">语文</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">数学</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">思想品德</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">语文</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">数学</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">语文</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">数学</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">语文</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">数学</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="dropdown">
-                                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
-                                    年级
-                                </a>
-                                <ul class="dropdown-menu style-width">
-                                    <li class="active">
-                                        <a href="#">全部</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">语文</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">数学</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">思想品德</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">语文</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">数学</a>
+                <div ng-controller="demoCtrl as vm">
+
+                    <h2>{{vm.searchCodes()}}</h2>
+
+                    <hr />
+
+                    <div class="search-block">
+
+                        <div class="term-box">
+                            <span class="term">学段</span>
+                            <ul class="nav nav-pills overflow-h">
+                                <li ng-repeat="item in vm.phases" ng-class="{active: item.selected}"><a href="#" ng-click="vm.selectPhase(item)">{{item.Name}}</a></li>
+                            </ul>
+                        </div>
+                        <div class="term-box">
+                            <span class="term">学科</span>
+                            <ul class="nav nav-pills overflow-h">
+                                <li ng-repeat="item in vm.subjects" ng-class="{active: item.selected}"><a href="#" ng-click="vm.selectSubject(item)">{{item.Name}}</a></li>
+                            </ul>
+                        </div>
+                        <div class="term-box">
+                            <span class="term">年级</span>
+                            <ul class="nav nav-pills overflow-h">
+                                <li ng-repeat="item in vm.grades" ng-class="{active: item.selected}"><a href="#" ng-click="vm.selectGrade(item)">{{item.Name}}</a></li>
+                            </ul>
+                        </div>
+                        <hr />
+
+                        <!--<div ng-repeat="dicCatalog in vm.dicCatalogs">
+                            <div>
+                                <span>{{dicCatalog.Name}}</span>
+                                <ul>
+                                    <li ng-repeat="subject in dicCatalog.Subjects">
+                                        {{subject.Name}}
+
+                                        <ul>
+                                            <li ng-repeat="grade in subject.Grades">{{grade.Name}}</li>
+                                        </ul>
                                     </li>
                                 </ul>
-                            </li>
-                        </ul>
-                        <br class="clear-both" />
-                    </form>
+                                <hr/>
+                                <ul>
+                                    <li ng-repeat="grade in dicCatalog.Grades">{{grade.Name}}</li>
+                                </ul>
+                            </div>
+                            <hr/>
+                        </div>-->
+                        <!--<div nb-dic-catalog ng-repeat="dicCatalog in vm.dicCatalogs">
+                        </div>-->
+
+                        <div nb-dic-catalog-box dic-catalog="vm.phaseDicCatalog">
+                        </div>
+                        <!--学科-->
+                        <div class="term-box">
+                            <span class="term">学科</span>
+                            <ul class="nav nav-pills overflow-h">
+                                <li class="active"><a href="#" data-toggle="tab">全部</a></li>
+                                <li><a href="#" data-toggle="tab"> 语文</a></li>
+                                <li><a href="#" data-toggle="tab"> 数学</a></li>
+                                <li><a href="#" data-toggle="tab"> 英语</a></li>
+                                <li><a href="#" data-toggle="tab"> 物理</a></li>
+                                <li><a href="#" data-toggle="tab"> 化学</a></li>
+                                <li><a href="#" data-toggle="tab"> 政治</a></li>
+                                <li><a href="#" data-toggle="tab"> 历史</a></li>
+                                <li><a href="#" data-toggle="tab"> 地理</a></li>
+                                <li><a href="#" data-toggle="tab"> 生物</a></li>
+                                <li><a href="#" data-toggle="tab"> 自然</a></li>
+                            </ul>
+                        </div>
+                        <!--年度-->
+                        <div class="term-box">
+                            <span class="term">年级</span>
+                            <ul class="nav nav-pills overflow-h">
+                                <li class="active"><a href="#" data-toggle="tab">全部</a></li>
+                                <li><a href="#" data-toggle="tab"> 一年级</a></li>
+                                <li><a href="#" data-toggle="tab"> 二年级</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+
+                    <hr />
+
+                    <div class="form-search margin-bottom-25">
+                        <!-- skyform-->
+                        <form action="" id="sky-form" class="sky-form">
+                            <!-- 下拉菜单-->
+                            <ul class="search-dropdown col margin-top-bottom">
+                                <li class="dropdown">
+                                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
+                                        学科
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li class="active">
+                                            <a href="#">全部</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">语文</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">数学</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">思想品德</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">语文</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">数学</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">语文</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">数学</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">语文</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">数学</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="dropdown">
+                                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
+                                        年级
+                                    </a>
+                                    <ul class="dropdown-menu style-width">
+                                        <li class="active">
+                                            <a href="#">全部</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">语文</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">数学</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">思想品德</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">语文</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">数学</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                            <br class="clear-both" />
+                        </form>
+                    </div>
+
+                    <hr />
+
+
                 </div>
             </div>
         </div>
     </div>
-    <!--[if lt IE 9]>
-            <script src="assets/plugins/respond.js"></script>
-            <script src="assets/plugins/html5shiv.js"></script>
-            <script src="assets/plugins/placeholder-IE-fixes.js"></script>
-        <![endif]-->
 </body>
 </html>

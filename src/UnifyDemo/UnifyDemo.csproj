@@ -560,6 +560,7 @@
     <Content Include="Content\Unify\assets\plugins\sky-forms-pro\skyforms\icons\fontawesome-webfont.woff" />
     <Content Include="Content\Unify\assets\plugins\sky-forms-pro\skyforms\icons\FontAwesome.otf" />
     <Content Include="Views\Home\Demo.cshtml" />
+    <Content Include="Content\scripts\GetDicCatalogs.js" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
