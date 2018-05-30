@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>directive demo</title>
+    <script src="../libs/angular/angular.js"></script>
+    <script>
+
+        //controller定义为module的一部分
+        var myApp = angular.module('myApp', []);
+
+
+        myApp.controller('SimpleController', function ($scope) {
+            var self = this;
+            $scope.result = "outer foo";
+            self.a = "a";
+            self.bObj = { result: "b" };
+            $scope.cObj = { result: "c" };
+
+        });
+
+        myApp.directive('nbFoo', function () {
+            return {
+                scope: {theTitle : '@title'},
+                controller: function ($scope, $element) {
+                    var vm = this;
+                    vm.message = 'result -> ' + $scope.theTitle;
+
+                    vm.click = function() {
+                        vm.message = vm.message + '.';
+                        $scope.$parent.result = vm.message;
+                    };
+                },
+                controllerAs: 'vm',
+                template: '<div ng-click="vm.click()">{{vm.message}}</h3>'
+            };
+        });
+       
+    </script>
+</head>
+<body>
+    <div ng-app='myApp'>
+        <div ng-controller="SimpleController as simple">
+            <h2>bind to scope: {{result}}</h2>
+            <hr />
+            <h2>bind to ctrl: {{vm.message}}</h2>
+            <hr />
+            <h2>bind to ctrl a: {{simple.a}}</h2>
+            <hr />
+            <h2>bind to ctrl a: {{simple.bObj.result}}</h2>
+            <hr />
+            <h2>bind to scope cObj: {{cObj.result}}</h2>
+            <hr />
+            <div nb-foo title="{{simple.a}}"></div>
+            <div nb-foo title="{{simple.bObj.result}}"></div>
+            <div nb-foo title="{{cObj.result}}"></div>
+        </div>
+    </div>
+</body>
+</html>
