@@ -17,6 +17,7 @@
     <link href="assets/css/style.css" rel="stylesheet" />
     <link href="assets/plugins/font-awesome/css/font-awesome.css" rel="stylesheet" />
     <link href="assets/css/theme-colors/blue.css" rel="stylesheet" />
+    <link href="assets/plugins/sky-forms-pro/skyforms/css/sky-forms.css" rel="stylesheet" />
     <link href="/Content/css/layout_template.css" rel="stylesheet">
     <style>
         .search-block .term-box .term {
@@ -38,6 +39,12 @@
         .search-block .term-box {
             overflow: Hidden;
             padding: 15px;
+        }
+
+
+        .selectedItem {
+            color: red;
+            /*color: #337ab7;*/
         }
     </style>
 
@@ -78,7 +85,7 @@
                         vm.dicSettings = result;
                         vm.dicSettings2 = result;
                         vm.dicSettings3 = result;
-                });
+                    });
             });
         }());
     </script>
@@ -97,7 +104,7 @@
                 <div ng-controller="demoCtrl as vm">
                     <div class="row">
                         <h2>{{vm.searchCodes}}</h2>
-                        <hr/>
+                        <hr />
                         <div class="search-block">
                             <div ng-if="vm.dicSettings">
                                 <div nb-dic-catalog-search search-codes="vm.searchCodes" dic-settings="vm.dicSettings"></div>
@@ -106,8 +113,38 @@
                     </div>
 
                     <div class="row">
+                        <h2>{{vm.searchCodes3}}</h2>
+                        <hr />
+                        <div class="form-search margin-bottom-25">
+                            <!-- skyform-->
+                            <form action="" id="sky-form" class="sky-form">
+                                <!-- 搜索input-->
+                                <section class="input-group col col-4">
+                                    <input type="text" class="form-control" placeholder="按标题搜索">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-u" type="button">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </span>
+                                </section>
+
+                                <div ng-if="vm.dicSettings3">
+                                    <div nb-dic-catalog-search search-codes="vm.searchCodes3" dic-settings="vm.dicSettings3" dic-view-mode="2"></div>
+                                </div>
+
+                                <br class="clear-both">
+                            </form>
+                            <span class="search-result">
+                                共找到
+                                <span class="color-orange">125</span>
+                                个视频
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="row">
                         <h2>{{vm.searchCodes2}}</h2>
-                        <hr/>
+                        <hr />
                         <div class="search-block">
                             <div ng-if="vm.dicSettings2">
                                 <div nb-dic-catalog-search search-codes="vm.searchCodes2" dic-settings="vm.dicSettings2" dic-view-mode="1"></div>
@@ -115,15 +152,6 @@
                         </div>
                     </div>
 
-                    <div class="row">
-                        <h2>{{vm.searchCodes3}}</h2>
-                        <hr />
-                        <div class="search-block">
-                            <div ng-if="vm.dicSettings3">
-                                <div nb-dic-catalog-search search-codes="vm.searchCodes3" dic-settings="vm.dicSettings3" dic-view-mode="2"></div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

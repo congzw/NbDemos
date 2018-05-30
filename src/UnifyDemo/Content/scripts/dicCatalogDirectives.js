@@ -159,7 +159,7 @@
         //https://stackoverflow.com/questions/21177582/directive-is-being-rendered-before-promise-is-resolved
 
         var template1 = '<div class="term-box">  ' +
-            '                               <span class="term">学段</span>  ' +
+            '                               <span class="term">学段(<span class="selectedItem">{{vm.currentPhase.Name}}</span>)</span>  ' +
             '                               <ul class="nav nav-pills overflow-h">  ' +
             '                                   <li ng-repeat="item in vm.phases" ng-class="{active: item === vm.currentPhase, hidden: item.Hidden}">  ' +
             '                                       <a href="javascript:void(0)" ng-click="vm.selectPhase(item)">  ' +
@@ -169,19 +169,50 @@
             '                               </ul>  ' +
             '                           </div>  ' +
             '                           <div class="term-box">  ' +
-            '                               <span class="term">学科</span>  ' +
+            '                               <span class="term">学科(<span class="selectedItem">{{vm.currentSubject.Name}}</span>)</span>  ' +
             '                               <ul class="nav nav-pills overflow-h">  ' +
             '                                   <li ng-repeat="item in vm.subjects" ng-class="{active: item === vm.currentSubject, hidden: item.Hidden}"><a href="javascript:void(0)" ng-click="vm.selectSubject(item)">{{item.Name}}</a></li>  ' +
             '                               </ul>  ' +
             '                           </div>  ' +
             '                           <div class="term-box">  ' +
-            '                               <span class="term">年级</span>  ' +
+            '                               <span class="term">年级(<span class="selectedItem">{{vm.currentGrade.Name}}</span>)</span>  ' +
             '                               <ul class="nav nav-pills overflow-h">  ' +
             '                                   <li ng-repeat="item in vm.grades" ng-class="{active: item === vm.currentGrade, hidden: item.Hidden}"><a href="javascript:void(0)" ng-click="vm.selectGrade(item)">{{item.Name}}</a></a></li>  ' +
             '                               </ul>  ' +
             '                          </div>';
 
-        var template2 = "<h2>TODO!</h2>";
+        var template2 = '<ul class="search-dropdown col margin-top-bottom">  ' +
+ '                                       <li class="dropdown">  ' +
+ '                                           <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">  ' +
+ '                                               学段(<span class="selectedItem">{{vm.currentPhase.Name}}</span>)  ' +
+ '                                           </a>  ' +
+ '                                           <ul class="dropdown-menu">  ' +
+ '                                               <li ng-repeat="item in vm.phases" ng-class="{active: item === vm.currentPhase, hidden: item.Hidden}">  ' +
+ '                                                   <a href="javascript:void(0)" ng-click="vm.selectPhase(item)">{{item.Name}}</a>  ' +
+ '                                               </li>  ' +
+ '                                           </ul>  ' +
+ '                                       </li>  ' +
+ '                                       <li class="dropdown">  ' +
+ '                                           <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">  ' +
+ '                                               学科(<span class="selectedItem">{{vm.currentSubject.Name}}</span>)  ' +
+ '                                           </a>  ' +
+ '                                           <ul class="dropdown-menu style-width">  ' +
+ '                                               <li ng-repeat="item in vm.subjects" ng-class="{active: item === vm.currentSubject, hidden: item.Hidden}">  ' +
+ '                                                   <a href="javascript:void(0)" ng-click="vm.selectSubject(item)">{{item.Name}}</a>  ' +
+ '                                               </li>  ' +
+ '                                           </ul>  ' +
+ '                                       </li>  ' +
+ '                                       <li class="dropdown">  ' +
+ '                                           <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">  ' +
+ '                                               年级(<span class="selectedItem">{{vm.currentGrade.Name}}</span>)  ' +
+ '                                           </a>  ' +
+ '                                           <ul class="dropdown-menu style-width">  ' +
+ '                                               <li ng-repeat="item in vm.grades" ng-class="{active: item === vm.currentGrade, hidden: item.Hidden}">  ' +
+ '                                                   <a href="javascript:void(0)" ng-click="vm.selectGrade(item)">{{item.Name}}</a>  ' +
+ '                                               </li>  ' +
+ '                                           </ul>  ' +
+ '                                       </li>  ' +
+ '                                  </ul>  ';
 
         var getTemplate = function (tElem, tAttrs) {
             var mode = tAttrs.dicViewMode;
