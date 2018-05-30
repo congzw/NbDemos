@@ -49,91 +49,106 @@
     var emptyPhase = createEmptyItem();
     var emptySubject = createEmptyItem();
     var emptyGrade = createEmptyItem();
-    var createDicCatalogSearch = function (dicCatalogSearch, data) {
+    var createPhaseCodeItem = function (phase) {
+        var phaseCodeItem = { Code: phase.Code };
+        return phaseCodeItem;
+    };
+    var createPhaseSubjectCodeItem = function (phase, subject) {
+        var phaseSubjectCodeItem = { Code: phase.Code + ',' + subject.Code };
+        return phaseSubjectCodeItem;
+    };
+    var createPhaseGradeCodeItem = function (phase, grade) {
+        var phaseGradeCodeItem = { Code: phase.Code + ',' + grade.Code };
+        return phaseGradeCodeItem;
+    };
+    var createPhaseSubjectGradeCodeItem = function (phase, subject, grade) {
+        var phaseSubjectGradeCodeItem = { Code: phase.Code + ',' + subject.Code + ',' + grade.Code };
+        return phaseSubjectGradeCodeItem;
+    };
 
-        dicCatalogSearch.dicCatalogs = data;
-        //data[0].InUse = true;
+    var setupDicCatalogSearchVm = function (dicCatalogSearch, dicSettings) {
+
+        //dicSettings[0].InUse = true;
         //console.log(dicSettings);
 
-        //todo
+        //try convert to all dicItems from dicSettingVm
+
+        //all dic items
         var phases = [];
-        phases.push(emptyPhase);
-        angular.forEach(data, function(value, key) {
-            phases.push({ Code: value.Code, Name: value.Name, Hidden: !value.InUse });
-        });
-        //console.log(phases);
-        dicCatalogSearch.phases = phases;
-
-        //todo
         var subjects = [];
-        subjects.push(emptySubject);
-        angular.forEach(data, function(value, key) {
-
-            angular.forEach(value.Subjects, function(value, key) {
-
-                if (!containItem(subjects, value)) {
-                    subjects.push({ Code: value.Code, Name: value.Name, Hidden: !value.InUse });
-                }
-            });
-        });
-        //console.log(subjects);
-        dicCatalogSearch.subjects = subjects;
-
-        //todo
         var grades = [];
+        phases.push(emptyPhase);
+        subjects.push(emptySubject);
         grades.push(emptyGrade);
-        angular.forEach(data, function(value, key) {
-            angular.forEach(value.Grades, function(value, key) {
-                if (!containItem(grades, value)) {
-                    grades.push({ Code: value.Code, Name: value.Name, Hidden: !value.InUse });
+        angular.forEach(dicSettings, function (phase, key) {
+            if (!phase.InUse) {
+                return;
+            }
+            phases.push({ Code: phase.Code, Name: phase.Name, Hidden: false });
+            //subjects
+            angular.forEach(phase.Subjects, function (subject, key) {
+                if (!subject.InUse) {
+                    return;
+                }
+                if (!containItem(subjects, subject)) {
+                    subjects.push({ Code: subject.Code, Name: subject.Name, Hidden: false });
+                }
+            });
+            //grades
+            angular.forEach(phase.Grades, function (grade, key) {
+                if (!grade.InUse) {
+                    return;
+                }
+                if (!containItem(grades, grade)) {
+                    grades.push({ Code: grade.Code, Name: grade.Name, Hidden: false });
                 }
             });
         });
-        //console.log(grades);
+        dicCatalogSearch.phases = phases;
+        dicCatalogSearch.subjects = subjects;
         dicCatalogSearch.grades = grades;
+        //console.log(phases);
+        //console.log(subjects);
+        //console.log(grades);
 
-        //todo
+        //dic setting
         var visiablePhases = [];
         var visiablePhaseSubjects = [];
         var visiablePhaseGrades = [];
         var visiablePhaseSubjectGrades = [];
-
-        angular.forEach(data, function(phase, key) {
+        angular.forEach(dicSettings, function(phase, key) {
             if (!phase.InUse) {
                 return;
             }
-            var phaseCodeItem = { Code: phase.Code };
+            var phaseCodeItem = createPhaseCodeItem(phase);
             if (!containItem(visiablePhases, phaseCodeItem)) {
                 visiablePhases.push(phaseCodeItem);
             }
 
-            angular.forEach(phase.Grades, function(grade, key) {
-
+            angular.forEach(phase.Grades, function (grade, key) {
                 if (!grade.InUse) {
                     return;
                 }
-                var phaseGradeCodeItem = { Code: phase.Code + ',' + grade.Code };
+                var phaseGradeCodeItem = createPhaseGradeCodeItem(phase, grade);
                 if (!containItem(visiablePhaseGrades, phaseGradeCodeItem)) {
                     visiablePhaseGrades.push(phaseGradeCodeItem);
                 }
             });
 
             angular.forEach(phase.Subjects, function(subject, key) {
-
                 if (!subject.InUse) {
                     return;
                 }
-                var subjectCodeItem = { Code: phase.Code + ',' + subject.Code };
+                var subjectCodeItem = createPhaseSubjectCodeItem(phase, subject);
                 if (!containItem(visiablePhaseSubjects, subjectCodeItem)) {
                     visiablePhaseSubjects.push(subjectCodeItem);
                 }
 
                 angular.forEach(subject.Grades, function(grade, key) {
                     if (!grade.InUse) {
-                        //console.log(settingCode + ': Hidden!');
                         return;
                     }
-                    var phaseSubjectGradeCodeItem = { Code: phase.Code + ',' + subject.Code + ',' + grade.Code };
+                    var phaseSubjectGradeCodeItem = createPhaseSubjectGradeCodeItem(phase, subject, grade);
                     if (!containItem(visiablePhaseSubjectGrades, phaseSubjectGradeCodeItem)) {
                         visiablePhaseSubjectGrades.push(phaseSubjectGradeCodeItem);
                     }
@@ -303,7 +318,7 @@
         var vm = this;
 
         dicCatalogAppService.getDicCatalogs().success(function (data) {
-            createDicCatalogSearch(vm, data);
+            setupDicCatalogSearchVm(vm, data);
         });
 
         vm.currentPhase = emptyPhase;
@@ -339,5 +354,4 @@
             return [vm.currentPhase.Code, vm.currentSubject.Code, vm.currentGrade.Code];
         }
     });
-
 }());
