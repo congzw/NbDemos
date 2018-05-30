@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>directive demo</title>
+    <script src="../libs/angular/angular.js"></script>
+    <script>
+
+        //controller定义为module的一部分
+        var myApp = angular.module('myApp', []);
+
+
+        myApp.controller('SimpleController', function ($scope) {
+            var self = this;
+            self.foo = "outer foo";
+        });
+
+        //myApp.directive('nbFoo', function () {
+        //    return {
+        //        controller: 'SimpleController',
+        //        controllerAs: 'ctrl',
+        //        template: '<h3>{{ctrl.tutorialName}}</h3>'
+        //    };
+        //});
+
+        //myApp.controller('SimpleController', function () {
+        //    var self = this;
+        //    self.tutorialName = "Angular";
+        //});
+
+
+        myApp.directive('nbFoo', function () {
+            return {
+                scope: true,
+                controller: function ($scope, $element) {
+                    var vm = this;
+                    console.log(vm);
+                    vm.title = "Angular";
+
+                    vm.click = function() {
+                        vm.title = vm.title + '.';
+                        $scope.$parent.title = vm.title;
+                    };
+                },
+                controllerAs: 'vm',
+                template: '<h3 ng-click="vm.click()">{{vm.title}}</h3>'
+            };
+        });
+        
+       
+    </script>
+</head>
+<body>
+    <div ng-app='myApp'>
+        <div ng-controller="SimpleController">
+            <h2>bind to scope: {{title}}</h2>
+            <hr />
+            <h2>bind to controller as: {{vm.title}}</h2>
+            <hr />
+            <h2>vm: {{vm}}</h2>
+            <hr />
+            <div nb-foo>
+            </div>
+            <div nb-foo>
+            </div>
+            <div nb-foo>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
