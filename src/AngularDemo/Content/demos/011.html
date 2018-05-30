@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>directive demo</title>
+    <script src="../libs/angular/angular.js"></script>
+    <script>
+
+        //controller定义为module的一部分
+        var myApp = angular.module('myApp', []);
+
+
+        myApp.controller('SimpleController', function ($scope) {
+            var self = this;
+
+            self.searchCodesA = "foo";
+            self.searchCodesB = "bar";
+        });
+
+        myApp.directive('nbFoo', function () {
+            return {
+                scope: { searchCodes: '=' },
+                controller: function ($scope, $element) {
+                    var vm = this;
+                    console.log($scope.searchCodes);
+                    vm.message = 'result -> ' + $scope.searchCodes;
+
+                    vm.click = function() {
+                        vm.message = vm.message + '.';
+                        $scope.searchCodes = vm.message;
+
+                        //[x] coupling to parent scope property, not good practices!
+                        $scope.$parent.result = vm.message;
+                    };
+                },
+                controllerAs: 'vm',
+                template: '<div ng-click="vm.click()">{{vm.message}}</h3>'
+            };
+        });
+       
+    </script>
+</head>
+<body>
+    <div ng-app='myApp'>
+        <div ng-controller="SimpleController as vm">
+            <h2>bind to scope searchCodes: {{result}}</h2>
+            <hr />
+            <h2>bind to ctrl searchCodesA: {{vm.searchCodesA}}</h2>
+            <hr />
+            <h2>bind to ctrl searchCodesB: {{vm.searchCodesB}}</h2>
+            <hr />
+            <div nb-foo search-codes="vm.searchCodesA"></div>
+            <div nb-foo search-codes="vm.searchCodesB"></div>
+        </div>
+    </div>
+</body>
+</html>
