@@ -1,0 +1,100 @@
+﻿<!DOCTYPE html>
+<!--[if IE 8]>
+<html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9]>
+<html lang="en" class="ie9"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+<head>
+    <title>angular-dics</title>
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link href="assets/plugins/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link href="assets/css/style.css" rel="stylesheet" />
+    <link href="assets/plugins/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="assets/css/theme-colors/blue.css" rel="stylesheet" />
+    <link href="/Content/css/layout_template.css" rel="stylesheet">
+    <style>
+        .search-block .term-box .term {
+            float: left;
+            margin-right: 2em;
+            padding: 5px 15px;
+            background-color: #ddd;
+            color: #7c8082;
+        }
+
+        .search-block .nav > li > a {
+            padding: 3px 12px;
+        }
+
+        .search-block .term-box:not(:last-child) {
+            border-bottom: 1px dashed #ddd;
+        }
+
+        .search-block .term-box {
+            overflow: Hidden;
+            padding: 15px;
+        }
+    </style>
+
+    <!-- JS Global Compulsory -->
+    <script src="../libs/angular1.2/angular.js"></script>
+    <script src="../scripts/zqnb.js"></script>
+    <script src="../scripts/zqnb.mainApp.js"></script>
+    <script src="../scripts/zqnb.mainApp.unify.js"></script>
+    <script src="../scripts/dicCatalogDirectives.js"></script>
+    
+    <!--[if lt IE 9]>
+            <script src="assets/plugins/respond.js"></script>
+            <script src="assets/plugins/html5shiv.js"></script>
+            <script src="assets/plugins/placeholder-IE-fixes.js"></script>
+        <![endif]-->
+
+</head>
+<body>
+    <div class="wrapper">
+        <div ng-app="mainApp">
+            <div class="container">
+                <div ng-controller="demoCtrl as vm">
+
+                    <h2>{{vm.searchCodes()}}</h2>
+                    <p>{{vm.phases}}</p>
+                    <hr />
+
+                    <div class="search-block">
+
+                        <div class="term-box">
+                            <span class="term">学段</span>
+                            <ul class="nav nav-pills overflow-h">
+                                <li ng-repeat="item in vm.phases" ng-class="{active: item === vm.currentPhase, hidden: item.Hidden}">
+                                    <a href="#" ng-click="vm.selectPhase(item)">
+                                        {{item.Name}}
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="term-box">
+                            <span class="term">学科</span>
+                            <ul class="nav nav-pills overflow-h">
+                                <li ng-repeat="item in vm.subjects" ng-class="{active: item === vm.currentSubject, hidden: item.Hidden}"><a href="#" ng-click="vm.selectSubject(item)">{{item.Name}}</a></li>
+                            </ul>
+                        </div>
+                        <div class="term-box">
+                            <span class="term">年级</span>
+                            <ul class="nav nav-pills overflow-h">
+                                <li ng-repeat="item in vm.grades" ng-class="{active: item === vm.currentGrade, hidden: item.Hidden}"><a href="#" ng-click="vm.selectGrade(item)">{{item.Name}}</a></a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
