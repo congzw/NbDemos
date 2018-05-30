@@ -47,7 +47,36 @@
     <script src="../scripts/zqnb.mainApp.js"></script>
     <script src="../scripts/zqnb.mainApp.unify.js"></script>
     <script src="../scripts/dicCatalogDirectives.js"></script>
-    
+    <script>
+        (function () {
+            'use strict';
+            var mainApp = zqnb.mainApp;
+
+            mainApp.factory('dicCatalogAppService', [
+                '$http', function ($http) {
+                    var serviceUrl = '/Content/scripts/GetDicCatalogs.js';
+                    return {
+                        getDicCatalogs: function () {
+                            return $http.get(serviceUrl);
+                        }
+                    }
+                }
+            ]);
+
+            mainApp.controller('demoCtrl', function ($scope, dicCatalogAppService) {
+                var vm = this;
+                vm.searchCodes = ['', '', ''];
+                vm.searchCodes2 = ['', '', ''];
+                dicCatalogAppService.getDicCatalogs()
+                    .success(function (result) {
+                        //console.log(result);
+                        vm.dicSettings = result;
+                        vm.dicSettings2 = result;
+                });
+            });
+        }());
+    </script>
+
     <!--[if lt IE 9]>
             <script src="assets/plugins/respond.js"></script>
             <script src="assets/plugins/html5shiv.js"></script>
@@ -60,38 +89,25 @@
         <div ng-app="mainApp">
             <div class="container">
                 <div ng-controller="demoCtrl as vm">
-
-                    <h2>{{vm.searchCodes()}}</h2>
-                    <p>{{vm.phases}}</p>
-                    <hr />
-
-                    <div class="search-block">
-
-                        <div class="term-box">
-                            <span class="term">学段</span>
-                            <ul class="nav nav-pills overflow-h">
-                                <li ng-repeat="item in vm.phases" ng-class="{active: item === vm.currentPhase, hidden: item.Hidden}">
-                                    <a href="#" ng-click="vm.selectPhase(item)">
-                                        {{item.Name}}
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="term-box">
-                            <span class="term">学科</span>
-                            <ul class="nav nav-pills overflow-h">
-                                <li ng-repeat="item in vm.subjects" ng-class="{active: item === vm.currentSubject, hidden: item.Hidden}"><a href="#" ng-click="vm.selectSubject(item)">{{item.Name}}</a></li>
-                            </ul>
-                        </div>
-                        <div class="term-box">
-                            <span class="term">年级</span>
-                            <ul class="nav nav-pills overflow-h">
-                                <li ng-repeat="item in vm.grades" ng-class="{active: item === vm.currentGrade, hidden: item.Hidden}"><a href="#" ng-click="vm.selectGrade(item)">{{item.Name}}</a></a></li>
-                            </ul>
+                    <div class="row">
+                        <h2>{{vm.searchCodes}}</h2>
+                        <hr/>
+                        <div class="search-block">
+                            <div ng-if="vm.dicSettings">
+                                <div nb-dic-catalog-search search-codes="vm.searchCodes" dic-settings="vm.dicSettings"></div>
+                            </div>
                         </div>
                     </div>
-
-
+                    
+                    <div class="row">
+                        <h2>{{vm.searchCodes2}}</h2>
+                        <hr />
+                        <div class="search-block">
+                            <div ng-if="vm.dicSettings2">
+                                <div nb-dic-catalog-search search-codes="vm.searchCodes2" dic-settings="vm.dicSettings2"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

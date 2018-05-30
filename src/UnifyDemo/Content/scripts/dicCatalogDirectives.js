@@ -2,356 +2,388 @@
     'use strict';
     var mainApp = zqnb.mainApp;
 
-    mainApp.factory('dicCatalogAppService', [
-        '$http', function ($http) {
-            var serviceUrl = '/Content/scripts/GetDicCatalogs.js';
-            return {
-                getDicCatalogs: function () {
-                    return $http.get(serviceUrl);
-                }
-            }
-        }
-    ]);
-    
-    //级联关系的逻辑
-    //学段（空）：展示所有学科、所有年级
-    //学段（非空）：筛选学段的学科、学段的年级
-    //学段+ 年级（同时非空）：筛选学段的学科、学段的年级、学段的年级的学科
-    var equalIgnoreCase = function (str, str2) {
-        if (str === null || str2 === null) {
-            return true;
-        }
-        if (typeof str !== 'string' || typeof str2 !== 'string') {
-            return false;
-        }
-        if (str === '' && str2 === '') {
-            return true;
-        }
-        return (str2.toUpperCase() === str.toUpperCase());
-    };
-    var sameCodeItem = function (item1, item2) {
-        return item1 === item2 || equalIgnoreCase(item1.Code, item2.Code);
-    };
-    var containItem = function (items, itemToCheck) {
-        if (!items || !itemToCheck) {
-            return false;
-        }
-        for (var i = 0; i < items.length; i++) {
-            if (sameCodeItem(items[i], itemToCheck)) {
+    mainApp.directive('nbDicCatalogSearch', function () {
+
+        //级联关系的逻辑
+        //学段（空）：展示所有学科、所有年级
+        //学段（非空）：筛选学段的学科、学段的年级
+        //学段+ 年级（同时非空）：筛选学段的学科、学段的年级、学段的年级的学科
+        var equalIgnoreCase = function (str, str2) {
+            if (str === null || str2 === null) {
                 return true;
             }
-        }
-        return false;
-    };
-    var createEmptyItem = function () {
-        return { Code: "", Name: "全部", Selected: true, Hidden: false };
-    };
-    var emptyPhase = createEmptyItem();
-    var emptySubject = createEmptyItem();
-    var emptyGrade = createEmptyItem();
-    var createPhaseCodeItem = function (phase) {
-        var phaseCodeItem = { Code: phase.Code };
-        return phaseCodeItem;
-    };
-    var createPhaseSubjectCodeItem = function (phase, subject) {
-        var phaseSubjectCodeItem = { Code: phase.Code + ',' + subject.Code };
-        return phaseSubjectCodeItem;
-    };
-    var createPhaseGradeCodeItem = function (phase, grade) {
-        var phaseGradeCodeItem = { Code: phase.Code + ',' + grade.Code };
-        return phaseGradeCodeItem;
-    };
-    var createPhaseSubjectGradeCodeItem = function (phase, subject, grade) {
-        var phaseSubjectGradeCodeItem = { Code: phase.Code + ',' + subject.Code + ',' + grade.Code };
-        return phaseSubjectGradeCodeItem;
-    };
-
-    var setupDicCatalogSearchVm = function (dicCatalogSearch, dicSettings) {
-
-        //dicSettings[0].InUse = true;
-        //console.log(dicSettings);
-
-        //try convert to all dicItems from dicSettingVm
-
-        //all dic items
-        var phases = [];
-        var subjects = [];
-        var grades = [];
-        phases.push(emptyPhase);
-        subjects.push(emptySubject);
-        grades.push(emptyGrade);
-        angular.forEach(dicSettings, function (phase, key) {
-            if (!phase.InUse) {
-                return;
+            if (typeof str !== 'string' || typeof str2 !== 'string') {
+                return false;
             }
-            phases.push({ Code: phase.Code, Name: phase.Name, Hidden: false });
-            //subjects
-            angular.forEach(phase.Subjects, function (subject, key) {
-                if (!subject.InUse) {
-                    return;
-                }
-                if (!containItem(subjects, subject)) {
-                    subjects.push({ Code: subject.Code, Name: subject.Name, Hidden: false });
-                }
-            });
-            //grades
-            angular.forEach(phase.Grades, function (grade, key) {
-                if (!grade.InUse) {
-                    return;
-                }
-                if (!containItem(grades, grade)) {
-                    grades.push({ Code: grade.Code, Name: grade.Name, Hidden: false });
-                }
-            });
-        });
-        dicCatalogSearch.phases = phases;
-        dicCatalogSearch.subjects = subjects;
-        dicCatalogSearch.grades = grades;
-        //console.log(phases);
-        //console.log(subjects);
-        //console.log(grades);
-
-        //dic setting
-        var visiablePhases = [];
-        var visiablePhaseSubjects = [];
-        var visiablePhaseGrades = [];
-        var visiablePhaseSubjectGrades = [];
-        angular.forEach(dicSettings, function(phase, key) {
-            if (!phase.InUse) {
-                return;
+            if (str === '' && str2 === '') {
+                return true;
             }
-            var phaseCodeItem = createPhaseCodeItem(phase);
-            if (!containItem(visiablePhases, phaseCodeItem)) {
-                visiablePhases.push(phaseCodeItem);
+            return (str2.toUpperCase() === str.toUpperCase());
+        };
+        var sameCodeItem = function (item1, item2) {
+            return item1 === item2 || equalIgnoreCase(item1.Code, item2.Code);
+        };
+        var containItem = function (items, itemToCheck) {
+            if (!items || !itemToCheck) {
+                return false;
             }
+            for (var i = 0; i < items.length; i++) {
+                if (sameCodeItem(items[i], itemToCheck)) {
+                    return true;
+                }
+            }
+            return false;
+        };
+        var createEmptyItem = function () {
+            return { Code: "", Name: "全部", Selected: true, Hidden: false };
+        };
+        var emptyPhase = createEmptyItem();
+        var emptySubject = createEmptyItem();
+        var emptyGrade = createEmptyItem();
+        var createPhaseCodeItem = function (phase) {
+            var phaseCodeItem = { Code: phase.Code };
+            return phaseCodeItem;
+        };
+        var createPhaseSubjectCodeItem = function (phase, subject) {
+            var phaseSubjectCodeItem = { Code: phase.Code + ',' + subject.Code };
+            return phaseSubjectCodeItem;
+        };
+        var createPhaseGradeCodeItem = function (phase, grade) {
+            var phaseGradeCodeItem = { Code: phase.Code + ',' + grade.Code };
+            return phaseGradeCodeItem;
+        };
+        var createPhaseSubjectGradeCodeItem = function (phase, subject, grade) {
+            var phaseSubjectGradeCodeItem = { Code: phase.Code + ',' + subject.Code + ',' + grade.Code };
+            return phaseSubjectGradeCodeItem;
+        };
 
-            angular.forEach(phase.Grades, function (grade, key) {
-                if (!grade.InUse) {
+        var setupDicCatalogSearchVm = function (dicCatalogSearch, dicSettings) {
+
+            //dicSettings[0].InUse = true;
+            //console.log(dicSettings);
+
+            //try convert to all dicItems from dicSettingVm
+
+            //all dic items
+            var phases = [];
+            var subjects = [];
+            var grades = [];
+            phases.push(emptyPhase);
+            subjects.push(emptySubject);
+            grades.push(emptyGrade);
+            angular.forEach(dicSettings, function (phase, key) {
+                if (!phase.InUse) {
                     return;
                 }
-                var phaseGradeCodeItem = createPhaseGradeCodeItem(phase, grade);
-                if (!containItem(visiablePhaseGrades, phaseGradeCodeItem)) {
-                    visiablePhaseGrades.push(phaseGradeCodeItem);
-                }
-            });
-
-            angular.forEach(phase.Subjects, function(subject, key) {
-                if (!subject.InUse) {
-                    return;
-                }
-                var subjectCodeItem = createPhaseSubjectCodeItem(phase, subject);
-                if (!containItem(visiablePhaseSubjects, subjectCodeItem)) {
-                    visiablePhaseSubjects.push(subjectCodeItem);
-                }
-
-                angular.forEach(subject.Grades, function(grade, key) {
+                phases.push({ Code: phase.Code, Name: phase.Name, Hidden: false });
+                //subjects
+                angular.forEach(phase.Subjects, function (subject, key) {
+                    if (!subject.InUse) {
+                        return;
+                    }
+                    if (!containItem(subjects, subject)) {
+                        subjects.push({ Code: subject.Code, Name: subject.Name, Hidden: false });
+                    }
+                });
+                //grades
+                angular.forEach(phase.Grades, function (grade, key) {
                     if (!grade.InUse) {
                         return;
                     }
-                    var phaseSubjectGradeCodeItem = createPhaseSubjectGradeCodeItem(phase, subject, grade);
-                    if (!containItem(visiablePhaseSubjectGrades, phaseSubjectGradeCodeItem)) {
-                        visiablePhaseSubjectGrades.push(phaseSubjectGradeCodeItem);
+                    if (!containItem(grades, grade)) {
+                        grades.push({ Code: grade.Code, Name: grade.Name, Hidden: false });
                     }
                 });
             });
-        });
-        //console.log(dicSettings);
-        dicCatalogSearch.visiablePhases = visiablePhases;
-        dicCatalogSearch.visiablePhaseSubjects = visiablePhaseSubjects;
-        dicCatalogSearch.visiablePhaseGrades = visiablePhaseGrades;
-        dicCatalogSearch.visiablePhaseSubjectGrades = visiablePhaseSubjectGrades;
+            dicCatalogSearch.phases = phases;
+            dicCatalogSearch.subjects = subjects;
+            dicCatalogSearch.grades = grades;
+            //console.log(phases);
+            //console.log(subjects);
+            //console.log(grades);
 
-        return dicCatalogSearch;
-    };
-    
-    mainApp.controller('demoCtrl', function ($scope, dicCatalogAppService) {
-
-        var shouldShowThisPhase = function (visiablePhases, phase) {
-            //全部永远显示
-            if (sameCodeItem(phase, emptyPhase)) {
-                return true;
-            }
-            var phaseCodeItem = { Code: phase.Code };
-            var shouldShow = containItem(visiablePhases, phaseCodeItem);
-            return shouldShow;
-        };
-        var shouldShowCurrentPhaseSubject = function (theVm, subject) {
-
-            //全部永远显示
-            if (sameCodeItem(subject, emptySubject)) {
-                return true;
-            }
-            var phaseSubjectCodeItem = { Code: theVm.currentPhase.Code + ',' + subject.Code };
-            var shouldShow = containItem(theVm.visiablePhaseSubjects, phaseSubjectCodeItem);
-            if (shouldShow) {
-                //console.log("refresh phase subjects: " + theVm.currentPhase.Name + ',' + subject.Name + ' ' + shouldShow);
-            }
-            return shouldShow;
-        };
-        var shouldShowCurrentPhaseGrade = function (theVm, grade) {
-
-            //全部永远显示
-            if (sameCodeItem(grade, emptyGrade)) {
-                return true;
-            }
-            var phaseGradeCodeItem = { Code: theVm.currentPhase.Code + ',' + grade.Code };
-            var shouldShow = containItem(theVm.visiablePhaseGrades, phaseGradeCodeItem);
-            if (shouldShow) {
-                //console.log("refresh phase grades: " + theVm.currentPhase.Name + ',' + grade.Name + ' ' + shouldShow);
-            }
-            return shouldShow;
-        };
-        var shouldShowCurrentPhaseSubjectGrade = function (theVm, grade) {
-
-            //全部永远显示
-            if (sameCodeItem(grade, emptyGrade)) {
-                return true;
-            }
-            var phaseSubjectGradeCodeItem = { Code: theVm.currentPhase.Code + ',' + theVm.currentSubject.Code + ',' + grade.Code };
-            var shouldShow = containItem(theVm.visiablePhaseSubjectGrades, phaseSubjectGradeCodeItem);
-            if (shouldShow) {
-                //console.log("refresh phase subject grades: " + theVm.currentPhase.Name + ','+ theVm.currentSubject.Name + ',' + grade.Name + ' ' + shouldShow);
-            }
-            return shouldShow;
-        };
-
-        var changeSelect = function (items, item) {
-            angular.forEach(items, function (item) {
-                item.Selected = false;
-            });
-            item.Selected = true;
-        }
-        var hideAll = function (items) {
-            angular.forEach(items, function (item) {
-                if (item.Code === "") {
-                    //console.log("Empty Hide: " + item.Name);
-                    item.Hidden = false;
+            //dic setting
+            var visiablePhases = [];
+            var visiablePhaseSubjects = [];
+            var visiablePhaseGrades = [];
+            var visiablePhaseSubjectGrades = [];
+            angular.forEach(dicSettings, function (phase, key) {
+                if (!phase.InUse) {
                     return;
                 }
-                item.Hidden = true;
-            });
-        }
-        var changeDisplay = function (theVm) {
-            hideAll(theVm.phases);
-            hideAll(theVm.subjects);
-            hideAll(theVm.grades);
-
-            //refresh phases
-            //console.log(vm.visiablePhases);
-            angular.forEach(theVm.phases, function (phase) {
-                var shouldShow = shouldShowThisPhase(theVm.visiablePhases, phase);
-                if (shouldShow) {
-                    phase.Hidden = false;
-                }
-            });
-
-            //refresh phase subjects
-            //console.log(vm.visiablePhaseSubjects);
-            var needChangeToEmptySubject = true;
-            angular.forEach(theVm.subjects, function (subject) {
-                if (theVm.isEmptyPhase()) {
-                    //全部（学科）
-                    subject.Hidden = false;
-                    needChangeToEmptySubject = false;
-                    return;
+                var phaseCodeItem = createPhaseCodeItem(phase);
+                if (!containItem(visiablePhases, phaseCodeItem)) {
+                    visiablePhases.push(phaseCodeItem);
                 }
 
-                var shouldShow = shouldShowCurrentPhaseSubject(theVm, subject);
-                if (shouldShow) {
-                    //console.log("refresh phase subjects: " + theVm.currentPhase.Name + ',' + subject.Name + ' ' + shouldShow);
-                    subject.Hidden = false;
-                    if (sameCodeItem(subject, theVm.currentSubject)) {
-                        //console.log("当前的选中学科在其中: " + subject.Code + ',' + theVm.currentSubject.Code);
-                        needChangeToEmptySubject = false;
+                angular.forEach(phase.Grades, function (grade, key) {
+                    if (!grade.InUse) {
+                        return;
                     }
-                }
-            });
-            //如果当前的选中学科不在其中，则使用全部
-            if (needChangeToEmptySubject) {
-                theVm.currentSubject = emptySubject;
-            }
-
-            //refresh phase grades
-            //console.log(vm.visiablePhaseGrades);
-            var needChangeToEmptyGrade = true;
-            angular.forEach(theVm.grades, function (grade) {
-                if (theVm.isEmptyPhase()) {
-                    //全部（年级）
-                    grade.Hidden = false;
-                    needChangeToEmptyGrade = false;
-                    return;
-                }
-                var shouldShow = shouldShowCurrentPhaseGrade(theVm, grade);
-                if (shouldShow) {
-                    //console.log("refresh phase grades: " + vm.currentPhase.Name + ',' + grade.Name + ' ' + shouldShow);
-                    grade.Hidden = false;
-                    if (sameCodeItem(grade, theVm.currentGrade)) {
-                        //console.log("当前的选中的年级在其中: " + grade.Code + ',' + theVm.currentGrade.Code);
-                        needChangeToEmptyGrade = false;
+                    var phaseGradeCodeItem = createPhaseGradeCodeItem(phase, grade);
+                    if (!containItem(visiablePhaseGrades, phaseGradeCodeItem)) {
+                        visiablePhaseGrades.push(phaseGradeCodeItem);
                     }
-                }
-            });
+                });
 
-            //refresh phase subject grades
-            angular.forEach(theVm.grades, function (grade) {
-                //如果学段和学科同时不为空，则需要二次筛选
-                if (!theVm.isEmptyPhase() && !theVm.isEmptySubject()) {
-                    var shouldShow = shouldShowCurrentPhaseSubjectGrade(theVm, grade);
-                    if (!shouldShow) {
-                        grade.Hidden = true;
+                angular.forEach(phase.Subjects, function (subject, key) {
+                    if (!subject.InUse) {
+                        return;
                     }
-                    else {
-                        if (sameCodeItem(grade, theVm.currentGrade)) {
-                            console.log("当前的选中的年级在隐藏的按钮中: " + grade.Code + ',' + theVm.currentGrade.Code);
-                            needChangeToEmptyGrade = false;
+                    var subjectCodeItem = createPhaseSubjectCodeItem(phase, subject);
+                    if (!containItem(visiablePhaseSubjects, subjectCodeItem)) {
+                        visiablePhaseSubjects.push(subjectCodeItem);
+                    }
+
+                    angular.forEach(subject.Grades, function (grade, key) {
+                        if (!grade.InUse) {
+                            return;
                         }
-                    }
-                }
+                        var phaseSubjectGradeCodeItem = createPhaseSubjectGradeCodeItem(phase, subject, grade);
+                        if (!containItem(visiablePhaseSubjectGrades, phaseSubjectGradeCodeItem)) {
+                            visiablePhaseSubjectGrades.push(phaseSubjectGradeCodeItem);
+                        }
+                    });
+                });
             });
+            dicCatalogSearch.visiablePhases = visiablePhases;
+            dicCatalogSearch.visiablePhaseSubjects = visiablePhaseSubjects;
+            dicCatalogSearch.visiablePhaseGrades = visiablePhaseGrades;
+            dicCatalogSearch.visiablePhaseSubjectGrades = visiablePhaseSubjectGrades;
+            //console.log(dicSettings);
+            //console.log(dicCatalogSearch);
 
-            //如果当前的选中年级不在其中，则使用全部
-            if (needChangeToEmptyGrade) {
-                theVm.currentGrade = emptyGrade;
-            }
-        }
-
-        var vm = this;
-
-        dicCatalogAppService.getDicCatalogs().success(function (data) {
-            setupDicCatalogSearchVm(vm, data);
-        });
-
-        vm.currentPhase = emptyPhase;
-        vm.currentSubject = emptySubject;
-        vm.currentGrade = emptyGrade;
-
-        vm.isEmptyPhase = function() {
-            return vm.currentPhase.Code === "";
+            return dicCatalogSearch;
         };
-        vm.isEmptySubject = function() {
-            return vm.currentSubject.Code === "";
+
+
+        //https://stackoverflow.com/questions/21177582/directive-is-being-rendered-before-promise-is-resolved
+
+        return {
+            scope: {
+                searchCodes: '=',
+                dicSettings: '='
+            },
+            //link: function (scope) {
+            //},
+            controller: function ($scope, $element, $attrs, $transclude) {
+                var vm = this;
+                var dicSettings = $scope.dicSettings;
+                var searchCodes = $scope.searchCodes = ['','',''];
+
+                var shouldShowThisPhase = function (visiablePhases, phase) {
+                    //全部永远显示
+                    if (sameCodeItem(phase, emptyPhase)) {
+                        return true;
+                    }
+                    var phaseCodeItem = { Code: phase.Code };
+                    var shouldShow = containItem(visiablePhases, phaseCodeItem);
+                    return shouldShow;
+                };
+                var shouldShowCurrentPhaseSubject = function (theVm, subject) {
+
+                    //全部永远显示
+                    if (sameCodeItem(subject, emptySubject)) {
+                        return true;
+                    }
+                    var phaseSubjectCodeItem = { Code: theVm.currentPhase.Code + ',' + subject.Code };
+                    var shouldShow = containItem(theVm.visiablePhaseSubjects, phaseSubjectCodeItem);
+                    if (shouldShow) {
+                        //console.log("refresh phase subjects: " + theVm.currentPhase.Name + ',' + subject.Name + ' ' + shouldShow);
+                    }
+                    return shouldShow;
+                };
+                var shouldShowCurrentPhaseGrade = function (theVm, grade) {
+
+                    //全部永远显示
+                    if (sameCodeItem(grade, emptyGrade)) {
+                        return true;
+                    }
+                    var phaseGradeCodeItem = { Code: theVm.currentPhase.Code + ',' + grade.Code };
+                    var shouldShow = containItem(theVm.visiablePhaseGrades, phaseGradeCodeItem);
+                    if (shouldShow) {
+                        //console.log("refresh phase grades: " + theVm.currentPhase.Name + ',' + grade.Name + ' ' + shouldShow);
+                    }
+                    return shouldShow;
+                };
+                var shouldShowCurrentPhaseSubjectGrade = function (theVm, grade) {
+
+                    //全部永远显示
+                    if (sameCodeItem(grade, emptyGrade)) {
+                        return true;
+                    }
+                    var phaseSubjectGradeCodeItem = { Code: theVm.currentPhase.Code + ',' + theVm.currentSubject.Code + ',' + grade.Code };
+                    var shouldShow = containItem(theVm.visiablePhaseSubjectGrades, phaseSubjectGradeCodeItem);
+                    if (shouldShow) {
+                        //console.log("refresh phase subject grades: " + theVm.currentPhase.Name + ','+ theVm.currentSubject.Name + ',' + grade.Name + ' ' + shouldShow);
+                    }
+                    return shouldShow;
+                };
+                var resetSearchCodes = function (theVm) {
+                    //searchCodes = [theVm.currentPhase.Code, theVm.currentSubject.Code, theVm.currentGrade.Code];
+                    searchCodes[0] = theVm.currentPhase.Code;
+                    searchCodes[1] = theVm.currentSubject.Code;
+                    searchCodes[2] = theVm.currentGrade.Code;
+                    //console.log(searchCodes);
+                }
+                var changeSelect = function (items, item) {
+                    angular.forEach(items, function (item) {
+                        item.Selected = false;
+                    });
+                    item.Selected = true;
+                }
+                var hideAll = function (items) {
+                    angular.forEach(items, function (item) {
+                        if (item.Code === "") {
+                            //console.log("Empty Hide: " + item.Name);
+                            item.Hidden = false;
+                            return;
+                        }
+                        item.Hidden = true;
+                    });
+                }
+                var changeDisplay = function (theVm) {
+                    hideAll(theVm.phases);
+                    hideAll(theVm.subjects);
+                    hideAll(theVm.grades);
+
+                    //refresh phases
+                    //console.log(vm.visiablePhases);
+                    angular.forEach(theVm.phases, function (phase) {
+                        var shouldShow = shouldShowThisPhase(theVm.visiablePhases, phase);
+                        if (shouldShow) {
+                            phase.Hidden = false;
+                        }
+                    });
+
+                    //refresh phase subjects
+                    //console.log(vm.visiablePhaseSubjects);
+                    var needChangeToEmptySubject = true;
+                    angular.forEach(theVm.subjects, function (subject) {
+                        if (theVm.isEmptyPhase()) {
+                            //全部（学科）
+                            subject.Hidden = false;
+                            needChangeToEmptySubject = false;
+                            return;
+                        }
+
+                        var shouldShow = shouldShowCurrentPhaseSubject(theVm, subject);
+                        if (shouldShow) {
+                            //console.log("refresh phase subjects: " + theVm.currentPhase.Name + ',' + subject.Name + ' ' + shouldShow);
+                            subject.Hidden = false;
+                            if (sameCodeItem(subject, theVm.currentSubject)) {
+                                //console.log("当前的选中学科在其中: " + subject.Code + ',' + theVm.currentSubject.Code);
+                                needChangeToEmptySubject = false;
+                            }
+                        }
+                    });
+                    //如果当前的选中学科不在其中，则使用全部
+                    if (needChangeToEmptySubject) {
+                        theVm.currentSubject = emptySubject;
+                    }
+
+                    //refresh phase grades
+                    //console.log(vm.visiablePhaseGrades);
+                    var needChangeToEmptyGrade = true;
+                    angular.forEach(theVm.grades, function (grade) {
+                        if (theVm.isEmptyPhase()) {
+                            //全部（年级）
+                            grade.Hidden = false;
+                            needChangeToEmptyGrade = false;
+                            return;
+                        }
+                        var shouldShow = shouldShowCurrentPhaseGrade(theVm, grade);
+                        if (shouldShow) {
+                            //console.log("refresh phase grades: " + vm.currentPhase.Name + ',' + grade.Name + ' ' + shouldShow);
+                            grade.Hidden = false;
+                            if (sameCodeItem(grade, theVm.currentGrade)) {
+                                //console.log("当前的选中的年级在其中: " + grade.Code + ',' + theVm.currentGrade.Code);
+                                needChangeToEmptyGrade = false;
+                            }
+                        }
+                    });
+
+                    //refresh phase subject grades
+                    angular.forEach(theVm.grades, function (grade) {
+                        //如果学段和学科同时不为空，则需要二次筛选
+                        if (!theVm.isEmptyPhase() && !theVm.isEmptySubject()) {
+                            var shouldShow = shouldShowCurrentPhaseSubjectGrade(theVm, grade);
+                            if (!shouldShow) {
+                                grade.Hidden = true;
+                            }
+                            else {
+                                if (sameCodeItem(grade, theVm.currentGrade)) {
+                                    //console.log("当前的选中的年级在隐藏的按钮中: " + grade.Code + ',' + theVm.currentGrade.Code);
+                                    needChangeToEmptyGrade = false;
+                                }
+                            }
+                        }
+                    });
+
+                    //如果当前的选中年级不在其中，则使用全部
+                    if (needChangeToEmptyGrade) {
+                        theVm.currentGrade = emptyGrade;
+                    }
+
+                    resetSearchCodes(theVm);
+                }
+
+                //console.log(dicSettings);
+                setupDicCatalogSearchVm(vm, dicSettings);
+
+                vm.currentPhase = emptyPhase;
+                vm.currentSubject = emptySubject;
+                vm.currentGrade = emptyGrade;
+
+                vm.isEmptyPhase = function () {
+                    return vm.currentPhase.Code === "";
+                };
+                vm.isEmptySubject = function () {
+                    return vm.currentSubject.Code === "";
+                };
+                vm.isEmptyGrade = function () {
+                    return vm.currentGrade.Code === "";
+                };
+
+                vm.selectPhase = function (item) {
+                    changeSelect(vm.phases, item);
+                    vm.currentPhase = item;
+                    changeDisplay(vm);
+                }
+                vm.selectSubject = function (item) {
+                    changeSelect(vm.subjects, item);
+                    vm.currentSubject = item;
+                    changeDisplay(vm);
+                }
+                vm.selectGrade = function (item) {
+                    changeSelect(vm.grades, item);
+                    vm.currentGrade = item;
+                    changeDisplay(vm);
+                }
+            },
+            controllerAs: 'vm',
+            template: '<div class="term-box">  ' +
+ '                               <span class="term">学段</span>  ' +
+ '                               <ul class="nav nav-pills overflow-h">  ' +
+ '                                   <li ng-repeat="item in vm.phases" ng-class="{active: item === vm.currentPhase, hidden: item.Hidden}">  ' +
+ '                                       <a href="javascript:void(0)" ng-click="vm.selectPhase(item)">  ' +
+ '                                           {{item.Name}}  ' +
+ '                                       </a>  ' +
+ '                                   </li>  ' +
+ '                               </ul>  ' +
+ '                           </div>  ' +
+ '                           <div class="term-box">  ' +
+ '                               <span class="term">学科</span>  ' +
+ '                               <ul class="nav nav-pills overflow-h">  ' +
+ '                                   <li ng-repeat="item in vm.subjects" ng-class="{active: item === vm.currentSubject, hidden: item.Hidden}"><a href="javascript:void(0)" ng-click="vm.selectSubject(item)">{{item.Name}}</a></li>  ' +
+ '                               </ul>  ' +
+ '                           </div>  ' +
+ '                           <div class="term-box">  ' +
+ '                               <span class="term">年级</span>  ' +
+ '                               <ul class="nav nav-pills overflow-h">  ' +
+ '                                   <li ng-repeat="item in vm.grades" ng-class="{active: item === vm.currentGrade, hidden: item.Hidden}"><a href="javascript:void(0)" ng-click="vm.selectGrade(item)">{{item.Name}}</a></a></li>  ' +
+ '                               </ul>  ' +
+ '                          </div>'
         };
-        vm.isEmptyGrade = function() {
-            return vm.currentGrade.Code === "";
-        };
-        
-        vm.selectPhase = function (item) {
-            changeSelect(vm.phases, item);
-            vm.currentPhase = item;
-            changeDisplay(vm);
-        }
-        vm.selectSubject = function (item) {
-            changeSelect(vm.subjects, item);
-            vm.currentSubject = item;
-            changeDisplay(vm);
-        }
-        vm.selectGrade = function (item) {
-            changeSelect(vm.grades, item);
-            vm.currentGrade = item;
-            changeDisplay(vm);
-        }
-        vm.searchCodes = function () {
-            return [vm.currentPhase.Code, vm.currentSubject.Code, vm.currentGrade.Code];
-        }
     });
 }());
