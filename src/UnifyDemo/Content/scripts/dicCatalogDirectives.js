@@ -156,13 +156,50 @@
             return dicCatalogSearch;
         };
 
-
         //https://stackoverflow.com/questions/21177582/directive-is-being-rendered-before-promise-is-resolved
+
+        var template1 = '<div class="term-box">  ' +
+            '                               <span class="term">学段</span>  ' +
+            '                               <ul class="nav nav-pills overflow-h">  ' +
+            '                                   <li ng-repeat="item in vm.phases" ng-class="{active: item === vm.currentPhase, hidden: item.Hidden}">  ' +
+            '                                       <a href="javascript:void(0)" ng-click="vm.selectPhase(item)">  ' +
+            '                                           {{item.Name}}  ' +
+            '                                       </a>  ' +
+            '                                   </li>  ' +
+            '                               </ul>  ' +
+            '                           </div>  ' +
+            '                           <div class="term-box">  ' +
+            '                               <span class="term">学科</span>  ' +
+            '                               <ul class="nav nav-pills overflow-h">  ' +
+            '                                   <li ng-repeat="item in vm.subjects" ng-class="{active: item === vm.currentSubject, hidden: item.Hidden}"><a href="javascript:void(0)" ng-click="vm.selectSubject(item)">{{item.Name}}</a></li>  ' +
+            '                               </ul>  ' +
+            '                           </div>  ' +
+            '                           <div class="term-box">  ' +
+            '                               <span class="term">年级</span>  ' +
+            '                               <ul class="nav nav-pills overflow-h">  ' +
+            '                                   <li ng-repeat="item in vm.grades" ng-class="{active: item === vm.currentGrade, hidden: item.Hidden}"><a href="javascript:void(0)" ng-click="vm.selectGrade(item)">{{item.Name}}</a></a></li>  ' +
+            '                               </ul>  ' +
+            '                          </div>';
+
+        var template2 = "<h2>TODO!</h2>";
+
+        var getTemplate = function (tElem, tAttrs) {
+            var mode = tAttrs.dicViewMode;
+            if (!mode) {
+                return template1;
+            }
+
+            if (mode === "1") {
+                return template1;
+            }
+            return template2;
+        }
 
         return {
             scope: {
                 searchCodes: '=',
-                dicSettings: '='
+                dicSettings: '=',
+                dicViewMode: '@'
             },
             //link: function (scope) {
             //},
@@ -362,28 +399,7 @@
                 }
             },
             controllerAs: 'vm',
-            template: '<div class="term-box">  ' +
- '                               <span class="term">学段</span>  ' +
- '                               <ul class="nav nav-pills overflow-h">  ' +
- '                                   <li ng-repeat="item in vm.phases" ng-class="{active: item === vm.currentPhase, hidden: item.Hidden}">  ' +
- '                                       <a href="javascript:void(0)" ng-click="vm.selectPhase(item)">  ' +
- '                                           {{item.Name}}  ' +
- '                                       </a>  ' +
- '                                   </li>  ' +
- '                               </ul>  ' +
- '                           </div>  ' +
- '                           <div class="term-box">  ' +
- '                               <span class="term">学科</span>  ' +
- '                               <ul class="nav nav-pills overflow-h">  ' +
- '                                   <li ng-repeat="item in vm.subjects" ng-class="{active: item === vm.currentSubject, hidden: item.Hidden}"><a href="javascript:void(0)" ng-click="vm.selectSubject(item)">{{item.Name}}</a></li>  ' +
- '                               </ul>  ' +
- '                           </div>  ' +
- '                           <div class="term-box">  ' +
- '                               <span class="term">年级</span>  ' +
- '                               <ul class="nav nav-pills overflow-h">  ' +
- '                                   <li ng-repeat="item in vm.grades" ng-class="{active: item === vm.currentGrade, hidden: item.Hidden}"><a href="javascript:void(0)" ng-click="vm.selectGrade(item)">{{item.Name}}</a></a></li>  ' +
- '                               </ul>  ' +
- '                          </div>'
+            template: getTemplate
         };
     });
 }());
