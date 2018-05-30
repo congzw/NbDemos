@@ -69,6 +69,10 @@
                 vm.searchCodes2 = ['', '', ''];
                 dicCatalogAppService.getDicCatalogs()
                     .success(function (result) {
+
+                        //use ng-if="vm.dicSettings" hack deferred!
+                        //https://stackoverflow.com/questions/21177582/directive-is-being-rendered-before-promise-is-resolved
+
                         //console.log(result);
                         vm.dicSettings = result;
                         vm.dicSettings2 = result;
