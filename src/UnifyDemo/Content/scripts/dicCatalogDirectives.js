@@ -2,7 +2,7 @@
     'use strict';
     var mainApp = zqnb.mainApp;
 
-    mainApp.directive('nbDicCatalogSearch', function () {
+    mainApp.directive('nbDicCatalog', function () {
 
         //级联关系的逻辑
         //学段（空）：展示所有学科、所有年级
