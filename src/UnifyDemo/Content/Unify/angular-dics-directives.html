@@ -71,7 +71,7 @@
 
             mainApp.controller('demoCtrl', function ($scope, dicCatalogAppService) {
                 var vm = this;
-                vm.selectResult = { Subject : { Code: "GS001" } };
+                vm.selectResult = { Phase: { Code: "Phase1" }, Subject: { Code: "GS001" }, Grade: { Code: "GO003" } };
                 vm.selectResult2 = {};
                 vm.selectResult3 = {};
                 dicCatalogAppService.getDicCatalogs()

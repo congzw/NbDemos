@@ -181,7 +181,7 @@
 
             //fix init code without name!
             if (!selectResult.Phase.Name) {
-                tryFixNameWithCode(theVm.grades, selectResult.Phase);
+                tryFixNameWithCode(theVm.phases, selectResult.Phase);
             }
 
             if (!selectResult.Subject.Name) {
