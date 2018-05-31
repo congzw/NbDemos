@@ -40,7 +40,7 @@
             overflow: Hidden;
             padding: 15px;
         }
-        
+
         .selectedDicCatalogItem {
             /*color: red;*/
             color: #e67e22 !important;
@@ -48,6 +48,8 @@
     </style>
 
     <!-- JS Global Compulsory -->
+    <script src="assets/plugins/jquery/jquery.js"></script>
+    <script src="assets/plugins/bootstrap/js/bootstrap.js"></script>
     <script src="../libs/angular1.2/angular.js"></script>
     <script src="../scripts/zqnb.js"></script>
     <script src="../scripts/zqnb.mainApp.js"></script>
@@ -104,17 +106,17 @@
                         <hr />
                         <div class="search-block">
                             <div ng-if="vm.dicSettings">
-                                <div nb-dic-catalog  dic-settings="vm.dicSettings" select-result="vm.selectResult"></div>
+                                <div nb-dic-catalog dic-settings="vm.dicSettings" select-result="vm.selectResult"></div>
                             </div>
                         </div>
                     </div>
 
                     <div class="row">
                         <h2>{{vm.selectResult2}}</h2>
-                        <hr />
+                        <hr/>
                         <div class="form-search margin-bottom-25">
                             <!-- skyform-->
-                            <form action="" id="sky-form" class="sky-form">
+                            <form action="" class="sky-form">
                                 <!-- 搜索input-->
                                 <section class="input-group col col-4">
                                     <input type="text" class="form-control" placeholder="按标题搜索">
@@ -140,24 +142,28 @@
                     </div>
 
                     <div class="row">
-                        <!--<h2>{{vm.selectResult3}}</h2>
+                        <h2>{{vm.selectResult3}}</h2>
                         <hr />
-                        <div class="form-search">
-                            <form class="sky-form">
-                                <div class="row">
-                                    <div ng-if="vm.dicSettings">
-                                        <div nb-dic-catalog dic-settings="vm.dicSettings" select-result="vm.selectResult3" dic-view-mode="3"></div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>-->
-                        <!--<select ng-options="o as o for o in s.options" ng-model="s.selectedOption" ng-change="optionChanged()"></select>-->
-                        <!--<select ng-model="vm.selectResult.Phase.Code" ng-options="item.Code as item.Name for item in vm.phases" options-class="{ hidden : item.Hidden }"></select>-->
+                        <div class="form-search margin-bottom-25">
+                            <!-- skyform-->
+                            <form action="" class="sky-form">
+                                <!-- 搜索input-->
+                                <section class="input-group col col-4">
+                                    <input type="text" class="form-control" placeholder="按标题搜索">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-u" type="button">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </span>
+                                </section>
 
-                        <!--<select ng-model="vm.selectResult.Phase"><option ng-selected="vm.selectPhase(item)" ng-repeat="item in vm.phases" value="{{item.Code}}">{{item.Name}}</option></select>
-                        <select><option ng-selected="vm.selectPhase(item)" ng-repeat="item in vm.phases" value="{{item.Code}}">{{item.Name}}</option></select>-->
-                        <!--<select ng-options="item.Code as item.Name for item in vm.phases | !item.Hidden" ng-model="vm.temp" ng-change="vm.selectPhase(item)"></select>-->
-                        <!--<select ng-options="o as o for o in s.options" ng-model="s.selectedOption" ng-change="optionChanged()"></select>-->
+                                <div ng-if="vm.dicSettings">
+                                    <div nb-dic-catalog dic-settings="vm.dicSettings" select-result="vm.selectResult3" dic-view-mode="3"></div>
+                                </div>
+
+                                <br class="clear-both">
+                            </form>
+                        </div>
                     </div>
 
                 </div>

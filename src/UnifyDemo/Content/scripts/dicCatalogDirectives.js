@@ -261,7 +261,36 @@
  '                                       </li>  ' +
  '                                  </ul>  ';
         }();
-        
+
+        var template3 = function () {
+            return '     ' +
+ '   <div class="dropdown my-dropdown">  ' +
+ '       <div class="trigger dropdown-toggle" data-toggle="dropdown">  ' +
+ '           学段(<span class="selectedDicCatalogItem">{{vm.selectResult.Phase.Name}}</span>)<span class="caret"></span>  ' +
+ '       </div>  ' +
+ '       <ul class="dropdown-menu">  ' +
+ '           <li ng-repeat="item in vm.phases" ng-class="{active: vm.isCurrentPhase(item), hidden: item.Hidden}"><a href="javascript:void(0)" ng-click="vm.selectPhase(item)">{{item.Name}}</a></li>  ' +
+ '       </ul>  ' +
+ '   </div>  ' +
+ '     ' +
+ '   <div class="dropdown my-dropdown">  ' +
+ '       <div class="trigger dropdown-toggle" data-toggle="dropdown">  ' +
+ '           学科(<span class="selectedDicCatalogItem">{{vm.selectResult.Subject.Name}}</span>)<span class="caret"></span>  ' +
+ '       </div>  ' +
+ '       <ul class="dropdown-menu">  ' +
+ '           <li ng-repeat="item in vm.subjects" ng-class="{active: vm.isCurrentSubject(item), hidden: item.Hidden}"><a href="javascript:void(0)" ng-click="vm.selectSubject(item)">{{item.Name}}</a></li>  ' +
+ '       </ul>  ' +
+ '   </div>  ' +
+ '     ' +
+ '   <div class="dropdown my-dropdown">  ' +
+ '       <div class="trigger dropdown-toggle" data-toggle="dropdown">  ' +
+ '           年级(<span class="selectedDicCatalogItem">{{vm.selectResult.Grade.Name}}</span>)<span class="caret"></span>  ' +
+ '       </div>  ' +
+ '       <ul class="dropdown-menu">  ' +
+ '           <li ng-repeat="item in vm.grades" ng-class="{active: vm.isCurrentGrade(item), hidden: item.Hidden}"><a href="javascript:void(0)" ng-click="vm.selectGrade(item)">{{item.Name}}</a></li>  ' +
+ '       </ul>  ' +
+ '  </div>  ';
+        }();
 
         var getTemplate = function (tElem, tAttrs) {
             var mode = tAttrs.dicViewMode;
@@ -274,6 +303,9 @@
             }
             if (mode === "2") {
                 return template2;
+            }
+            if (mode === "3") {
+                return template3;
             }
 
             return template1;

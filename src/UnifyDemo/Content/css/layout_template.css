@@ -1021,4 +1021,14 @@ label {
 .sticky-footer {
   background-color: #222;
 }
+.my-dropdown {
+  display: inline-block;
+}
+.dropdown .trigger {
+  position: relative;
+  display: inline-block;
+  padding: 6px 12px;
+  font-size: 14px;
+  cursor: pointer;
+}
 /*# sourceMappingURL=layout_template.css.map */
