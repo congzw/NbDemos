@@ -64,7 +64,7 @@
                 selectResult = {};
             }
             if (!selectResult.Phase) {
-                selectResult.Phase = {Code : emptyPhase.Code, Name : emptyPhase.Name};
+                selectResult.Phase = { Code: emptyPhase.Code, Name: emptyPhase.Name };
             }
             if (!selectResult.Subject) {
                 selectResult.Subject = { Code: emptySubject.Code, Name: emptySubject.Name };
@@ -173,9 +173,9 @@
             return dicCatalogSearch;
         };
 
-        var template1 = function() {
+        var template1 = function () {
             return '<div class="term-box">  ' +
-                '                               <span class="term">学段(<span class="selectedItem">{{vm.selectResult.Phase.Name}}</span>)</span>  ' +
+                '                               <span class="term">学段(<span class="selectedDicCatalogItem">{{vm.selectResult.Phase.Name}}</span>)</span>  ' +
                 '                               <ul class="nav nav-pills overflow-h">  ' +
                 '                                   <li ng-repeat="item in vm.phases" ng-class="{active: vm.isCurrentPhase(item), hidden: item.Hidden}">  ' +
                 '                                       <a href="javascript:void(0)" ng-click="vm.selectPhase(item)">  ' +
@@ -185,24 +185,24 @@
                 '                               </ul>  ' +
                 '                           </div>  ' +
                 '                           <div class="term-box">  ' +
-                '                               <span class="term">学科(<span class="selectedItem">{{vm.selectResult.Subject.Name}}</span>)</span>  ' +
+                '                               <span class="term">学科(<span class="selectedDicCatalogItem">{{vm.selectResult.Subject.Name}}</span>)</span>  ' +
                 '                               <ul class="nav nav-pills overflow-h">  ' +
                 '                                   <li ng-repeat="item in vm.subjects" ng-class="{active: vm.isCurrentSubject(item), hidden: item.Hidden}"><a href="javascript:void(0)" ng-click="vm.selectSubject(item)">{{item.Name}}</a></li>  ' +
                 '                               </ul>  ' +
                 '                           </div>  ' +
                 '                           <div class="term-box">  ' +
-                '                               <span class="term">年级(<span class="selectedItem">{{vm.selectResult.Grade.Name}}</span>)</span>  ' +
+                '                               <span class="term">年级(<span class="selectedDicCatalogItem">{{vm.selectResult.Grade.Name}}</span>)</span>  ' +
                 '                               <ul class="nav nav-pills overflow-h">  ' +
                 '                                   <li ng-repeat="item in vm.grades" ng-class="{active: vm.isCurrentGrade(item), hidden: item.Hidden}"><a href="javascript:void(0)" ng-click="vm.selectGrade(item)">{{item.Name}}</a></a></li>  ' +
                 '                               </ul>  ' +
                 '                          </div>';
         }();
 
-        var template2 = function() {
+        var template2 = function () {
             return '<ul class="search-dropdown col margin-top-bottom">  ' +
  '                                       <li class="dropdown">  ' +
  '                                           <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">  ' +
- '                                               学段(<span class="selectedItem">{{vm.selectResult.Phase.Name}}</span>)  ' +
+ '                                               学段(<span class="selectedDicCatalogItem">{{vm.selectResult.Phase.Name}}</span>)  ' +
  '                                           </a>  ' +
  '                                           <ul class="dropdown-menu">  ' +
  '                                               <li ng-repeat="item in vm.phases" ng-class="{active: vm.isCurrentPhase(item), hidden: item.Hidden}">  ' +
@@ -212,7 +212,7 @@
  '                                       </li>  ' +
  '                                       <li class="dropdown">  ' +
  '                                           <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">  ' +
- '                                               学科(<span class="selectedItem">{{vm.selectResult.Subject.Name}}</span>)  ' +
+ '                                               学科(<span class="selectedDicCatalogItem">{{vm.selectResult.Subject.Name}}</span>)  ' +
  '                                           </a>  ' +
  '                                           <ul class="dropdown-menu style-width">  ' +
  '                                               <li ng-repeat="item in vm.subjects" ng-class="{active: vm.isCurrentSubject(item), hidden: item.Hidden}">  ' +
@@ -222,7 +222,7 @@
  '                                       </li>  ' +
  '                                       <li class="dropdown">  ' +
  '                                           <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">  ' +
- '                                               年级(<span class="selectedItem">{{vm.selectResult.Grade.Name}}</span>)  ' +
+ '                                               年级(<span class="selectedDicCatalogItem">{{vm.selectResult.Grade.Name}}</span>)  ' +
  '                                           </a>  ' +
  '                                           <ul class="dropdown-menu style-width">  ' +
  '                                               <li ng-repeat="item in vm.grades" ng-class="{active: vm.isCurrentGrade(item), hidden: item.Hidden}">  ' +
@@ -254,10 +254,10 @@
             controller: function ($scope, $element, $attrs, $transclude) {
                 var vm = this;
                 var dicSettings = $scope.dicSettings;
-                var selectResult = $scope.selectResult; 
+                var selectResult = $scope.selectResult;
                 prepareSelectResult(selectResult);
                 vm.selectResult = selectResult;
-                
+
                 var shouldShowThisPhase = function (visiablePhases, phase) {
                     //全部永远显示
                     if (sameCodeItem(phase, emptyPhase)) {
@@ -306,8 +306,8 @@
                     }
                     return shouldShow;
                 };
-                var changeSelect = function(items, item) {
-                    angular.forEach(items, function(item) {
+                var changeSelect = function (items, item) {
+                    angular.forEach(items, function (item) {
                         item.Selected = false;
                     });
                     item.Selected = true;
@@ -316,8 +316,8 @@
                     copyTo.Code = copyFrom.Code;
                     copyTo.Name = copyFrom.Name;
                 };
-                var hideAll = function(items) {
-                    angular.forEach(items, function(item) {
+                var hideAll = function (items) {
+                    angular.forEach(items, function (item) {
                         if (item.Code === "") {
                             //console.log("Empty Hide: " + item.Name);
                             item.Hidden = false;
@@ -326,14 +326,14 @@
                         item.Hidden = true;
                     });
                 };
-                var changeDisplay = function(theVm) {
+                var changeDisplay = function (theVm) {
                     hideAll(theVm.phases);
                     hideAll(theVm.subjects);
                     hideAll(theVm.grades);
 
                     //refresh phases
                     //console.log(vm.visiablePhases);
-                    angular.forEach(theVm.phases, function(phase) {
+                    angular.forEach(theVm.phases, function (phase) {
                         var shouldShow = shouldShowThisPhase(theVm.visiablePhases, phase);
                         if (shouldShow) {
                             phase.Hidden = false;
@@ -343,7 +343,7 @@
                     //refresh phase subjects
                     //console.log(vm.visiablePhaseSubjects);
                     var needChangeToEmptySubject = true;
-                    angular.forEach(theVm.subjects, function(subject) {
+                    angular.forEach(theVm.subjects, function (subject) {
                         if (theVm.isEmptyPhase()) {
                             //全部（学科）
                             subject.Hidden = false;
@@ -369,7 +369,7 @@
                     //refresh phase grades
                     //console.log(vm.visiablePhaseGrades);
                     var needChangeToEmptyGrade = true;
-                    angular.forEach(theVm.grades, function(grade) {
+                    angular.forEach(theVm.grades, function (grade) {
                         if (theVm.isEmptyPhase()) {
                             //全部（年级）
                             grade.Hidden = false;
@@ -388,7 +388,7 @@
                     });
 
                     //refresh phase subject grades
-                    angular.forEach(theVm.grades, function(grade) {
+                    angular.forEach(theVm.grades, function (grade) {
                         //如果学段和学科同时不为空，则需要二次筛选
                         if (!theVm.isEmptyPhase() && !theVm.isEmptySubject()) {
                             var shouldShow = shouldShowCurrentPhaseSubjectGrade(theVm, grade);
@@ -407,7 +407,6 @@
                     if (needChangeToEmptyGrade) {
                         copyCodeAndName(theVm.selectResult.Grade, emptyGrade);
                     }
-
                     //resetSearchCodes(theVm);
                 };
 
