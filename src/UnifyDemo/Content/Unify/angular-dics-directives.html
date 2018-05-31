@@ -42,8 +42,8 @@
         }
         
         .selectedDicCatalogItem {
-            color: red;
-            /*color: #337ab7;*/
+            /*color: red;*/
+            color: #e67e22 !important;
         }
     </style>
 
@@ -71,7 +71,7 @@
 
             mainApp.controller('demoCtrl', function ($scope, dicCatalogAppService) {
                 var vm = this;
-                vm.selectResult = {};
+                vm.selectResult = { Subject : { Code: "GS001" } };
                 vm.selectResult2 = {};
                 vm.selectResult3 = {};
                 dicCatalogAppService.getDicCatalogs()

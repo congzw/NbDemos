@@ -59,25 +59,10 @@
             var phaseSubjectGradeCodeItem = { Code: phase.Code + ',' + subject.Code + ',' + grade.Code };
             return phaseSubjectGradeCodeItem;
         };
-        var prepareSelectResult = function (selectResult) {
-            if (!selectResult) {
-                selectResult = {};
-            }
-            if (!selectResult.Phase) {
-                selectResult.Phase = { Code: emptyPhase.Code, Name: emptyPhase.Name };
-            }
-            if (!selectResult.Subject) {
-                selectResult.Subject = { Code: emptySubject.Code, Name: emptySubject.Name };
-            }
-            if (!selectResult.Grade) {
-                selectResult.Grade = { Code: emptyGrade.Code, Name: emptyGrade.Name };
-            }
-        };
-
-        var setupDicCatalogSearchVm = function (dicCatalogSearch, dicSettings) {
+        var setupDicCatalogVm = function (theVm, dicSettings) {
 
             //dicSettings[0].InUse = true;
-            //console.log(dicSettings);
+            //console.log(theVm);
 
             //try convert to all dicItems from dicSettingVm
 
@@ -112,9 +97,9 @@
                     }
                 });
             });
-            dicCatalogSearch.phases = phases;
-            dicCatalogSearch.subjects = subjects;
-            dicCatalogSearch.grades = grades;
+            theVm.phases = phases;
+            theVm.subjects = subjects;
+            theVm.grades = grades;
             //console.log(phases);
             //console.log(subjects);
             //console.log(grades);
@@ -163,14 +148,49 @@
                     });
                 });
             });
-            dicCatalogSearch.visiablePhases = visiablePhases;
-            dicCatalogSearch.visiablePhaseSubjects = visiablePhaseSubjects;
-            dicCatalogSearch.visiablePhaseGrades = visiablePhaseGrades;
-            dicCatalogSearch.visiablePhaseSubjectGrades = visiablePhaseSubjectGrades;
+            theVm.visiablePhases = visiablePhases;
+            theVm.visiablePhaseSubjects = visiablePhaseSubjects;
+            theVm.visiablePhaseGrades = visiablePhaseGrades;
+            theVm.visiablePhaseSubjectGrades = visiablePhaseSubjectGrades;
             //console.log(dicSettings);
             //console.log(dicCatalogSearch);
 
-            return dicCatalogSearch;
+            return theVm;
+        };
+        var tryFixNameWithCode = function (items, itemToFix) {
+            angular.forEach(items, function (item, key) {
+                if (sameCodeItem(item, itemToFix)) {
+                    itemToFix.Name = item.Name;
+                    return;
+                }
+            });
+        }
+        var prepareSelectResult = function (theVm, selectResult) {
+            if (!selectResult) {
+                selectResult = {};
+            }
+            if (!selectResult.Phase) {
+                selectResult.Phase = { Code: emptyPhase.Code, Name: emptyPhase.Name };
+            }
+            if (!selectResult.Subject) {
+                selectResult.Subject = { Code: emptySubject.Code, Name: emptySubject.Name };
+            }
+            if (!selectResult.Grade) {
+                selectResult.Grade = { Code: emptyGrade.Code, Name: emptyGrade.Name };
+            }
+
+            //fix init code without name!
+            if (!selectResult.Phase.Name) {
+                tryFixNameWithCode(theVm.grades, selectResult.Phase);
+            }
+
+            if (!selectResult.Subject.Name) {
+                tryFixNameWithCode(theVm.subjects, selectResult.Subject);
+            }
+
+            if (!selectResult.Grade.Name) {
+                tryFixNameWithCode(theVm.grades, selectResult.Grade);
+            }
         };
 
         var template1 = function () {
@@ -253,14 +273,16 @@
             },
             controller: function ($scope, $element, $attrs, $transclude) {
                 var vm = this;
+
                 var dicSettings = $scope.dicSettings;
+                setupDicCatalogVm(vm, dicSettings);
                 var selectResult = $scope.selectResult;
-                prepareSelectResult(selectResult);
+                prepareSelectResult(vm, selectResult);
                 vm.selectResult = selectResult;
 
                 var shouldShowThisPhase = function (visiablePhases, phase) {
                     //全部永远显示
-                    if (sameCodeItem(phase, emptyPhase)) {
+                    if(sameCodeItem(phase, emptyPhase)) {
                         return true;
                     }
                     var phaseCodeItem = { Code: phase.Code };
@@ -270,7 +292,7 @@
                 var shouldShowCurrentPhaseSubject = function (theVm, subject) {
 
                     //全部永远显示
-                    if (sameCodeItem(subject, emptySubject)) {
+                    if(sameCodeItem(subject, emptySubject)) {
                         return true;
                     }
                     var phaseSubjectCodeItem = { Code: theVm.selectResult.Phase.Code + ',' + subject.Code };
@@ -283,7 +305,7 @@
                 var shouldShowCurrentPhaseGrade = function (theVm, grade) {
 
                     //全部永远显示
-                    if (sameCodeItem(grade, emptyGrade)) {
+                    if(sameCodeItem(grade, emptyGrade)) {
                         return true;
                     }
                     var phaseGradeCodeItem = { Code: theVm.selectResult.Phase.Code + ',' + grade.Code };
@@ -296,7 +318,7 @@
                 var shouldShowCurrentPhaseSubjectGrade = function (theVm, grade) {
 
                     //全部永远显示
-                    if (sameCodeItem(grade, emptyGrade)) {
+                    if(sameCodeItem(grade, emptyGrade)) {
                         return true;
                     }
                     var phaseSubjectGradeCodeItem = { Code: theVm.selectResult.Phase.Code + ',' + theVm.selectResult.Subject.Code + ',' + grade.Code };
@@ -318,7 +340,7 @@
                 };
                 var hideAll = function (items) {
                     angular.forEach(items, function (item) {
-                        if (item.Code === "") {
+                        if(item.Code === "") {
                             //console.log("Empty Hide: " + item.Name);
                             item.Hidden = false;
                             return;
@@ -344,7 +366,7 @@
                     //console.log(vm.visiablePhaseSubjects);
                     var needChangeToEmptySubject = true;
                     angular.forEach(theVm.subjects, function (subject) {
-                        if (theVm.isEmptyPhase()) {
+                        if(theVm.isEmptyPhase()) {
                             //全部（学科）
                             subject.Hidden = false;
                             needChangeToEmptySubject = false;
@@ -370,7 +392,7 @@
                     //console.log(vm.visiablePhaseGrades);
                     var needChangeToEmptyGrade = true;
                     angular.forEach(theVm.grades, function (grade) {
-                        if (theVm.isEmptyPhase()) {
+                        if(theVm.isEmptyPhase()) {
                             //全部（年级）
                             grade.Hidden = false;
                             needChangeToEmptyGrade = false;
@@ -390,7 +412,7 @@
                     //refresh phase subject grades
                     angular.forEach(theVm.grades, function (grade) {
                         //如果学段和学科同时不为空，则需要二次筛选
-                        if (!theVm.isEmptyPhase() && !theVm.isEmptySubject()) {
+                        if(!theVm.isEmptyPhase() && !theVm.isEmptySubject()) {
                             var shouldShow = shouldShowCurrentPhaseSubjectGrade(theVm, grade);
                             if (!shouldShow) {
                                 grade.Hidden = true;
@@ -409,9 +431,6 @@
                     }
                     //resetSearchCodes(theVm);
                 };
-
-                //console.log(dicSettings);
-                setupDicCatalogSearchVm(vm, dicSettings);
 
                 vm.isEmptyPhase = function () {
                     return vm.selectResult.Phase.Code === "";
@@ -447,6 +466,7 @@
                 vm.isCurrentGrade = function (grade) {
                     return sameCodeItem(grade, vm.selectResult.Grade);
                 };
+                //console.log(dicSettings);
             },
             controllerAs: 'vm',
             template: getTemplate
