@@ -8,6 +8,9 @@
         //学段（空）：展示所有学科、所有年级
         //学段（非空）：筛选学段的学科、学段的年级
         //学段+ 年级（同时非空）：筛选学段的学科、学段的年级、学段的年级的学科
+        //hacks:
+        //https://stackoverflow.com/questions/21177582/directive-is-being-rendered-before-promise-is-resolved
+
         var equalIgnoreCase = function (str, str2) {
             if (str === null || str2 === null) {
                 return true;
@@ -55,6 +58,20 @@
         var createPhaseSubjectGradeCodeItem = function (phase, subject, grade) {
             var phaseSubjectGradeCodeItem = { Code: phase.Code + ',' + subject.Code + ',' + grade.Code };
             return phaseSubjectGradeCodeItem;
+        };
+        var prepareSelectResult = function (selectResult) {
+            if (!selectResult) {
+                selectResult = {};
+            }
+            if (!selectResult.Phase) {
+                selectResult.Phase = {Code : emptyPhase.Code, Name : emptyPhase.Name};
+            }
+            if (!selectResult.Subject) {
+                selectResult.Subject = { Code: emptySubject.Code, Name: emptySubject.Name };
+            }
+            if (!selectResult.Grade) {
+                selectResult.Grade = { Code: emptyGrade.Code, Name: emptyGrade.Name };
+            }
         };
 
         var setupDicCatalogSearchVm = function (dicCatalogSearch, dicSettings) {
@@ -156,32 +173,33 @@
             return dicCatalogSearch;
         };
 
-        //https://stackoverflow.com/questions/21177582/directive-is-being-rendered-before-promise-is-resolved
+        var template1 = function() {
+            return '<div class="term-box">  ' +
+                '                               <span class="term">学段(<span class="selectedItem">{{vm.currentPhase.Name}}</span>)</span>  ' +
+                '                               <ul class="nav nav-pills overflow-h">  ' +
+                '                                   <li ng-repeat="item in vm.phases" ng-class="{active: item === vm.currentPhase, hidden: item.Hidden}">  ' +
+                '                                       <a href="javascript:void(0)" ng-click="vm.selectPhase(item)">  ' +
+                '                                           {{item.Name}}  ' +
+                '                                       </a>  ' +
+                '                                   </li>  ' +
+                '                               </ul>  ' +
+                '                           </div>  ' +
+                '                           <div class="term-box">  ' +
+                '                               <span class="term">学科(<span class="selectedItem">{{vm.currentSubject.Name}}</span>)</span>  ' +
+                '                               <ul class="nav nav-pills overflow-h">  ' +
+                '                                   <li ng-repeat="item in vm.subjects" ng-class="{active: item === vm.currentSubject, hidden: item.Hidden}"><a href="javascript:void(0)" ng-click="vm.selectSubject(item)">{{item.Name}}</a></li>  ' +
+                '                               </ul>  ' +
+                '                           </div>  ' +
+                '                           <div class="term-box">  ' +
+                '                               <span class="term">年级(<span class="selectedItem">{{vm.currentGrade.Name}}</span>)</span>  ' +
+                '                               <ul class="nav nav-pills overflow-h">  ' +
+                '                                   <li ng-repeat="item in vm.grades" ng-class="{active: item === vm.currentGrade, hidden: item.Hidden}"><a href="javascript:void(0)" ng-click="vm.selectGrade(item)">{{item.Name}}</a></a></li>  ' +
+                '                               </ul>  ' +
+                '                          </div>';
+        }();
 
-        var template1 = '<div class="term-box">  ' +
-            '                               <span class="term">学段(<span class="selectedItem">{{vm.currentPhase.Name}}</span>)</span>  ' +
-            '                               <ul class="nav nav-pills overflow-h">  ' +
-            '                                   <li ng-repeat="item in vm.phases" ng-class="{active: item === vm.currentPhase, hidden: item.Hidden}">  ' +
-            '                                       <a href="javascript:void(0)" ng-click="vm.selectPhase(item)">  ' +
-            '                                           {{item.Name}}  ' +
-            '                                       </a>  ' +
-            '                                   </li>  ' +
-            '                               </ul>  ' +
-            '                           </div>  ' +
-            '                           <div class="term-box">  ' +
-            '                               <span class="term">学科(<span class="selectedItem">{{vm.currentSubject.Name}}</span>)</span>  ' +
-            '                               <ul class="nav nav-pills overflow-h">  ' +
-            '                                   <li ng-repeat="item in vm.subjects" ng-class="{active: item === vm.currentSubject, hidden: item.Hidden}"><a href="javascript:void(0)" ng-click="vm.selectSubject(item)">{{item.Name}}</a></li>  ' +
-            '                               </ul>  ' +
-            '                           </div>  ' +
-            '                           <div class="term-box">  ' +
-            '                               <span class="term">年级(<span class="selectedItem">{{vm.currentGrade.Name}}</span>)</span>  ' +
-            '                               <ul class="nav nav-pills overflow-h">  ' +
-            '                                   <li ng-repeat="item in vm.grades" ng-class="{active: item === vm.currentGrade, hidden: item.Hidden}"><a href="javascript:void(0)" ng-click="vm.selectGrade(item)">{{item.Name}}</a></a></li>  ' +
-            '                               </ul>  ' +
-            '                          </div>';
-
-        var template2 = '<ul class="search-dropdown col margin-top-bottom">  ' +
+        var template2 = function() {
+            return '<ul class="search-dropdown col margin-top-bottom">  ' +
  '                                       <li class="dropdown">  ' +
  '                                           <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">  ' +
  '                                               学段(<span class="selectedItem">{{vm.currentPhase.Name}}</span>)  ' +
@@ -213,6 +231,7 @@
  '                                           </ul>  ' +
  '                                       </li>  ' +
  '                                  </ul>  ';
+        }();
 
         var getTemplate = function (tElem, tAttrs) {
             var mode = tAttrs.dicViewMode;
@@ -228,16 +247,16 @@
 
         return {
             scope: {
-                searchCodes: '=',
+                selectResult: '=',
                 dicSettings: '=',
                 dicViewMode: '@'
             },
-            //link: function (scope) {
-            //},
             controller: function ($scope, $element, $attrs, $transclude) {
                 var vm = this;
                 var dicSettings = $scope.dicSettings;
-                var searchCodes = $scope.searchCodes = ['','',''];
+                var selectResult = $scope.selectResult; 
+                prepareSelectResult(selectResult);
+
 
                 var shouldShowThisPhase = function (visiablePhases, phase) {
                     //全部永远显示
@@ -288,11 +307,14 @@
                     return shouldShow;
                 };
                 var resetSearchCodes = function (theVm) {
-                    //searchCodes = [theVm.currentPhase.Code, theVm.currentSubject.Code, theVm.currentGrade.Code];
-                    searchCodes[0] = theVm.currentPhase.Code;
-                    searchCodes[1] = theVm.currentSubject.Code;
-                    searchCodes[2] = theVm.currentGrade.Code;
-                    //console.log(searchCodes);
+                    
+                    selectResult.Phase.Code = theVm.currentPhase.Code;
+                    selectResult.Phase.Name = theVm.currentPhase.Name;
+                    selectResult.Subject.Code = theVm.currentSubject.Code;
+                    selectResult.Subject.Name = theVm.currentSubject.Name;
+                    selectResult.Grade.Code = theVm.currentGrade.Code;
+                    selectResult.Grade.Name = theVm.currentGrade.Name;
+                    //console.log(selectResult);
                 }
                 var changeSelect = function (items, item) {
                     angular.forEach(items, function (item) {
