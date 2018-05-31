@@ -1,6 +1,53 @@
 ﻿(function () {
     'use strict';
     var mainApp = zqnb.mainApp;
+    mainApp.directive('optionsClass', function ($parse) {
+
+        //console.log('optionsClass');
+
+        return {
+            require: 'select',
+            link: function (scope, elem, attrs, ngSelect) {
+                // get the source for the items array that populates the select.
+                var optionsSourceStr = attrs.ngOptions.split(' ').pop(),
+                // use $parse to get a function from the options-class attribute
+                // that you can use to evaluate later.
+                    getOptionsClassFunc = $parse(attrs.optionsClass);
+
+                ////vm.subjects
+                //console.log(optionsSourceStr);
+                //{ hidden: item.Hidden }
+                console.log(attrs.optionsClass);
+
+                scope.$watch(optionsSourceStr, function (items) {
+                    // when the options source changes loop through its items.
+                    angular.forEach(items, function (item, index) {
+                        // evaluate against the item to get a mapping object for
+                        // for your classes.
+                        var classes = getOptionsClassFunc(item),
+                        // also get the option you're going to need. This can be found
+                        // by looking for the option with the appropriate index in the
+                        // value attribute.
+                            option = elem.find('option[value=' + index + ']');
+
+                        ////{hidden: false}
+                        console.log(item);
+                        console.log(classes);
+
+                        // now loop through the key/value pairs in the mapping object
+                        // and apply the classes that evaluated to be truthy.
+                        angular.forEach(classes, function (value, key) {
+                            console.log(key + ':' + value);
+                            if (value) {
+                                angular.element(option).addClass(key);
+                            }
+                        });
+                    });
+                });
+            }
+        };
+    });
+
     mainApp.directive('nbDicCatalog', function () {
 
         //级联关系的逻辑
@@ -261,7 +308,48 @@
  '                                       </li>  ' +
  '                                  </ul>  ';
         }();
-        
+
+        var template3 = function () {
+            return '   <section class="col col-2" title="学段">  ' +
+ '       <label class="select">  ' +
+ '           <select ng-change="vm.hackSelectOption(vm, vm.selectResult.Phase.Code, 1)" ng-model="vm.selectResult.Phase.Code" ng-options="item.Code as item.Name for item in vm.phases" options-class="{ hidden : Hidden }"></select>  ' +
+ '           <i></i>  ' +
+ '       </label>  ' +
+ '   </section>  ' +
+ '   <section class="col col-2" title="学科">  ' +
+ '       <label class="select">  ' +
+ '           <select ng-change="vm.hackSelectOption(vm, vm.selectResult.Subject.Code, 2)" ng-model="vm.selectResult.Subject.Code" ng-options="item.Code as item.Name for item in vm.subjects" options-class="{ hidden : Hidden }"></select>  ' +
+ '           <i></i>  ' +
+ '       </label>  ' +
+ '   </section>  ' +
+ '   <section class="col col-2" title="年级">  ' +
+ '       <label class="select">  ' +
+ '           <select ng-change="vm.hackSelectOption(vm, vm.selectResult.Grade.Code, 3)" ng-model="vm.selectResult.Grade.Code" ng-options="item.Code as item.Name for item in vm.grades" options-class="{ hidden : Hidden }"></select>  ' +
+ '           <i></i>  ' +
+ '       </label>  ' +
+ '  </section>  ';
+        }();
+
+ //       var template3 = function() {
+ //           return '   <section class="col col-2" title="学段">  ' +
+ //'       <label class="select">  ' +
+ //'           <select ng-change="hackSelectOption(vm, hackSelectOptionCodes.Phase, 1)" ng-model="hackSelectOptionCodes.Phase"><option ng-repeat="item in vm.phases" ng-class="{ hidden: item.Hidden}" value="{{item.Code}}">{{item.Name}}</option></select>  ' +
+ //'           <i></i>  ' +
+ //'       </label>  ' +
+ //'   </section>  ' +
+ //'   <section class="col col-2" title="学科">  ' +
+ //'       <label class="select">  ' +
+ //'           <select ng-change="hackSelectOption(vm, hackSelectOptionCodes.Subject, 2)" ng-model="hackSelectOptionCodes.Subject"><option ng-repeat="item in vm.subjects" ng-class="{ hidden: item.Hidden}" value="{{item.Code}}">{{item.Name}}</option></select>  ' +
+ //'           <i></i>  ' +
+ //'       </label>  ' +
+ //'   </section>  ' +
+ //'   <section class="col col-2" title="年级">  ' +
+ //'       <label class="select">  ' +
+ //'           <select ng-change="hackSelectOption(vm, hackSelectOptionCodes.Grade, 3)" ng-model="hackSelectOptionCodes.Grade"><option ng-repeat="item in vm.grades" ng-class="{ hidden: item.Hidden}" value="{{item.Code}}">{{item.Name}}</option></select>  ' +
+ //'           <i></i>  ' +
+ //'       </label>  ' +
+ //'  </section>  ';
+ //       }();
 
         var getTemplate = function (tElem, tAttrs) {
             var mode = tAttrs.dicViewMode;
@@ -275,6 +363,9 @@
             if (mode === "2") {
                 return template2;
             }
+            if (mode === "3") {
+                return template3;
+            }
 
             return template1;
         }
@@ -287,6 +378,45 @@
             },
             controller: function ($scope, $element, $attrs, $transclude) {
                 var vm = this;
+                
+                vm.hackSelectOption = function (theVm, hackItemCode, dicTypeValue) {
+                    var theItem = null;
+                    //todo, why ex? angular.js:9413 TypeError: Cannot read property 'prop' of undefined
+                    if (1 === dicTypeValue) {
+                        var thePhase = tryFindItemWithCode(theVm.phases, hackItemCode);
+                        if (thePhase !== null) {
+                            theVm.selectPhase(thePhase);
+                            theItem = thePhase;
+                        }
+                    } else if (2 === dicTypeValue) {
+                        var theSubject = tryFindItemWithCode(theVm.subjects, hackItemCode);
+                        if (theSubject !== null) {
+                            theVm.selectSubject(theSubject);
+                            theItem = theSubject;
+                        }
+                    } else if (3 === dicTypeValue) {
+                        var theGrade = tryFindItemWithCode(theVm.grades, hackItemCode);
+                        if (theGrade !== null) {
+                            theVm.selectGrade(theGrade);
+                            theItem = theGrade;
+                        }
+                    }
+
+                    if (theItem) {
+                        console.log('hack for view mode 3 ng-options: ' + hackItemCode + ' -> '+ theItem.Name);
+                    }
+                };
+
+                ////hack for view mode 3 ng-options
+                //$scope.hackSelectOptionCodes = { Phase: "", Subject: "", Grade: "" };
+                //$scope.$watch('hackSelectOptionCodes', function (newValue, oldValue, scope) {
+                //    console.log(newValue.Phase + ',' + newValue.Subject + ',' + newValue.Grade);
+                //    console.log(oldValue.Phase + ',' + oldValue.Subject + ',' + oldValue.Grade);
+                //});
+
+                //var updatingUI = false;
+                //var theItem = null;
+              
                 
                 var dicSettings = $scope.dicSettings;
                 setupDicCatalogVm(vm, dicSettings);
@@ -347,7 +477,7 @@
                         item.Selected = false;
                         if (sameCodeItem(item, theItem)) {
                             item.Selected = true;
-                            //console.log('change to selected: ' + item.Name);
+                            console.log('change to selected: ' + item.Name);
                         }
                     });
                 };
@@ -462,6 +592,7 @@
                     changeSelect(vm.phases, item);
                     copyCodeAndName(vm.selectResult.Phase, item);
                     changeDisplay(vm);
+                    console.log('selectPhase: ' + item.Name);
                 }
                 vm.selectSubject = function (item) {
                     changeSelect(vm.subjects, item);

@@ -82,8 +82,6 @@
 
                         //console.log(result);
                         vm.dicSettings = result;
-                        vm.dicSettings2 = result;
-                        vm.dicSettings3 = result;
                     });
             });
         }());
@@ -127,8 +125,8 @@
                                     </span>
                                 </section>
 
-                                <div ng-if="vm.dicSettings3">
-                                    <div nb-dic-catalog dic-settings="vm.dicSettings3" select-result="vm.selectResult2" dic-view-mode="2"></div>
+                                <div ng-if="vm.dicSettings">
+                                    <div nb-dic-catalog dic-settings="vm.dicSettings" select-result="vm.selectResult2" dic-view-mode="2"></div>
                                 </div>
 
                                 <br class="clear-both">
@@ -142,13 +140,24 @@
                     </div>
 
                     <div class="row">
-                        <h2>{{vm.selectResult3}}</h2>
+                        <!--<h2>{{vm.selectResult3}}</h2>
                         <hr />
-                        <div class="search-block">
-                            <div ng-if="vm.dicSettings2">
-                                <div nb-dic-catalog dic-settings="vm.dicSettings2" select-result="vm.selectResult3" dic-view-mode="1"></div>
-                            </div>
-                        </div>
+                        <div class="form-search">
+                            <form class="sky-form">
+                                <div class="row">
+                                    <div ng-if="vm.dicSettings">
+                                        <div nb-dic-catalog dic-settings="vm.dicSettings" select-result="vm.selectResult3" dic-view-mode="3"></div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>-->
+                        <!--<select ng-options="o as o for o in s.options" ng-model="s.selectedOption" ng-change="optionChanged()"></select>-->
+                        <!--<select ng-model="vm.selectResult.Phase.Code" ng-options="item.Code as item.Name for item in vm.phases" options-class="{ hidden : item.Hidden }"></select>-->
+
+                        <!--<select ng-model="vm.selectResult.Phase"><option ng-selected="vm.selectPhase(item)" ng-repeat="item in vm.phases" value="{{item.Code}}">{{item.Name}}</option></select>
+                        <select><option ng-selected="vm.selectPhase(item)" ng-repeat="item in vm.phases" value="{{item.Code}}">{{item.Name}}</option></select>-->
+                        <!--<select ng-options="item.Code as item.Name for item in vm.phases | !item.Hidden" ng-model="vm.temp" ng-change="vm.selectPhase(item)"></select>-->
+                        <!--<select ng-options="o as o for o in s.options" ng-model="s.selectedOption" ng-change="optionChanged()"></select>-->
                     </div>
 
                 </div>
