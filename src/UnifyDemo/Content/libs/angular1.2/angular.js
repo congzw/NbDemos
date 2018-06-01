@@ -20156,7 +20156,12 @@ var selectDirective = ['$compile', '$parse', function($compile,   $parse) {
           if (selectCtrl.hasOption(viewValue)) {
             if (unknownOption.parent()) unknownOption.remove();
             selectElement.val(viewValue);
-            if (viewValue === '') emptyOption.prop('selected', true); // to make IE9 happy
+            if (viewValue === '') {
+                if (emptyOption) {
+                    emptyOption.prop('selected', true); // to make IE9 happy
+                }
+              }
+
           } else {
             if (isUndefined(viewValue) && emptyOption) {
               selectElement.val('');
