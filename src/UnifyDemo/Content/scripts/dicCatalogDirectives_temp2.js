@@ -30,7 +30,20 @@
             return (str2.toUpperCase() === str.toUpperCase());
         };
         var sameCodeItem = function (item1, item2) {
-            return item1 === item2 || equalIgnoreCase(item1.Code, item2.Code);
+            try {
+                //if (typeof item2 === "string") {
+                //    //hack for ng-options
+                //    console.log(item1);
+                //    return equalIgnoreCase(item1.Code, item2);
+                //}
+                return item1 === item2 || equalIgnoreCase(item1.Code, item2.Code);
+                
+            } catch (e) {
+                console.log('ex sameCodeItem');
+                console.log(item1);
+                console.log(item2);
+                throw e;
+            } 
         };
         var containItem = function (items, itemToCheck) {
             if (!items || !itemToCheck) {
@@ -270,62 +283,32 @@
         }();
 
         var template3 = function () {
-            return '     ' +
- '   <div class="dropdown my-dropdown">  ' +
- '       <div class="trigger dropdown-toggle" data-toggle="dropdown">  ' +
- '           学段(<span class="selectedDicCatalogItem">{{vm.selectResult.Phase.Name}}</span>)<span class="caret"></span>  ' +
- '       </div>  ' +
- '       <ul class="dropdown-menu">  ' +
- '           <li ng-repeat="item in vm.phases" ng-class="{active: vm.isCurrentPhase(item), hidden: item.Hidden}"><a href="javascript:void(0)" ng-click="vm.selectPhase(item)">{{item.Name}}</a></li>  ' +
- '       </ul>  ' +
- '   </div>  ' +
- '     ' +
- '   <div class="dropdown my-dropdown">  ' +
- '       <div class="trigger dropdown-toggle" data-toggle="dropdown">  ' +
- '           学科(<span class="selectedDicCatalogItem">{{vm.selectResult.Subject.Name}}</span>)<span class="caret"></span>  ' +
- '       </div>  ' +
- '       <ul class="dropdown-menu">  ' +
- '           <li ng-repeat="item in vm.subjects" ng-class="{active: vm.isCurrentSubject(item), hidden: item.Hidden}"><a href="javascript:void(0)" ng-click="vm.selectSubject(item)">{{item.Name}}</a></li>  ' +
- '       </ul>  ' +
- '   </div>  ' +
- '     ' +
- '   <div class="dropdown my-dropdown">  ' +
- '       <div class="trigger dropdown-toggle" data-toggle="dropdown">  ' +
- '           年级(<span class="selectedDicCatalogItem">{{vm.selectResult.Grade.Name}}</span>)<span class="caret"></span>  ' +
- '       </div>  ' +
- '       <ul class="dropdown-menu">  ' +
- '           <li ng-repeat="item in vm.grades" ng-class="{active: vm.isCurrentGrade(item), hidden: item.Hidden}"><a href="javascript:void(0)" ng-click="vm.selectGrade(item)">{{item.Name}}</a></li>  ' +
- '       </ul>  ' +
- '  </div>  ';
+            return '' +
+ '   <section class="col col-2">  ' +
+ '       <label class="select">  ' +
+ '           <select ng-model="vm.selectResult.Phase.Code" class="form-control" ng-change="vm.selectPhase(vm.selectResult.Phase.Code)">  ' +
+ '               <option ng-repeat="item in vm.phases" ng-selected="{{item.Code==vm.selectResult.Phase.Code}}" ng-class="{hidden: item.Hidden}" value="{{item.Code}}">{{item.Name}}</option>  ' +
+ '           </select>  ' +
+ '           <i></i>  ' +
+ '       </label>  ' +
+ '   </section>  ' +
+ '   <section class="col col-2">  ' +
+ '       <label class="select">  ' +
+ '           <select ng-model="vm.selectResult.Subject.Code" class="form-control" ng-change="vm.selectSubject(vm.selectResult.Subject.Code)">  ' +
+ '               <option ng-repeat="item in vm.subjects" ng-selected="{{item.Code==vm.selectResult.Subject.Code}}" ng-class="{hidden: item.Hidden}" value="{{item.Code}}">{{item.Name}}</option>  ' +
+ '           </select>  ' +
+ '           <i></i>  ' +
+ '       </label>  ' +
+ '   </section>  ' +
+ '   <section class="col col-2">  ' +
+ '       <label class="select">  ' +
+ '           <select ng-model="vm.selectResult.Grade.Code" class="form-control" ng-change="vm.selectGrade(vm.selectResult.Grade.Code)">  ' +
+ '               <option ng-repeat="item in vm.grades" ng-selected="{{item.Code==vm.selectResult.Grade.Code}}" ng-class="{hidden: item.Hidden}" value="{{item.Code}}">{{item.Name}}</option>  ' +
+ '           </select>  ' +
+ '           <i></i>  ' +
+ '       </label>  ' +
+ '  </section>  ';
         }();
-
-        var template4 = function () {
-                return '' +
-     '   <section class="col col-2">  ' +
-     '       <label class="select">  ' +
-     '           <select ng-model="vm.selectResult.Phase.Code" class="form-control" ng-change="vm.selectPhase(vm.selectResult.Phase.Code)">  ' +
-     '               <option ng-repeat="item in vm.phases" ng-selected="{{item.Code==vm.selectResult.Phase.Code}}" ng-class="{hidden: item.Hidden}" value="{{item.Code}}">{{item.Name}}</option>  ' +
-     '           </select>  ' +
-     '           <i></i>  ' +
-     '       </label>  ' +
-     '   </section>  ' +
-     '   <section class="col col-2">  ' +
-     '       <label class="select">  ' +
-     '           <select ng-model="vm.selectResult.Subject.Code" class="form-control" ng-change="vm.selectSubject(vm.selectResult.Subject.Code)">  ' +
-     '               <option ng-repeat="item in vm.subjects" ng-selected="{{item.Code==vm.selectResult.Subject.Code}}" ng-class="{hidden: item.Hidden}" value="{{item.Code}}">{{item.Name}}</option>  ' +
-     '           </select>  ' +
-     '           <i></i>  ' +
-     '       </label>  ' +
-     '   </section>  ' +
-     '   <section class="col col-2">  ' +
-     '       <label class="select">  ' +
-     '           <select ng-model="vm.selectResult.Grade.Code" class="form-control" ng-change="vm.selectGrade(vm.selectResult.Grade.Code)">  ' +
-     '               <option ng-repeat="item in vm.grades" ng-selected="{{item.Code==vm.selectResult.Grade.Code}}" ng-class="{hidden: item.Hidden}" value="{{item.Code}}">{{item.Name}}</option>  ' +
-     '           </select>  ' +
-     '           <i></i>  ' +
-     '       </label>  ' +
-     '  </section>  ';
-            }();
 
         var getTemplate = function (tElem, tAttrs) {
             var mode = tAttrs.dicViewMode;
@@ -341,9 +324,6 @@
             }
             if (mode === "3") {
                 return template3;
-            }
-            if (mode === "4") {
-                return template4;
             }
 
             return template1;
@@ -422,8 +402,16 @@
                     });
                 };
                 var copyCodeAndName = function (copyTo, copyFrom) {
-                    copyTo.Code = copyFrom.Code;
-                    copyTo.Name = copyFrom.Name;
+                    try {
+                        copyTo.Code = copyFrom.Code;
+                        copyTo.Name = copyFrom.Name;
+
+                    } catch (e) {
+                        console.log('ex copyCodeAndName');
+                        console.log(copyTo);
+                        console.log(copyFrom);
+                        throw e;
+                    }
                 };
                 var hideAll = function (items) {
                     angular.forEach(items, function (item) {
@@ -532,8 +520,8 @@
                 vm.selectPhase = function (item) {
                     //hack for ng-options
                     if (typeof item === "string") {
-                        //console.log('hack for ng-options selectPhase');
-                        //console.log(item);
+                        console.log('hack for ng-options selectPhase');
+                        console.log(item);
                         var hackItem = tryFindItemWithCode(vm.phases, item);
                         changeSelect(vm.phases, hackItem);
                         copyCodeAndName(vm.selectResult.Phase, hackItem);
@@ -547,8 +535,8 @@
                 vm.selectSubject = function (item) {
                     //hack for ng-options
                     if (typeof item === "string") {
-                        //console.log('hack for ng-options selectSubject');
-                        //console.log(item);
+                        console.log('hack for ng-options selectSubject');
+                        console.log(item);
                         var hackItem = tryFindItemWithCode(vm.subjects, item);
                         changeSelect(vm.subjects, hackItem);
                         copyCodeAndName(vm.selectResult.Subject, hackItem);
@@ -562,8 +550,8 @@
                 vm.selectGrade = function (item) {
                     //hack for ng-options
                     if (typeof item === "string") {
-                        //console.log('hack for ng-options selectGrade');
-                        //console.log(item);
+                        console.log('hack for ng-options selectGrade');
+                        console.log(item);
                         var hackItem = tryFindItemWithCode(vm.grades, item);
                         changeSelect(vm.grades, hackItem);
                         copyCodeAndName(vm.selectResult.Grade, hackItem);
