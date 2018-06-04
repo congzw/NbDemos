@@ -1,6 +1,40 @@
 ﻿(function () {
     'use strict';
     var mainApp = zqnb.mainApp;
+
+    mainApp.directive('nbDicSearch', function () {
+
+        //级联关系的逻辑
+        //学段（空）：展示所有学科、所有年级
+        //学段（非空）：筛选学段的学科、学段的年级
+        //学段+ 年级（同时非空）：筛选学段的学科、学段的年级、学段的年级的学科
+        //hacks:
+        //https://stackoverflow.com/questions/21177582/directive-is-being-rendered-before-promise-is-resolved
+
+        //org : {OrgId : '', OrgName:'', OrgTypeCode:''}
+        //phaseOrgTypes : [{PhaseCode: 'Phase1', OrgTypeCode: 'XueXiao-001'}]}
+        //=> org : {OrgId : '', OrgName:'', VisiablePhaseCodes:['Phase0','Phase1']}
+        //非学校？ => 教育局，科室？
+
+        var createEmptyItem = function () {
+            return { Code: "", Name: "全部", Selected: true, Hidden: false };
+        }
+        , createEmptyOrg = function () {
+            return { OrgId: '', OrgName: '全部', VisiablePhaseCodes: [] };
+        }
+        , searchResult = {
+            phase: createEmptyItem(),
+            subject: createEmptyItem(),
+            grade: createEmptyItem(),
+            org: createEmptyOrg()
+        }
+        , isEmptyItem = function () {
+        }
+        , foo = '';
+
+    });
+
+
     mainApp.directive('nbDicCatalog', function () {
 
         ////fix angularjs 1.2.x bug:
@@ -300,32 +334,32 @@
         }();
 
         var template4 = function () {
-                return '' +
-     '   <section class="col col-2">  ' +
-     '       <label class="select">  ' +
-     '           <select ng-model="vm.selectResult.Phase.Code" class="form-control" ng-change="vm.selectPhase(vm.selectResult.Phase.Code)">  ' +
-     '               <option ng-repeat="item in vm.phases" ng-selected="{{item.Code==vm.selectResult.Phase.Code}}" ng-class="{hidden: item.Hidden}" value="{{item.Code}}">{{item.Name}}</option>  ' +
-     '           </select>  ' +
-     '           <i></i>  ' +
-     '       </label>  ' +
-     '   </section>  ' +
-     '   <section class="col col-2">  ' +
-     '       <label class="select">  ' +
-     '           <select ng-model="vm.selectResult.Subject.Code" class="form-control" ng-change="vm.selectSubject(vm.selectResult.Subject.Code)">  ' +
-     '               <option ng-repeat="item in vm.subjects" ng-selected="{{item.Code==vm.selectResult.Subject.Code}}" ng-class="{hidden: item.Hidden}" value="{{item.Code}}">{{item.Name}}</option>  ' +
-     '           </select>  ' +
-     '           <i></i>  ' +
-     '       </label>  ' +
-     '   </section>  ' +
-     '   <section class="col col-2">  ' +
-     '       <label class="select">  ' +
-     '           <select ng-model="vm.selectResult.Grade.Code" class="form-control" ng-change="vm.selectGrade(vm.selectResult.Grade.Code)">  ' +
-     '               <option ng-repeat="item in vm.grades" ng-selected="{{item.Code==vm.selectResult.Grade.Code}}" ng-class="{hidden: item.Hidden}" value="{{item.Code}}">{{item.Name}}</option>  ' +
-     '           </select>  ' +
-     '           <i></i>  ' +
-     '       </label>  ' +
-     '  </section>  ';
-            }();
+            return '' +
+ '   <section class="col col-2">  ' +
+ '       <label class="select">  ' +
+ '           <select ng-model="vm.selectResult.Phase.Code" class="form-control" ng-change="vm.selectPhase(vm.selectResult.Phase.Code)">  ' +
+ '               <option ng-repeat="item in vm.phases" ng-selected="{{item.Code==vm.selectResult.Phase.Code}}" ng-class="{hidden: item.Hidden}" value="{{item.Code}}">{{item.Name}}</option>  ' +
+ '           </select>  ' +
+ '           <i></i>  ' +
+ '       </label>  ' +
+ '   </section>  ' +
+ '   <section class="col col-2">  ' +
+ '       <label class="select">  ' +
+ '           <select ng-model="vm.selectResult.Subject.Code" class="form-control" ng-change="vm.selectSubject(vm.selectResult.Subject.Code)">  ' +
+ '               <option ng-repeat="item in vm.subjects" ng-selected="{{item.Code==vm.selectResult.Subject.Code}}" ng-class="{hidden: item.Hidden}" value="{{item.Code}}">{{item.Name}}</option>  ' +
+ '           </select>  ' +
+ '           <i></i>  ' +
+ '       </label>  ' +
+ '   </section>  ' +
+ '   <section class="col col-2">  ' +
+ '       <label class="select">  ' +
+ '           <select ng-model="vm.selectResult.Grade.Code" class="form-control" ng-change="vm.selectGrade(vm.selectResult.Grade.Code)">  ' +
+ '               <option ng-repeat="item in vm.grades" ng-selected="{{item.Code==vm.selectResult.Grade.Code}}" ng-class="{hidden: item.Hidden}" value="{{item.Code}}">{{item.Name}}</option>  ' +
+ '           </select>  ' +
+ '           <i></i>  ' +
+ '       </label>  ' +
+ '  </section>  ';
+        }();
 
         var getTemplate = function (tElem, tAttrs) {
             var mode = tAttrs.dicViewMode;
@@ -357,7 +391,7 @@
             },
             controller: function ($scope, $element, $attrs, $transclude) {
                 var vm = this;
-                
+
                 var dicSettings = $scope.dicSettings;
                 setupDicCatalogVm(vm, dicSettings);
                 var selectResult = $scope.selectResult;
@@ -366,7 +400,7 @@
 
                 var shouldShowThisPhase = function (visiablePhases, phase) {
                     //全部永远显示
-                    if(sameCodeItem(phase, emptyPhase)) {
+                    if (sameCodeItem(phase, emptyPhase)) {
                         return true;
                     }
                     var phaseCodeItem = { Code: phase.Code };
@@ -376,7 +410,7 @@
                 var shouldShowCurrentPhaseSubject = function (theVm, subject) {
 
                     //全部永远显示
-                    if(sameCodeItem(subject, emptySubject)) {
+                    if (sameCodeItem(subject, emptySubject)) {
                         return true;
                     }
                     var phaseSubjectCodeItem = { Code: theVm.selectResult.Phase.Code + ',' + subject.Code };
@@ -389,7 +423,7 @@
                 var shouldShowCurrentPhaseGrade = function (theVm, grade) {
 
                     //全部永远显示
-                    if(sameCodeItem(grade, emptyGrade)) {
+                    if (sameCodeItem(grade, emptyGrade)) {
                         return true;
                     }
                     var phaseGradeCodeItem = { Code: theVm.selectResult.Phase.Code + ',' + grade.Code };
@@ -402,7 +436,7 @@
                 var shouldShowCurrentPhaseSubjectGrade = function (theVm, grade) {
 
                     //全部永远显示
-                    if(sameCodeItem(grade, emptyGrade)) {
+                    if (sameCodeItem(grade, emptyGrade)) {
                         return true;
                     }
                     var phaseSubjectGradeCodeItem = { Code: theVm.selectResult.Phase.Code + ',' + theVm.selectResult.Subject.Code + ',' + grade.Code };
@@ -427,7 +461,7 @@
                 };
                 var hideAll = function (items) {
                     angular.forEach(items, function (item) {
-                        if(item.Code === "") {
+                        if (item.Code === "") {
                             //console.log("Empty Hide: " + item.Name);
                             item.Hidden = false;
                             return;
@@ -584,7 +618,7 @@
                     return sameCodeItem(grade, vm.selectResult.Grade);
                 };
                 //console.log(dicSettings);
-                
+
                 changeDisplay(vm);
             },
             controllerAs: 'vm',

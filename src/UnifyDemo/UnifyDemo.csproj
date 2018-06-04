@@ -95,6 +95,7 @@
     <Content Include="Content\scripts\zqnb.js" />
     <Content Include="Content\scripts\zqnb.mainApp.js" />
     <Content Include="Content\scripts\zqnb.mainApp.unify.js" />
+    <Content Include="Content\scripts\_temp.js" />
     <Content Include="Content\Unify\angular-dics-directives2.html" />
     <Content Include="Content\Unify\angular-dics-directives.html" />
     <Content Include="Content\Unify\angular-tabs.html" />
