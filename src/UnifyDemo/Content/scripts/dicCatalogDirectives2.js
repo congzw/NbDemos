@@ -2,7 +2,7 @@
     'use strict';
     var mainApp = zqnb.mainApp;
 
-    mainApp.directive('nbDicSearch', function () {
+    mainApp.directive('nbDicItem', function () {
 
         //级联关系的逻辑
         //学段（空）：展示所有学科、所有年级
@@ -15,6 +15,7 @@
         //phaseOrgTypes : [{PhaseCode: 'Phase1', OrgTypeCode: 'XueXiao-001'}]}
         //=> org : {OrgId : '', OrgName:'', VisiablePhaseCodes:['Phase0','Phase1']}
         //非学校？ => 教育局，科室？
+        //todo just add visiablePhaseCode for user or org...
 
         var createEmptyItem = function () {
             return { Code: "", Name: "全部", Selected: true, Hidden: false };
@@ -33,8 +34,7 @@
         , foo = '';
 
     });
-
-
+    
     mainApp.directive('nbDicCatalog', function () {
 
         ////fix angularjs 1.2.x bug:

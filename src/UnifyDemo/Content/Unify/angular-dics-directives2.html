@@ -59,9 +59,50 @@
         (function () {
             'use strict';
             var mainApp = zqnb.mainApp;
+            
+            mainApp.controller('orgCtrl', function ($scope) {
+                var vm = this;
+                var emptyOrg = { OrgId: '', OrgName: '全部', OrgTypeCode: '', VisiablePhaseCodes: [] };
+                vm.Orgs = [emptyOrg, { OrgId: 'GUID_001', OrgName: '一中', OrgTypeCode: '' }, { OrgId: 'GUID_002', OrgName: '二中', OrgTypeCode: '' }];
+                vm.selectedOrgId = '';
+                vm.selectAction = function () {
+                    console.log(vm.selectedOrgId);
+                }
+            });
 
-            mainApp.factory('dicCatalogAppService', [
-                '$http', function ($http) {
+            mainApp.directive('nbDicOrg', function () {
+
+                //org : {OrgId : '', OrgName:'', OrgTypeCode:''}
+                //phaseOrgTypes : [{PhaseCode: 'Phase1', OrgTypeCode: 'XueXiao-001'}]}
+                //=> org : {OrgId : '', OrgName:'', VisiablePhaseCodes:['Phase0','Phase1']}
+                //非学校？ => 教育局，科室？
+                //todo just add visiablePhaseCode for user or org...
+
+                var createEmptyOrg = function () {
+                    return { OrgId: '', OrgName: '全部', VisiablePhaseCodes: [] };
+                }
+                , currentOrg = {
+                    org: createEmptyOrg()
+                }
+                , template = '';
+
+                return {
+                    scope: {
+                        selectOrgId: '=',
+                        orgs: '='
+                    },
+                    controller: function ($scope, $element, $attrs, $transclude) {
+                        var vm = this;
+                        vm.orgs = $scope.orgs;
+                        console.log(vm.orgs);
+                    },
+                    controllerAs: 'vm',
+                    template: template
+                };
+
+            });
+
+            mainApp.factory('dicCatalogAppService', ['$http', function ($http) {
                     var serviceUrl = '/Content/scripts/GetDicCatalogs.js';
                     return {
                         getDicCatalogs: function () {
@@ -85,9 +126,10 @@
                         //console.log(result);
                         vm.dicSettings = result;
 
-                        vm.schools = [{Name:'', SortNum: 0, OrgTypeCode : ''}]; //todo
+                        vm.orgs = [{Name:'', SortNum: 0, OrgTypeCode : ''}]; //todo
                     });
             });
+
         }());
     </script>
 
@@ -102,10 +144,21 @@
     <div class="wrapper">
         <div ng-app="mainApp">
             <div class="container">
+                
+                <div class="row" ng-controller="orgCtrl as vm">
+
+                    <h2>{{vm.Orgs}}</h2>
+                    <hr />
+                    <select ng-change="vm.selectAction()"
+                            ng-model="vm.selectedOrgId"
+                            ng-options="org.OrgId as org.OrgName for org in vm.Orgs">
+                    </select>
+
+                </div>
                 <div ng-controller="demoCtrl as vm">
                     <div class="row">
                         <h2>{{vm.selectResult}}</h2>
-                        <hr />
+                        <hr/>
                         <div class="search-block">
                             <div ng-if="vm.dicSettings">
                                 <div nb-dic-catalog dic-settings="vm.dicSettings" select-result="vm.selectResult"></div>
@@ -145,7 +198,7 @@
 
                     <div class="row">
                         <h2>{{vm.selectResult3}}</h2>
-                        <hr />
+                        <hr/>
                         <div class="form-search margin-bottom-25">
                             <!-- skyform-->
                             <form action="" class="sky-form">
