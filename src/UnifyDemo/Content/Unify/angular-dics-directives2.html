@@ -1,0 +1,174 @@
+﻿<!DOCTYPE html>
+<!--[if IE 8]>
+<html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9]>
+<html lang="en" class="ie9"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+<head>
+    <title>angular-dics</title>
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link href="assets/plugins/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link href="assets/css/style.css" rel="stylesheet" />
+    <link href="assets/plugins/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="assets/css/theme-colors/blue.css" rel="stylesheet" />
+    <link href="assets/plugins/sky-forms-pro/skyforms/css/sky-forms.css" rel="stylesheet" />
+    <link href="/Content/css/layout_template.css" rel="stylesheet">
+    <style>
+        .search-block .term-box .term {
+            float: left;
+            margin-right: 2em;
+            padding: 5px 15px;
+            background-color: #ddd;
+            color: #7c8082;
+        }
+
+        .search-block .nav > li > a {
+            padding: 3px 12px;
+        }
+
+        .search-block .term-box:not(:last-child) {
+            border-bottom: 1px dashed #ddd;
+        }
+
+        .search-block .term-box {
+            overflow: Hidden;
+            padding: 15px;
+        }
+
+        .selectedDicCatalogItem {
+            /*color: red;*/
+            color: #e67e22 !important;
+        }
+    </style>
+
+    <!-- JS Global Compulsory -->
+    <script src="assets/plugins/jquery/jquery.js"></script>
+    <script src="assets/plugins/bootstrap/js/bootstrap.js"></script>
+    <script src="../libs/angular1.2/angular.js"></script>
+    <script src="../scripts/zqnb.js"></script>
+    <script src="../scripts/zqnb.mainApp.js"></script>
+    <script src="../scripts/zqnb.mainApp.unify.js"></script>
+    <script src="../scripts/dicCatalogDirectives2.js"></script>
+    <script>
+        (function () {
+            'use strict';
+            var mainApp = zqnb.mainApp;
+
+            mainApp.factory('dicCatalogAppService', [
+                '$http', function ($http) {
+                    var serviceUrl = '/Content/scripts/GetDicCatalogs.js';
+                    return {
+                        getDicCatalogs: function () {
+                            return $http.get(serviceUrl);
+                        }
+                    }
+                }
+            ]);
+
+            mainApp.controller('demoCtrl', function ($scope, dicCatalogAppService) {
+                var vm = this;
+                vm.selectResult = { Phase: { Code: "Phase1" }, Subject: { Code: "GS001" }, Grade: { Code: "GO003" } };
+                vm.selectResult2 = {};
+                vm.selectResult3 = {};
+                dicCatalogAppService.getDicCatalogs()
+                    .success(function (result) {
+
+                        //use ng-if="vm.dicSettings" hack deferred!
+                        //https://stackoverflow.com/questions/21177582/directive-is-being-rendered-before-promise-is-resolved
+
+                        //console.log(result);
+                        vm.dicSettings = result;
+                    });
+            });
+        }());
+    </script>
+
+    <!--[if lt IE 9]>
+            <script src="assets/plugins/respond.js"></script>
+            <script src="assets/plugins/html5shiv.js"></script>
+            <script src="assets/plugins/placeholder-IE-fixes.js"></script>
+        <![endif]-->
+
+</head>
+<body>
+    <div class="wrapper">
+        <div ng-app="mainApp">
+            <div class="container">
+                <div ng-controller="demoCtrl as vm">
+                    <div class="row">
+                        <h2>{{vm.selectResult}}</h2>
+                        <hr />
+                        <div class="search-block">
+                            <div ng-if="vm.dicSettings">
+                                <div nb-dic-catalog dic-settings="vm.dicSettings" select-result="vm.selectResult"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <h2>{{vm.selectResult2}}</h2>
+                        <hr/>
+                        <div class="form-search margin-bottom-25">
+                            <!-- skyform-->
+                            <form action="" class="sky-form">
+                                <!-- 搜索input-->
+                                <section class="input-group col col-4">
+                                    <input type="text" class="form-control" placeholder="按标题搜索">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-u" type="button">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </span>
+                                </section>
+
+                                <div ng-if="vm.dicSettings">
+                                    <div nb-dic-catalog dic-settings="vm.dicSettings" select-result="vm.selectResult2" dic-view-mode="2"></div>
+                                </div>
+
+                                <br class="clear-both">
+                            </form>
+                            <span class="search-result">
+                                共找到
+                                <span class="color-orange">125</span>
+                                个视频
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <h2>{{vm.selectResult3}}</h2>
+                        <hr />
+                        <div class="form-search margin-bottom-25">
+                            <!-- skyform-->
+                            <form action="" class="sky-form">
+                                <!-- 搜索input-->
+                                <section class="input-group col col-4">
+                                    <input type="text" class="form-control" placeholder="按标题搜索">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-u" type="button">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </span>
+                                </section>
+
+                                <div ng-if="vm.dicSettings">
+                                    <div nb-dic-catalog dic-settings="vm.dicSettings" select-result="vm.selectResult3" dic-view-mode="4"></div>
+                                </div>
+
+                                <br class="clear-both">
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
