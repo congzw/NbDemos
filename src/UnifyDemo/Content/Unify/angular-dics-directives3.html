@@ -1,0 +1,262 @@
+﻿<!DOCTYPE html>
+<!--[if IE 8]>
+<html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9]>
+<html lang="en" class="ie9"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+<head>
+    <title>angular-dics</title>
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link href="assets/plugins/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link href="assets/css/style.css" rel="stylesheet" />
+    <link href="assets/plugins/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="assets/css/theme-colors/blue.css" rel="stylesheet" />
+    <link href="assets/plugins/sky-forms-pro/skyforms/css/sky-forms.css" rel="stylesheet" />
+    <link href="/Content/css/layout_template.css" rel="stylesheet">
+    <style>
+        .search-block .term-box .term {
+            float: left;
+            margin-right: 2em;
+            padding: 5px 15px;
+            background-color: #ddd;
+            color: #7c8082;
+        }
+
+        .search-block .nav > li > a {
+            padding: 3px 12px;
+        }
+
+        .search-block .term-box:not(:last-child) {
+            border-bottom: 1px dashed #ddd;
+        }
+
+        .search-block .term-box {
+            overflow: Hidden;
+            padding: 15px;
+        }
+
+        .selectedDicCatalogItem {
+            /*color: red;*/
+            color: #e67e22 !important;
+        }
+    </style>
+
+    <!-- JS Global Compulsory -->
+    <script src="assets/plugins/jquery/jquery.js"></script>
+    <script src="assets/plugins/bootstrap/js/bootstrap.js"></script>
+    <script src="../libs/angular1.2/angular.js"></script>
+    <script src="../scripts/zqnb.js"></script>
+    <script src="../scripts/zqnb.mainApp.js"></script>
+    <script src="../scripts/zqnb.mainApp.unify.js"></script>
+    <script>
+        (function () {
+            'use strict';
+            var mainApp = zqnb.mainApp;
+
+            var createEmptyItem = function () {
+                return { Code: "", Name: "全部" };
+            };
+
+
+            mainApp.factory('dicCatalogAppService', ['$http', function ($http) {
+                var serviceUrl = '/Content/scripts/GetDicCatalogs.js';
+                return {
+                    getDicCatalogs: function () {
+                        return $http.get(serviceUrl);
+                    }
+                }
+            }
+            ]);
+
+            mainApp.controller('demoCtrl', function ($scope, dicCatalogAppService) {
+                var vm = this;
+
+                vm.selectResult = {
+                    Phase: createEmptyItem(),
+                    Subject: { Code: "GS001" },
+                    Grade: { Code: "GO003" }
+                };
+
+
+                vm.selectResult.Phase.Code = "Phase1";
+
+                //vm.selectResult = {
+                //    Phase: { Code: "Phase1"},
+                //    Subject: { Code: "GS001"},
+                //    Grade: { Code: "GO003"}
+                //};
+
+                var emptyPhase = createEmptyItem();
+
+                vm.resetPhase = function () {
+                    vm.selectResult.Phase = emptyPhase;
+                };
+
+                dicCatalogAppService.getDicCatalogs()
+                    .success(function (result) {
+
+                        //create phases
+                        var phases = [];
+                        phases.push(emptyPhase);
+                        angular.forEach(result, function (item, key) {
+                            phases.push({ Code: item.Code, Name: item.Name });
+                        });
+                        vm.phases = phases;
+
+                    });
+            });
+
+            mainApp.directive('nbSelectItems', function () {
+
+                var template1 = function () {
+                    return '' +
+                        '<div class="term-box">  ' +
+                        '    <span class="term">{{vm.category}}(<span class="selectedDicCatalogItem">{{vm.current.Name}}</span>)</span>  ' +
+                        '    <ul class="nav nav-pills overflow-h">  ' +
+                        '        <li ng-repeat="item in vm.items" ng-class="{active: vm.Selected, hidden: item.Hidden}">  ' +
+                        '            <a href="javascript:void(0)" ng-click="vm.selectItem(item)">  ' +
+                        '                {{item.Name}}  ' +
+                        '            </a>  ' +
+                        '        </li>  ' +
+                        '    </ul>  ' +
+                        '</div>  ';
+                }();
+                var template2 = '';
+                var template3 = '';
+                var template4 = '';
+                var getTemplate = function (tElem, tAttrs) {
+                    var mode = tAttrs.dicViewMode;
+                    if (!mode) {
+                        return template1;
+                    }
+
+                    if (mode === "1") {
+                        return template1;
+                    }
+                    if (mode === "2") {
+                        return template2;
+                    }
+                    if (mode === "3") {
+                        return template3;
+                    }
+                    if (mode === "4") {
+                        return template4;
+                    }
+
+                    return template1;
+                }
+
+                return {
+                    scope: {
+                        category: '@',
+                        current: '=',
+                        items: '=',
+                        dicViewMode: '@'
+                    },
+                    controller: function ($scope, $element, $attrs, $transclude) {
+                        var vm = this;
+
+                        vm.category = $scope.category;
+                        vm.current = $scope.current;
+                        vm.items = $scope.items;
+
+                        var fixVm = function (theVm) {
+                            //fix selected
+                            angular.forEach(theVm.items, function (theItem, key) {
+                                theItem.Selected = false;
+                                //vm.current.Hidden = theItem.InUse;
+                            });
+
+                        };
+
+                        fixVm(vm);
+
+                        //fix name and selected
+                        angular.forEach(vm.items, function (theItem, key) {
+                            if (vm.current.Code === theItem.Code) {
+                                vm.current = theItem;
+                                //console.log($scope.current);
+                                return;
+                            }
+                        });
+
+
+                        ////fix name and selected
+                        //angular.forEach(vm.items, function (theItem, key) {
+                        //    if (vm.current.Code === theItem.Code) {
+                        //        vm.current.Name = theItem.Name;
+                        //        return;
+                        //    }
+                        //});
+
+                        //vm.isCurrentItem = function (item) {
+                        //    return vm.current.Code === item.Code;
+                        //};
+                        vm.selectItem = function (item) {
+        
+                            vm.current = item;
+                            //$scope.current = item;
+                            //console.log($scope.current);
+                        };
+                        vm.getItemName = function (item) {
+                            if (item.Name) {
+                                return item.Name;
+                            }
+                            //need fix
+                            angular.forEach(vm.items, function (theItem, key) {
+                                if (item.Code === theItem.Code) {
+                                    item.Name = theItem.Name;
+                                    return theItem.Name;
+                                }
+                                return '';
+                            });
+                            return '';
+                        };
+                    },
+                    controllerAs: 'vm',
+                    template: getTemplate
+                };
+            });
+        }());
+    </script>
+
+    <!--[if lt IE 9]>
+            <script src="assets/plugins/respond.js"></script>
+            <script src="assets/plugins/html5shiv.js"></script>
+            <script src="assets/plugins/placeholder-IE-fixes.js"></script>
+        <![endif]-->
+
+</head>
+<body>
+    <div class="wrapper">
+        <div ng-app="mainApp">
+            <div class="container">
+
+                <div ng-controller="demoCtrl as vm">
+                    <div class="row">
+                        <h2>{{vm.selectResult}}</h2>
+                        <hr />
+                        <div class="search-block">
+                            <div ng-if="vm.phases">
+                                <div nb-select-items category="学段" items="vm.phases" current="vm.selectResult.Phase"></div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <button class="btn btn-default" ng-click="vm.resetPhase()">重置学段</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
