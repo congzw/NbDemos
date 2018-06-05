@@ -75,16 +75,16 @@
             ]);
 
             mainApp.controller('demoCtrl', function ($scope, dicCatalogAppService) {
-         
+
                 var emptyPhase = createEmptyItem();
                 var emptySubject = createEmptyItem();
                 var emptyGrade = createEmptyItem();
 
-                var selectResult = function () {
-                    var result = {};
+                var dicCatalogVm = function () {
+                    var vm = {};
                     var initCodes = ['Phase2', 'GS001', 'GO003'],
-                        findItem = function(items, code) {
-                            angular.forEach(items, function(item, key) {
+                        findItem = function (items, code) {
+                            angular.forEach(items, function (item, key) {
                                 if (item.Code === code) {
                                     return item;
                                 }
@@ -95,10 +95,10 @@
                         subject = emptySubject,
                         grade = emptyGrade,
                         getSelectCodes = function () {
-                            return [result.Phase.Code, result.Subject.Code, result.Grade.Code];
+                            return [vm.Phase.Code, vm.Subject.Code, vm.Grade.Code];
                         }
 
-                    result = {
+                    vm = {
                         InitCodes: initCodes,
                         FindItem: findItem,
                         Phase: phase,
@@ -109,15 +109,10 @@
                         Grades: null,
                         GetSelectCodes: getSelectCodes
                     };
-                    return result;
+                    return vm;
                 }();
 
-                $scope.selectResult = selectResult;
-
-
-                $scope.resetPhase = function () {
-                    selectResult.Phase = emptyPhase;
-                };
+                $scope.dicCatalogVm = dicCatalogVm;
 
                 dicCatalogAppService.getDicCatalogs()
                     .success(function (result) {
@@ -129,12 +124,18 @@
                             phases.push({ Code: item.Code, Name: item.Name });
                         });
 
-                        var thePhase = selectResult.FindItem(phases, selectResult.InitCodes[0]);
+                        var thePhase = dicCatalogVm.FindItem(phases, dicCatalogVm.InitCodes[0]);
                         if (thePhase) {
-                            selectResult.Phase = thePhase;
+                            dicCatalogVm.Phase = thePhase;
                         }
-                        $scope.phases = phases;
+                        dicCatalogVm.Phases = phases;
+                        //$scope.phases = phases;
                     });
+
+                //for demo
+                $scope.resetPhase = function () {
+                    dicCatalogVm.Phase = emptyPhase;
+                };
             });
 
             mainApp.directive('nbSelectItems', function () {
@@ -181,19 +182,19 @@
                     scope: {
                         category: '@',
                         items: '=',
-                        result: '=',
+                        dicCatalogVm: '=',
                         dicViewMode: '@'
                     },
                     controller: function ($scope, $element, $attrs, $transclude) {
 
                         $scope.isCurrentItem = function (item) {
-                            return $scope.result.Phase === item;
+                            return $scope.dicCatalogVm.Phase === item;
                         };
                         $scope.selectItem = function (item) {
-                            $scope.result.Phase = item;
+                            $scope.dicCatalogVm.Phase = item;
                             ////todo reset for subjects and grades
-                            //$scope.result.Subject.Code = item.Code;
-                            //$scope.result.Grade.Code = item.Code;
+                            //$scope.dicCatalogVm.Subject.Code = item.Code;
+                            //$scope.dicCatalogVm.Grade.Code = item.Code;
                         };
                     },
                     template: getTemplate
@@ -216,11 +217,11 @@
 
                 <div ng-controller="demoCtrl as vm">
                     <div class="row">
-                        <h2>{{selectResult.GetSelectCodes()}}</h2>
+                        <h2>{{dicCatalogVm.GetSelectCodes()}}</h2>
                         <hr />
                         <div class="search-block">
-                            <div ng-if="phases">
-                                <div nb-select-items category="学段" items="phases" result="selectResult"></div>
+                            <div ng-if="dicCatalogVm.Phases">
+                                <div nb-select-items category="学段" items="dicCatalogVm.Phases" dic-catalog-vm="dicCatalogVm"></div>
                             </div>
                         </div>
                     </div>
