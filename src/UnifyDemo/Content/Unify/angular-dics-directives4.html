@@ -1,0 +1,255 @@
+﻿<!DOCTYPE html>
+<!--[if IE 8]>
+<html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9]>
+<html lang="en" class="ie9"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+<head>
+    <title>angular-dics</title>
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link href="assets/plugins/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link href="assets/css/style.css" rel="stylesheet" />
+    <link href="assets/plugins/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="assets/css/theme-colors/blue.css" rel="stylesheet" />
+    <link href="assets/plugins/sky-forms-pro/skyforms/css/sky-forms.css" rel="stylesheet" />
+    <link href="/Content/css/layout_template.css" rel="stylesheet">
+    <style>
+        .search-block .term-box .term {
+            float: left;
+            margin-right: 2em;
+            padding: 5px 15px;
+            background-color: #ddd;
+            color: #7c8082;
+        }
+
+        .search-block .nav > li > a {
+            padding: 3px 12px;
+        }
+
+        .search-block .term-box:not(:last-child) {
+            border-bottom: 1px dashed #ddd;
+        }
+
+        .search-block .term-box {
+            overflow: Hidden;
+            padding: 15px;
+        }
+
+        .selectedDicCatalogItem {
+            /*color: red;*/
+            color: #e67e22 !important;
+        }
+    </style>
+
+    <!-- JS Global Compulsory -->
+    <script src="assets/plugins/jquery/jquery.js"></script>
+    <script src="assets/plugins/bootstrap/js/bootstrap.js"></script>
+    <script src="../libs/angular1.2/angular.js"></script>
+    <script src="../scripts/zqnb.js"></script>
+    <script src="../scripts/zqnb.mainApp.js"></script>
+    <script src="../scripts/zqnb.mainApp.unify.js"></script>
+    <script>
+        (function () {
+            'use strict';
+            var mainApp = zqnb.mainApp;
+
+            var createEmptyItem = function () {
+                return { Code: "", Name: "全部" };
+            };
+
+
+            mainApp.factory('dicCatalogAppService', ['$http', function ($http) {
+                var serviceUrl = '/Content/scripts/GetDicCatalogs.js';
+                return {
+                    getDicCatalogs: function () {
+                        return $http.get(serviceUrl);
+                    }
+                }
+            }
+            ]);
+
+            mainApp.controller('demoCtrl', function ($scope, dicCatalogAppService) {
+
+                //'&' and '=' function binding
+                //https://stackoverflow.com/questions/25808193/angularjs-isolate-scope-vs
+
+                var emptyPhase = createEmptyItem();
+                var emptySubject = createEmptyItem();
+                var emptyGrade = createEmptyItem();
+
+                var dicCatalogVm = function () {
+                    var vm = {};
+                    var initCodes = ['Phase2', 'GS001', 'GO003'],
+                        findItem = function (items, code) {
+                            angular.forEach(items, function (item, key) {
+                                if (item.Code === code) {
+                                    return item;
+                                }
+                                return null;
+                            });
+                        },
+                        phase = emptyPhase,
+                        subject = emptySubject,
+                        grade = emptyGrade,
+                        getSelectCodes = function () {
+                            return [vm.Phase.Code, vm.Subject.Code, vm.Grade.Code];
+                        }
+
+                    vm = {
+                        InitCodes: initCodes,
+                        FindItem: findItem,
+                        Phase: phase,
+                        Phases: null,
+                        Subject: subject,
+                        Subjects: null,
+                        Grade: grade,
+                        Grades: null,
+                        GetSelectCodes: getSelectCodes
+                    };
+                    return vm;
+                }();
+
+                $scope.dicCatalogVm = dicCatalogVm;
+
+                
+                $scope.message = 'SelectCodes: ';
+                $scope.updateView = function () {
+                    $scope.message = 'SelectCodes: ' + dicCatalogVm.GetSelectCodes();
+                };
+
+                dicCatalogAppService.getDicCatalogs()
+                    .success(function (result) {
+
+                        //create phases
+                        var phases = [];
+                        phases.push(emptyPhase);
+                        angular.forEach(result, function (item, key) {
+                            phases.push({ Code: item.Code, Name: item.Name });
+                        });
+
+                        var thePhase = dicCatalogVm.FindItem(phases, dicCatalogVm.InitCodes[0]);
+                        if (thePhase) {
+                            dicCatalogVm.Phase = thePhase;
+                        }
+                        dicCatalogVm.Phases = phases;
+                        //$scope.phases = phases;
+                    });
+
+                //for demo
+                $scope.resetPhase = function () {
+                    dicCatalogVm.Phase = emptyPhase;
+                };
+            });
+
+            mainApp.directive('nbSelectItems', function () {
+
+                var template1 = function () {
+                    return '' +
+                        '<div class="term-box">  ' +
+                        '    <span class="term">{{category}}(<span class="selectedDicCatalogItem">{{result.Phase.Name}}</span>)</span>  ' +
+                        '    <ul class="nav nav-pills overflow-h">  ' +
+                        '        <li ng-repeat="item in items" ng-class="{active: isCurrentItem(item), hidden: item.Hidden}">  ' +
+                        '            <a href="javascript:void(0)" ng-click="selectItem(item)">  ' +
+                        '                {{item.Name}}  ' +
+                        '            </a>  ' +
+                        '        </li>  ' +
+                        '    </ul>  ' +
+                        '</div>  ';
+                }();
+                var template2 = '';
+                var template3 = '';
+                var template4 = '';
+                var getTemplate = function (tElem, tAttrs) {
+                    var mode = tAttrs.dicViewMode;
+                    if (!mode) {
+                        return template1;
+                    }
+
+                    if (mode === "1") {
+                        return template1;
+                    }
+                    if (mode === "2") {
+                        return template2;
+                    }
+                    if (mode === "3") {
+                        return template3;
+                    }
+                    if (mode === "4") {
+                        return template4;
+                    }
+
+                    return template1;
+                }
+
+                return {
+                    scope: {
+                        category: '@',
+                        updateView: '=',
+                        items: '=',
+                        dicCatalogVm: '=',
+                        dicViewMode: '@'
+                    },
+                    controller: function ($scope, $element, $attrs, $transclude) {
+
+                        var updateView = $scope.updateView;
+
+                        $scope.isCurrentItem = function (item) {
+                            return $scope.dicCatalogVm.Phase === item;
+                        };
+                        $scope.selectItem = function (item) {
+                            $scope.dicCatalogVm.Phase = item;
+                            ////todo reset for subjects and grades
+                            //$scope.dicCatalogVm.Subject.Code = item.Code;
+                            //$scope.dicCatalogVm.Grade.Code = item.Code;
+                            updateView();
+                        };
+                    },
+                    template: getTemplate
+                };
+            });
+        }());
+    </script>
+
+    <!--[if lt IE 9]>
+            <script src="assets/plugins/respond.js"></script>
+            <script src="assets/plugins/html5shiv.js"></script>
+            <script src="assets/plugins/placeholder-IE-fixes.js"></script>
+        <![endif]-->
+
+</head>
+<body>
+    <div class="wrapper">
+        <div ng-app="mainApp">
+            <div class="container">
+
+                <div ng-controller="demoCtrl as vm">
+                    <div class="row">
+
+                        <h2>{{message}}</h2>
+                        <hr />
+                        <h2>{{dicCatalogVm.GetSelectCodes()}}</h2>
+                        <hr/>
+                        <div class="search-block">
+                            <div ng-if="dicCatalogVm.Phases">
+                                <div nb-select-items category="学段" update-view="updateView" items="dicCatalogVm.Phases" dic-catalog-vm="dicCatalogVm"></div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <button class="btn btn-default" ng-click="resetPhase()">重置学段</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
