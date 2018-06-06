@@ -1,0 +1,25 @@
+﻿.search-block .term-box .term {
+    float: left;
+    margin-right: 2em;
+    padding: 5px 15px;
+    background-color: #ddd;
+    color: #7c8082;
+}
+
+.search-block .nav > li > a {
+    padding: 3px 12px;
+}
+
+.search-block .term-box:not(:last-child) {
+    border-bottom: 1px dashed #ddd;
+}
+
+.search-block .term-box {
+    overflow: Hidden;
+    padding: 15px;
+}
+
+.selectedDicCatalogItem {
+    /*color: red;*/
+    color: #e67e22 !important;
+}

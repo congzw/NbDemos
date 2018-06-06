@@ -80,6 +80,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\css\dics.css" />
     <Content Include="Content\css\layout_template.css" />
     <Content Include="Content\libs\angular1.2\angular.js" />
     <Content Include="Content\libs\angular1.2\ui-bootstrap\readme.txt" />
@@ -97,6 +98,7 @@
     <Content Include="Content\scripts\zqnb.mainApp.js" />
     <Content Include="Content\scripts\zqnb.mainApp.unify.js" />
     <Content Include="Content\scripts\_temp.js" />
+    <Content Include="Content\Unify\angular-dics-directives5.html" />
     <Content Include="Content\Unify\angular-directive-function.html" />
     <Content Include="Content\Unify\angular-dics-directives4.html" />
     <Content Include="Content\Unify\angular-dics-directives3.html" />
