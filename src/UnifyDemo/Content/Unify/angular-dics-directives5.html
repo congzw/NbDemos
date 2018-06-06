@@ -321,13 +321,13 @@
                     orgs.push({ Code: "Org2", Name: "组织2", OrgTypeCode: "OrgType2" });
                     orgs.push({ Code: "Org3", Name: "组织3", OrgTypeCode: "OrgType3" });
 
-                    angular.forEach(dicSettings, function(phase, key) {
+                    angular.forEach(dicSettings, function(phase) {
                         if (!phase.InUse) {
                             return;
                         }
                         phases.push({ Code: phase.Code, Name: phase.Name, Hidden: false });
                         //subjects
-                        angular.forEach(phase.Subjects, function(subject, key) {
+                        angular.forEach(phase.Subjects, function(subject) {
                             if (!subject.InUse) {
                                 return;
                             }
@@ -336,7 +336,7 @@
                             }
                         });
                         //grades
-                        angular.forEach(phase.Grades, function(grade, key) {
+                        angular.forEach(phase.Grades, function(grade) {
                             if (!grade.InUse) {
                                 return;
                             }
@@ -382,9 +382,6 @@
             ]);
 
             mainApp.controller('demoCtrl', function ($scope, dicCatalogAppService) {
-
-                //'&' and '=' function binding
-                //https://stackoverflow.com/questions/25808193/angularjs-isolate-scope-vs
 
                 var dicCatalogVm = dicHelper.createDicCatalogVm();
 

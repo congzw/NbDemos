@@ -2,6 +2,9 @@
     'use strict';
     var mainApp = zqnb.mainApp;
     
+    //'&' and '=' function binding
+    //https://stackoverflow.com/questions/25808193/angularjs-isolate-scope-vs
+
     mainApp.directive('nbSelectItems', function () {
 
         var template1 = function () {
