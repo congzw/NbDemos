@@ -83,215 +83,215 @@
                         return orgTypePhaseCodeItem;
                     },
                     createDicCatalogVm = function () {
-                    var vm = {};
+                        var vm = {};
 
-                    var emptyOrg = createEmptyItem(),
-                        emptyPhase = createEmptyItem(),
-                        emptySubject = createEmptyItem(),
-                        emptyGrade = createEmptyItem(),
-                        findItem = function (items, code) {
-                            var theOne = null;
-                            angular.forEach(items, function (item, key) {
-                                if (item.Code === code) {
-                                    theOne = item;
-                                    return;
+                        var emptyOrg = createEmptyItem(),
+                            emptyPhase = createEmptyItem(),
+                            emptySubject = createEmptyItem(),
+                            emptyGrade = createEmptyItem(),
+                            findItem = function (items, code) {
+                                var theOne = null;
+                                angular.forEach(items, function (item, key) {
+                                    if (item.Code === code) {
+                                        theOne = item;
+                                        return;
+                                    }
+                                });
+                                return theOne;
+                            },
+                            initCodes = { OrgCode: '', PhaseCode: '', SubjectCode: '', GradeCode: '' },
+                            getSelectCodes = function () {
+                                return [vm.org.Code, vm.phase.Code, vm.subject.Code, vm.grade.Code];
+                            },
+                            initItems = function (initData) {
+                                var orgs = [];
+                                var phases = [];
+                                var subjects = [];
+                                var grades = [];
+
+                                if (initData.autoAppendEmpty) {
+                                    orgs.push(emptyOrg);
+                                    phases.push(emptyPhase);
+                                    subjects.push(emptySubject);
+                                    grades.push(emptyGrade);
                                 }
-                            });
-                            return theOne;
-                        },
-                        initCodes = { OrgCode: '', PhaseCode: '', SubjectCode: '', GradeCode: '' },
-                        getSelectCodes = function () {
-                            return [vm.org.Code, vm.phase.Code, vm.subject.Code, vm.grade.Code];
-                        },
-                        initItems = function (initData) {
-                            var orgs = [];
-                            var phases = [];
-                            var subjects = [];
-                            var grades = [];
 
-                            if (initData.autoAppendEmpty) {
-                                orgs.push(emptyOrg);
-                                phases.push(emptyPhase);
-                                subjects.push(emptySubject);
-                                grades.push(emptyGrade);
+                                //setup orgs
+                                angular.forEach(initData.orgs, function (item, key) {
+                                    var orgTypeCode = '';
+                                    if (item.OrgTypeCode) {
+                                        orgTypeCode = item.OrgTypeCode;
+                                    }
+                                    orgs.push({ Code: item.Code, Name: item.Name, OrgTypeCode: orgTypeCode });
+                                });
+                                vm.orgs = orgs;
+
+                                //setup phases
+                                angular.forEach(initData.phases, function (item, key) {
+                                    phases.push({ Code: item.Code, Name: item.Name });
+                                });
+                                vm.phases = phases;
+
+                                //setup subjects
+                                angular.forEach(initData.subjects, function (item, key) {
+                                    subjects.push({ Code: item.Code, Name: item.Name });
+                                });
+                                vm.subjects = subjects;
+
+                                //setup grades
+                                angular.forEach(initData.grades, function (item, key) {
+                                    grades.push({ Code: item.Code, Name: item.Name });
+                                });
+                                vm.grades = grades;
+
+                                //console.log(vm);
+                            },
+                            initCurrent = function (initData) {
+                                var initCodes = initData.initCodes;
+                                if (initCodes) {
+                                    if (initCodes.OrgCode) {
+                                        vm.initCodes.OrgCode = initCodes.OrgCode;
+                                    }
+                                    if (initCodes.PhaseCode) {
+                                        vm.initCodes.PhaseCode = initCodes.PhaseCode;
+                                    }
+                                    if (initCodes.SubjectCode) {
+                                        vm.initCodes.SubjectCode = initCodes.SubjectCode;
+                                    }
+                                    if (initCodes.GradeCode) {
+                                        vm.initCodes.GradeCode = initCodes.GradeCode;
+                                    }
+                                }
+                                var theOrg = findItem(vm.orgs, vm.initCodes.OrgCode);
+                                if (theOrg) {
+                                    vm.org = theOrg;
+                                }
+
+                                var thePhase = findItem(vm.phases, vm.initCodes.PhaseCode);
+                                if (thePhase) {
+                                    vm.phase = thePhase;
+                                }
+
+                                var theSubject = findItem(vm.subjects, vm.initCodes.SubjectCode);
+                                if (theSubject) {
+                                    vm.subject = theSubject;
+                                }
+
+                                var theGrade = findItem(vm.grades, vm.initCodes.GradeCode);
+                                if (theGrade) {
+                                    vm.grade = theGrade;
+                                }
+                            },
+                            initRelation = function (initData) {
+
+                                //dic relations
+
+                                var orgTypePhases = initData.orgTypePhases;
+                                vm.orgTypePhases = orgTypePhases;
+
+                                var visiablePhases = [];
+                                var visiablePhaseSubjects = [];
+                                //var visiablePhaseGrades = [];
+                                //var visiablePhaseSubjectGrades = [];
+
+                                angular.forEach(orgTypePhases, function (orgTypePhase, key) {
+                                    var orgTypePhaseCodeItem = createCodeItem(orgTypePhase.OrgTypeCode, orgTypePhase.PhaseCode);
+                                    if (!containItem(visiablePhases, orgTypePhaseCodeItem)) {
+                                        visiablePhases.push(orgTypePhaseCodeItem);
+                                    }
+                                });
+
+                                vm.visiablePhases = visiablePhases;
+                                vm.visiablePhaseSubjects = visiablePhaseSubjects;
+                                //vm.visiablePhaseGrades = visiablePhaseGrades;
+                                //vm.visiablePhaseSubjectGrades = visiablePhaseSubjectGrades;
+
+                            };
+
+                        var isEmptyItem = function (item) {
+                            //console.log(item);
+                            return item.Code === '';
+                        }
+                        var shouldShowThisPhase = function (visiablePhaseCodesForOrg, phase, currentOrg) {
+                            //当前全部组织，所有【学科】永远显示
+                            if (isEmptyItem(currentOrg)) {
+                                return true;
+                            }
+                            // 未知组织类型，所有【学科】永远显示
+                            if (!currentOrg.OrgTypeCode) {
+                                return true;
                             }
 
-                            //setup orgs
-                            angular.forEach(initData.orgs, function (item, key) {
-                                var orgTypeCode = '';
-                                if (item.OrgTypeCode) {
-                                    orgTypeCode = item.OrgTypeCode;
-                                }
-                                orgs.push({ Code: item.Code, Name: item.Name, OrgTypeCode: orgTypeCode });
-                            });
-                            vm.orgs = orgs;
-
-                            //setup phases
-                            angular.forEach(initData.phases, function (item, key) {
-                                phases.push({ Code: item.Code, Name: item.Name });
-                            });
-                            vm.phases = phases;
-
-                            //setup subjects
-                            angular.forEach(initData.subjects, function (item, key) {
-                                subjects.push({ Code: item.Code, Name: item.Name });
-                            });
-                            vm.subjects = subjects;
-
-                            //setup grades
-                            angular.forEach(initData.grades, function (item, key) {
-                                grades.push({ Code: item.Code, Name: item.Name });
-                            });
-                            vm.grades = grades;
-
-                            //console.log(vm);
-                        },
-                        initCurrent = function (initData) {
-                            var initCodes = initData.initCodes;
-                            if (initCodes) {
-                                if (initCodes.OrgCode) {
-                                    vm.initCodes.OrgCode = initCodes.OrgCode;
-                                }
-                                if (initCodes.PhaseCode) {
-                                    vm.initCodes.PhaseCode = initCodes.PhaseCode;
-                                }
-                                if (initCodes.SubjectCode) {
-                                    vm.initCodes.SubjectCode = initCodes.SubjectCode;
-                                }
-                                if (initCodes.GradeCode) {
-                                    vm.initCodes.GradeCode = initCodes.GradeCode;
-                                }
-                            }
-                            var theOrg = findItem(vm.orgs, vm.initCodes.OrgCode);
-                            if (theOrg) {
-                                vm.org = theOrg;
+                            //【学科（全部）】按钮永远显示
+                            if (isEmptyItem(phase)) {
+                                return true;
                             }
 
-                            var thePhase = findItem(vm.phases, vm.initCodes.PhaseCode);
-                            if (thePhase) {
-                                vm.phase = thePhase;
-                            }
+                            //按关系查找
+                            var orgTypePhaseCodeItem = createCodeItem(currentOrg.OrgTypeCode, phase.Code);
+                            var shouldShow = containItem(visiablePhaseCodesForOrg, orgTypePhaseCodeItem);
+                            return shouldShow;
+                        };
+                        var updateView = function () {
 
-                            var theSubject = findItem(vm.subjects, vm.initCodes.SubjectCode);
-                            if (theSubject) {
-                                vm.subject = theSubject;
-                            }
+                            //console.log('updateView');
+                            //console.log(getSelectCodes());
+                            //console.log(vm.org);
 
-                            var theGrade = findItem(vm.grades, vm.initCodes.GradeCode);
-                            if (theGrade) {
-                                vm.grade = theGrade;
-                            }
-                        },
-                        initRelation = function (initData) {
-
-                            //dic relations
-
-                            var orgTypePhases = initData.orgTypePhases;
-                            vm.orgTypePhases = orgTypePhases;
-
-                            var visiablePhases = [];
-                            var visiablePhaseSubjects = [];
-                            //var visiablePhaseGrades = [];
-                            //var visiablePhaseSubjectGrades = [];
-                            
-                            angular.forEach(orgTypePhases, function (orgTypePhase, key) {
-                                var orgTypePhaseCodeItem = createCodeItem(orgTypePhase.OrgTypeCode, orgTypePhase.PhaseCode);
-                                if (!containItem(visiablePhases, orgTypePhaseCodeItem)) {
-                                    visiablePhases.push(orgTypePhaseCodeItem);
+                            //refresh phases by current Org
+                            angular.forEach(vm.phases, function (phase) {
+                                phase.Hidden = true;
+                                var shouldShow = shouldShowThisPhase(vm.visiablePhases, phase, vm.org);
+                                if (shouldShow) {
+                                    phase.Hidden = false;
                                 }
                             });
+                        };
+                        var resultChanged = function (event) {
+                            if (!event) {
+                                return;
+                            }
+                            if (event.ChangeBy === 'Org') {
+                                vm.phase = emptyPhase;
+                                vm.subject = emptySubject;
+                                vm.grade = emptyGrade;
+                                return;
+                            }
 
-                            vm.visiablePhases = visiablePhases;
-                            vm.visiablePhaseSubjects = visiablePhaseSubjects;
-                            //vm.visiablePhaseGrades = visiablePhaseGrades;
-                            //vm.visiablePhaseSubjectGrades = visiablePhaseSubjectGrades;
+                            if (event.ChangeBy === 'Phase') {
+                                vm.subject = emptySubject;
+                                vm.grade = emptyGrade;
+                                return;
+                            }
 
+                            if (event.ChangeBy === 'Subject') {
+                                vm.grade = emptyGrade;
+                                return;
+                            }
+                            //do nothing for grade
                         };
 
-                    var isEmptyItem = function (item) {
-                        //console.log(item);
-                        return item.Code === '';
-                    }
-                    var shouldShowThisPhase = function (visiablePhaseCodesForOrg, phase, currentOrg) {
-                        //当前全部组织，所有【学科】永远显示
-                        if (isEmptyItem(currentOrg)) {
-                            return true;
-                        }
-                        // 未知组织类型，所有【学科】永远显示
-                        if (!currentOrg.OrgTypeCode) {
-                            return true;
-                        }
-
-                        //【学科（全部）】按钮永远显示
-                        if (isEmptyItem(phase)) {
-                            return true;
-                        }
-
-                        //按关系查找
-                        var orgTypePhaseCodeItem = createCodeItem(currentOrg.OrgTypeCode, phase.Code);
-                        var shouldShow = containItem(visiablePhaseCodesForOrg, orgTypePhaseCodeItem);
-                        return shouldShow;
+                        vm = {
+                            initCodes: initCodes,
+                            org: emptyOrg,
+                            orgs: null,
+                            phase: emptyPhase,
+                            phases: null,
+                            subject: emptySubject,
+                            subjects: null,
+                            grade: emptyGrade,
+                            grades: null,
+                            getSelectCodes: getSelectCodes,
+                            initItems: initItems,
+                            initCurrent: initCurrent,
+                            initRelation: initRelation,
+                            resultChanged: resultChanged,
+                            visiablePhaseCodes: null,
+                            visiablePhaseSubjectCodes: null,
+                            updateView: updateView
+                        };
+                        return vm;
                     };
-                    var updateView = function () {
-
-                        //console.log('updateView');
-                        //console.log(getSelectCodes());
-                        //console.log(vm.org);
-
-                        //refresh phases by current Org
-                        angular.forEach(vm.phases, function (phase) {
-                            phase.Hidden = true;
-                            var shouldShow = shouldShowThisPhase(vm.visiablePhases, phase, vm.org);
-                            if (shouldShow) {
-                                phase.Hidden = false;
-                            }
-                        });
-                    };
-                    var resultChanged = function (event) {
-                        if (!event) {
-                            return;
-                        }
-                        if (event.ChangeBy === 'Org') {
-                            vm.phase = emptyPhase;
-                            vm.subject = emptySubject;
-                            vm.grade = emptyGrade;
-                            return;
-                        }
-
-                        if (event.ChangeBy === 'Phase') {
-                            vm.subject = emptySubject;
-                            vm.grade = emptyGrade;
-                            return;
-                        }
-
-                        if (event.ChangeBy === 'Subject') {
-                            vm.grade = emptyGrade;
-                            return;
-                        }
-                        //do nothing for grade
-                    };
-
-                    vm = {
-                        initCodes: initCodes,
-                        org: emptyOrg,
-                        orgs: null,
-                        phase: emptyPhase,
-                        phases: null,
-                        subject: emptySubject,
-                        subjects: null,
-                        grade: emptyGrade,
-                        grades: null,
-                        getSelectCodes: getSelectCodes,
-                        initItems: initItems,
-                        initCurrent: initCurrent,
-                        initRelation: initRelation,
-                        resultChanged: resultChanged,
-                        visiablePhaseCodes: null,
-                        visiablePhaseSubjectCodes: null,
-                        updateView : updateView
-                    };
-                    return vm;
-                };
 
                 return {
                     sameCodeItem: sameCodeItem,
@@ -303,74 +303,6 @@
                 };
             }();
 
-            var mockHelper = function() {
-
-                var setupInitData = function(initData, dicSettings) {
-
-                    //initCodes
-                    initData.initCodes = { OrgCode: 'Org2', PhaseCode: 'Phase2', SubjectCode: 'GS001', GradeCode: 'GO003' };
-
-                    //all dic items
-                    var orgs = [];
-                    var phases = [];
-                    var subjects = [];
-                    var grades = [];
-
-                    //mock set orgs
-                    orgs.push({ Code: "Org1", Name: "组织1", OrgTypeCode: "OrgType1" });
-                    orgs.push({ Code: "Org2", Name: "组织2", OrgTypeCode: "OrgType2" });
-                    orgs.push({ Code: "Org3", Name: "组织3", OrgTypeCode: "OrgType3" });
-
-                    angular.forEach(dicSettings, function(phase) {
-                        if (!phase.InUse) {
-                            return;
-                        }
-                        phases.push({ Code: phase.Code, Name: phase.Name, Hidden: false });
-                        //subjects
-                        angular.forEach(phase.Subjects, function(subject) {
-                            if (!subject.InUse) {
-                                return;
-                            }
-                            if (!dicHelper.containItem(subjects, subject)) {
-                                subjects.push({ Code: subject.Code, Name: subject.Name, Hidden: false });
-                            }
-                        });
-                        //grades
-                        angular.forEach(phase.Grades, function(grade) {
-                            if (!grade.InUse) {
-                                return;
-                            }
-                            if (!dicHelper.containItem(grades, grade)) {
-                                grades.push({ Code: grade.Code, Name: grade.Name, Hidden: false });
-                            }
-                        });
-                    });
-
-                    initData.orgs = orgs;
-                    initData.phases = phases;
-                    initData.subjects = subjects;
-                    initData.grades = grades;
-
-
-                    //mock relations
-                    initData.orgTypePhases = [
-                        { OrgTypeCode: "OrgType1", PhaseCode: "Phase0" },
-                        { OrgTypeCode: "OrgType1", PhaseCode: "Phase1" },
-                        { OrgTypeCode: "OrgType1", PhaseCode: "Phase2" },
-                        { OrgTypeCode: "OrgType1", PhaseCode: "Phase3" },
-                        { OrgTypeCode: "OrgType2", PhaseCode: "Phase2" },
-                        { OrgTypeCode: "OrgType3", PhaseCode: "Phase3" }
-                    ];
-
-                    return initData;
-                };
-
-                return {
-                    setupInitData: setupInitData
-                };
-            }();
-
-
             mainApp.factory('dicCatalogAppService', ['$http', function ($http) {
                 var serviceUrl = '/Content/scripts/GetDicCatalogs.js';
                 return {
@@ -380,8 +312,101 @@
                 }
             }
             ]);
+            mainApp.factory('dicCatalogMockData', ['dicCatalogAppService', function (dicCatalogAppService) {
+                
+                var mockHelper = function () {
 
-            mainApp.controller('demoCtrl', function ($scope, dicCatalogAppService) {
+                    var setupInitData = function (initData, dicSettings) {
+
+                        //initCodes
+                        initData.initCodes = { OrgCode: 'Org2', PhaseCode: 'Phase2', SubjectCode: 'GS001', GradeCode: 'GO003' };
+
+                        //all dic items
+                        var orgs = [];
+                        var phases = [];
+                        var subjects = [];
+                        var grades = [];
+
+                        //mock set orgs
+                        orgs.push({ Code: "Org1", Name: "组织1", OrgTypeCode: "OrgType1" });
+                        orgs.push({ Code: "Org2", Name: "组织2", OrgTypeCode: "OrgType2" });
+                        orgs.push({ Code: "Org3", Name: "组织3", OrgTypeCode: "OrgType3" });
+
+                        angular.forEach(dicSettings, function (phase) {
+                            if (!phase.InUse) {
+                                return;
+                            }
+                            phases.push({ Code: phase.Code, Name: phase.Name, Hidden: false });
+                            //subjects
+                            angular.forEach(phase.Subjects, function (subject) {
+                                if (!subject.InUse) {
+                                    return;
+                                }
+                                if (!dicHelper.containItem(subjects, subject)) {
+                                    subjects.push({ Code: subject.Code, Name: subject.Name, Hidden: false });
+                                }
+                            });
+                            //grades
+                            angular.forEach(phase.Grades, function (grade) {
+                                if (!grade.InUse) {
+                                    return;
+                                }
+                                if (!dicHelper.containItem(grades, grade)) {
+                                    grades.push({ Code: grade.Code, Name: grade.Name, Hidden: false });
+                                }
+                            });
+                        });
+
+                        initData.orgs = orgs;
+                        initData.phases = phases;
+                        initData.subjects = subjects;
+                        initData.grades = grades;
+
+
+                        //mock relations
+                        initData.orgTypePhases = [
+                            { OrgTypeCode: "OrgType1", PhaseCode: "Phase0" },
+                            { OrgTypeCode: "OrgType1", PhaseCode: "Phase1" },
+                            { OrgTypeCode: "OrgType1", PhaseCode: "Phase2" },
+                            { OrgTypeCode: "OrgType1", PhaseCode: "Phase3" },
+                            { OrgTypeCode: "OrgType2", PhaseCode: "Phase2" },
+                            { OrgTypeCode: "OrgType3", PhaseCode: "Phase3" }
+                        ];
+
+                        return initData;
+                    };
+
+                    return {
+                        setupInitData: setupInitData
+                    };
+                }();
+
+                var init = function (dicCatalogVm) {
+                    dicCatalogAppService.getDicCatalogs()
+                        .success(function (result) {
+
+                            var initData = {
+                                autoAppendEmpty: true,
+                                orgs: [],
+                                phases: [],
+                                subjects: [],
+                                grades: [],
+                                orgTypePhases: [],
+                                initCodes: { OrgCode: '', PhaseCode: '', SubjectCode: '', GradeCode: '' }
+                            };
+                            mockHelper.setupInitData(initData, result);
+                            dicCatalogVm.initItems(initData);
+                            dicCatalogVm.initCurrent(initData);
+                            dicCatalogVm.initRelation(initData);
+                            dicCatalogVm.updateView();
+                        });
+                };
+                return { init: init };
+            }
+            ]);
+
+
+            mainApp.controller('demoCtrl', function ($scope, dicCatalogMockData) {
 
                 var dicCatalogVm = dicHelper.createDicCatalogVm();
 
@@ -393,27 +418,10 @@
                     dicCatalogVm.resultChanged(event);
                     dicCatalogVm.updateView();
                 };
-                
-                dicCatalogAppService.getDicCatalogs()
-                    .success(function (result) {
 
-                        var initData = {
-                            autoAppendEmpty: true,
-                            orgs: [],
-                            phases: [],
-                            subjects: [],
-                            grades: [],
-                            orgTypePhases: [],
-                            initCodes: { OrgCode: '', PhaseCode: '', SubjectCode: '', GradeCode: '' }
-                        };
-                        mockHelper.setupInitData(initData, result);
-                        dicCatalogVm.initItems(initData);
-                        dicCatalogVm.initCurrent(initData);
-                        dicCatalogVm.initRelation(initData);
-                        dicCatalogVm.updateView();
-                    });
+                dicCatalogMockData.init(dicCatalogVm);
+
             });
-
         }());
     </script>
 
