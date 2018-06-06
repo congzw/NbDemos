@@ -189,15 +189,15 @@
                                 var orgTypePhases = initData.orgTypePhases;
                                 vm.orgTypePhases = orgTypePhases;
 
-                                var visiablePhases = [];
+                                var visiableOrgTypePhases = [];
                                 var visiablePhaseSubjects = [];
                                 var visiablePhaseGrades = [];
                                 var visiablePhaseSubjectGrades = [];
 
                                 angular.forEach(orgTypePhases, function (orgTypePhase) {
                                     var orgTypePhaseCodeItem = createCodeItem(orgTypePhase.OrgTypeCode, orgTypePhase.PhaseCode);
-                                    if (!containItem(visiablePhases, orgTypePhaseCodeItem)) {
-                                        visiablePhases.push(orgTypePhaseCodeItem);
+                                    if (!containItem(visiableOrgTypePhases, orgTypePhaseCodeItem)) {
+                                        visiableOrgTypePhases.push(orgTypePhaseCodeItem);
                                     }
                                 });
                                 
@@ -238,7 +238,7 @@
                                     });
                                 });
 
-                                vm.visiablePhases = visiablePhases;
+                                vm.visiableOrgTypePhases = visiableOrgTypePhases;
                                 vm.visiablePhaseSubjects = visiablePhaseSubjects;
                                 vm.visiablePhaseGrades = visiablePhaseGrades;
                                 vm.visiablePhaseSubjectGrades = visiablePhaseSubjectGrades;
@@ -252,13 +252,11 @@
                             //console.log(item);
                             return item.Code === '';
                         }
-                        var shouldShowThisPhase = function (visiablePhaseCodesForOrg, phase, currentOrg) {
-                            //当前全部组织，所有【学科】永远显示
-                            if (isEmptyItem(currentOrg)) {
-                                return true;
-                            }
-                            // 未知组织类型，所有【学科】永远显示
-                            if (!currentOrg.OrgTypeCode) {
+                        var shouldShowThisPhase = function (theVm, phase) {
+
+                            var currentOrg = theVm.org;
+                            //当前全部组织，或未知组织类型，所有【学科】永远显示
+                            if (isEmptyItem(currentOrg) || !currentOrg.OrgTypeCode) {
                                 return true;
                             }
 
@@ -269,7 +267,7 @@
 
                             //按关系查找
                             var orgTypePhaseCodeItem = createCodeItem(currentOrg.OrgTypeCode, phase.Code);
-                            var shouldShow = containItem(visiablePhaseCodesForOrg, orgTypePhaseCodeItem);
+                            var shouldShow = containItem(theVm.visiableOrgTypePhases, orgTypePhaseCodeItem);
                             return shouldShow;
                         };
                         var shouldShowThisPhaseSubject = function (theVm, subject) {
@@ -301,7 +299,7 @@
                             //refresh phases by current Org
                             angular.forEach(vm.phases, function (phase) {
                                 phase.Hidden = true;
-                                var shouldShow = shouldShowThisPhase(vm.visiablePhases, phase, vm.org);
+                                var shouldShow = shouldShowThisPhase(vm, phase);
                                 if (shouldShow) {
                                     phase.Hidden = false;
                                 }
