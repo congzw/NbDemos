@@ -79,31 +79,35 @@
                 //'&' and '=' function binding
                 //https://stackoverflow.com/questions/25808193/angularjs-isolate-scope-vs
 
+                var emptySchool = createEmptyItem();
                 var emptyPhase = createEmptyItem();
                 var emptySubject = createEmptyItem();
                 var emptyGrade = createEmptyItem();
 
                 var dicCatalogVm = function () {
                     var vm = {};
-                    var initCodes = ['Phase2', 'GS001', 'GO003'],
-                        findItem = function (items, code) {
-                            angular.forEach(items, function (item, key) {
+                    var initCodes = ['Org2', 'Phase2', 'GS001', 'GO003'],
+                        findItem = function(items, code) {
+                            angular.forEach(items, function(item, key) {
                                 if (item.Code === code) {
                                     return item;
                                 }
                                 return null;
                             });
                         },
+                        org = emptySchool,
                         phase = emptyPhase,
                         subject = emptySubject,
                         grade = emptyGrade,
-                        getSelectCodes = function () {
-                            return [vm.Phase.Code, vm.Subject.Code, vm.Grade.Code];
-                        }
+                        getSelectCodes = function() {
+                            return [vm.Org.Code, vm.Phase.Code, vm.Subject.Code, vm.Grade.Code];
+                        };
 
                     vm = {
                         InitCodes: initCodes,
                         FindItem: findItem,
+                        Org: org,
+                        Orgs: [],
                         Phase: phase,
                         Phases: null,
                         Subject: subject,
@@ -117,10 +121,25 @@
 
                 $scope.dicCatalogVm = dicCatalogVm;
 
-                
+
                 $scope.message = 'SelectCodes: ';
-                $scope.updateView = function () {
+                $scope.getCurrentInfo = function () {
+                    $scope.message = 'getCurrentInfo: ' + dicCatalogVm.GetSelectCodes();
+                };
+
+                $scope.updateView = function (newItem, oldItem) {
+                    console.log('select changed: ' + oldItem.Code + ' -> ' + newItem.Code);
+                    console.log(dicCatalogVm.Org);
+                    console.log(newItem);
                     $scope.message = 'SelectCodes: ' + dicCatalogVm.GetSelectCodes();
+                };
+
+                
+                $scope.orgChanged = function (newItem, oldItem) {
+                    console.log('org select changed: ' + newItem.Code);
+                    console.log(dicCatalogVm.Org);
+                    console.log(newItem);
+                    //dicCatalogVm.Phase = emptyPhase;
                 };
 
                 dicCatalogAppService.getDicCatalogs()
@@ -133,12 +152,23 @@
                             phases.push({ Code: item.Code, Name: item.Name });
                         });
 
-                        var thePhase = dicCatalogVm.FindItem(phases, dicCatalogVm.InitCodes[0]);
+                        var thePhase = dicCatalogVm.FindItem(phases, dicCatalogVm.InitCodes[1]);
                         if (thePhase) {
                             dicCatalogVm.Phase = thePhase;
                         }
                         dicCatalogVm.Phases = phases;
-                        //$scope.phases = phases;
+
+                        //mock orgs
+                        var orgs = [];
+                        orgs.push(emptySchool);
+                        for (var i = 1; i <= 3; i++) {
+                            orgs.push({ Code: "Org" + i , Name: "组织" + i });
+                        }
+                        var theOrg = dicCatalogVm.FindItem(orgs, dicCatalogVm.InitCodes[0]);
+                        if (theOrg) {
+                            dicCatalogVm.Org = theOrg;
+                        }
+                        dicCatalogVm.Orgs = orgs;
                     });
 
                 //for demo
@@ -152,7 +182,7 @@
                 var template1 = function () {
                     return '' +
                         '<div class="term-box">  ' +
-                        '    <span class="term">{{category}}(<span class="selectedDicCatalogItem">{{result.Phase.Name}}</span>)</span>  ' +
+                        '    <span class="term">{{category}}(<span class="selectedDicCatalogItem">{{current.Name}}</span>)</span>  ' +
                         '    <ul class="nav nav-pills overflow-h">  ' +
                         '        <li ng-repeat="item in items" ng-class="{active: isCurrentItem(item), hidden: item.Hidden}">  ' +
                         '            <a href="javascript:void(0)" ng-click="selectItem(item)">  ' +
@@ -190,24 +220,26 @@
                 return {
                     scope: {
                         category: '@',
-                        updateView: '=',
+                        currentChanged: '=',
                         items: '=',
-                        dicCatalogVm: '=',
+                        current: '=',
                         dicViewMode: '@'
                     },
                     controller: function ($scope, $element, $attrs, $transclude) {
-
-                        var updateView = $scope.updateView;
-
+        
                         $scope.isCurrentItem = function (item) {
-                            return $scope.dicCatalogVm.Phase === item;
+                            return $scope.current === item;
                         };
+
                         $scope.selectItem = function (item) {
-                            $scope.dicCatalogVm.Phase = item;
-                            ////todo reset for subjects and grades
-                            //$scope.dicCatalogVm.Subject.Code = item.Code;
-                            //$scope.dicCatalogVm.Grade.Code = item.Code;
-                            updateView();
+                            if ($scope.current === item) {
+                                return;
+                            }
+                            var old = $scope.current;
+                            $scope.current = item;
+                            if ($scope.currentChanged) {
+                                $scope.currentChanged(item, old);
+                            }
                         };
                     },
                     template: getTemplate
@@ -234,10 +266,13 @@
                         <h2>{{message}}</h2>
                         <hr />
                         <h2>{{dicCatalogVm.GetSelectCodes()}}</h2>
-                        <hr/>
+                        <hr />
                         <div class="search-block">
+                            <!--<div ng-if="dicCatalogVm.Orgs">
+                                <div nb-select-items category="学校" current-changed="orgChanged" items="dicCatalogVm.Orgs" current="dicCatalogVm.Org"></div>
+                            </div>-->
                             <div ng-if="dicCatalogVm.Phases">
-                                <div nb-select-items category="学段" update-view="updateView" items="dicCatalogVm.Phases" dic-catalog-vm="dicCatalogVm"></div>
+                                <div nb-select-items category="学段" current-changed="updateView" items="dicCatalogVm.Phases" current="dicCatalogVm.Phase"></div>
                             </div>
                         </div>
                     </div>
@@ -245,6 +280,9 @@
 
                     <div class="row">
                         <button class="btn btn-default" ng-click="resetPhase()">重置学段</button>
+                    </div>
+                    <div class="row">
+                        <button class="btn btn-default" ng-click="getCurrentInfo()">检测</button>
                     </div>
 
                 </div>
