@@ -191,21 +191,61 @@
 
                                 var visiablePhases = [];
                                 var visiablePhaseSubjects = [];
-                                //var visiablePhaseGrades = [];
-                                //var visiablePhaseSubjectGrades = [];
+                                var visiablePhaseGrades = [];
+                                var visiablePhaseSubjectGrades = [];
 
-                                angular.forEach(orgTypePhases, function (orgTypePhase, key) {
+                                angular.forEach(orgTypePhases, function (orgTypePhase) {
                                     var orgTypePhaseCodeItem = createCodeItem(orgTypePhase.OrgTypeCode, orgTypePhase.PhaseCode);
                                     if (!containItem(visiablePhases, orgTypePhaseCodeItem)) {
                                         visiablePhases.push(orgTypePhaseCodeItem);
                                     }
                                 });
+                                
+                                angular.forEach(initData.dicSettings, function (phase) {
+
+                                    if (!phase.InUse) {
+                                        return;
+                                    }
+
+                                    angular.forEach(phase.Grades, function (grade) {
+                                        if (!grade.InUse) {
+                                            return;
+                                        }
+                                        var phaseGradeCodeItem = createCodeItem(phase.Code, grade.Code);
+                                        if (!containItem(visiablePhaseGrades, phaseGradeCodeItem)) {
+                                            visiablePhaseGrades.push(phaseGradeCodeItem);
+                                        }
+                                    });
+
+                                    angular.forEach(phase.Subjects, function (subject) {
+                                        if (!subject.InUse) {
+                                            return;
+                                        }
+                                        var subjectCodeItem = createCodeItem(phase.Code, subject.Code);
+                                        if (!containItem(visiablePhaseSubjects, subjectCodeItem)) {
+                                            visiablePhaseSubjects.push(subjectCodeItem);
+                                        }
+
+                                        angular.forEach(subject.Grades, function (grade) {
+                                            if (!grade.InUse) {
+                                                return;
+                                            }
+                                            var phaseSubjectGradeCodeItem = createCodeItem(phase.Code, subject.Code, grade.Code);
+                                            if (!containItem(visiablePhaseSubjectGrades, phaseSubjectGradeCodeItem)) {
+                                                visiablePhaseSubjectGrades.push(phaseSubjectGradeCodeItem);
+                                            }
+                                        });
+                                    });
+                                });
 
                                 vm.visiablePhases = visiablePhases;
                                 vm.visiablePhaseSubjects = visiablePhaseSubjects;
-                                //vm.visiablePhaseGrades = visiablePhaseGrades;
-                                //vm.visiablePhaseSubjectGrades = visiablePhaseSubjectGrades;
+                                vm.visiablePhaseGrades = visiablePhaseGrades;
+                                vm.visiablePhaseSubjectGrades = visiablePhaseSubjectGrades;
 
+                                console.log('initRelation');
+                                console.log(vm);
+                                
                             };
 
                         var isEmptyItem = function (item) {
@@ -232,6 +272,26 @@
                             var shouldShow = containItem(visiablePhaseCodesForOrg, orgTypePhaseCodeItem);
                             return shouldShow;
                         };
+                        var shouldShowThisPhaseSubject = function (theVm, subject) {
+                            var currentPhase = theVm.phase;
+                            //当前全部学科，或未知学科类型，所有【年级】永远显示
+                            if (isEmptyItem(currentPhase) || !currentPhase.Code) {
+                                return true;
+                            }
+                            //【年级（全部）】按钮永远显示
+                            if (isEmptyItem(subject)) {
+                                return true;
+                            }
+
+                            //按关系查找
+                            var codeItem = createCodeItem(currentPhase.Code, subject.Code);
+                            var shouldShow = containItem(vm.visiablePhaseSubjects, codeItem);
+                            if (shouldShow) {
+                                //console.log("refresh phase subjects: " + currentPhase.Name + ',' + subject.Name + ' ' + shouldShow);
+                            }
+                            return shouldShow;
+                        };
+
                         var updateView = function () {
 
                             //console.log('updateView');
@@ -244,6 +304,15 @@
                                 var shouldShow = shouldShowThisPhase(vm.visiablePhases, phase, vm.org);
                                 if (shouldShow) {
                                     phase.Hidden = false;
+                                }
+                            });
+
+                            //refresh phase subjects by current phase
+                            angular.forEach(vm.subjects, function (subject) {
+                                subject.Hidden = true;
+                                var shouldShow = shouldShowThisPhaseSubject(vm, subject);
+                                if (shouldShow) {
+                                    subject.Hidden = false;
                                 }
                             });
                         };
@@ -286,8 +355,6 @@
                             initCurrent: initCurrent,
                             initRelation: initRelation,
                             resultChanged: resultChanged,
-                            visiablePhaseCodes: null,
-                            visiablePhaseSubjectCodes: null,
                             updateView: updateView
                         };
                         return vm;
@@ -318,6 +385,7 @@
 
                     var setupInitData = function (initData, dicSettings) {
 
+                        initData.dicSettings = dicSettings;
                         //initCodes
                         initData.initCodes = { OrgCode: 'Org2', PhaseCode: 'Phase2', SubjectCode: 'GS001', GradeCode: 'GO003' };
 
