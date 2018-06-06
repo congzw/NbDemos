@@ -34,10 +34,13 @@
         var template3 = '';
         var template4 = '';
         var getTemplate = function (tElem, tAttrs) {
-            var mode = tAttrs.viewMode;
-            console.log('getTemplate');
-            //console.log(tAttrs);
-            console.log(mode);
+            var mode = "1";
+            if (tAttrs.viewMode) {
+                mode = tAttrs.viewMode;
+            }
+            //console.log('nbSelectItems getTemplate');
+            ////console.log(tAttrs);
+            //console.log(mode);
             if (!mode) {
                 return template1;
             }
@@ -64,13 +67,13 @@
                 currentChanged: '=',
                 items: '=',
                 current: '=',
-                viewMode: '='
+                itemViewMode: '@'
             },
             template: getTemplate,
             controller: function ($scope, $element, $attrs, $transclude) {
 
-                console.log('nbSelectItems ctrl');
-                console.log($scope.viewMode);
+                //console.log('nbSelectItems ctrl');
+                //console.log($scope.viewMode);
 
                 $scope.isCurrentItem = function (item) {
                     return $scope.current === item;
@@ -93,19 +96,25 @@
     });
     mainApp.directive('nbDicSearch', function () {
 
-        var getTemplate = function () {
+        var getTemplate = function (tElem, tAttrs) {
+            //console.log('nbDicSearch getTemplate');
+            var mode = "1";
+            if (tAttrs.viewMode) {
+                mode = tAttrs.viewMode;
+            }
+            //console.log(mode);
             return '' +
 '   <div ng-if="dicCatalogVm.orgs">  ' +
-'       <div nb-select-items category="学校" current-changed="orgChanged" items="dicCatalogVm.orgs" current="dicCatalogVm.org" view-mode="dicCatalogVm.viewMode"></div>  ' +
+'       <div nb-select-items category="学校" current-changed="orgChanged" items="dicCatalogVm.orgs" current="dicCatalogVm.org" view-mode="'+ mode +'"></div>  ' +
 '   </div>  ' +
 '   <div ng-if="dicCatalogVm.phases">  ' +
-'       <div nb-select-items category="学段" current-changed="phaseChanged" items="dicCatalogVm.phases" current="dicCatalogVm.phase" view-mode="dicCatalogVm.viewMode"></div>  ' +
+'       <div nb-select-items category="学段" current-changed="phaseChanged" items="dicCatalogVm.phases" current="dicCatalogVm.phase" view-mode="' + mode + '"></div>  ' +
 '   </div>  ' +
 '   <div ng-if="dicCatalogVm.subjects">  ' +
-'       <div nb-select-items category="学科" current-changed="subjectChanged" items="dicCatalogVm.subjects" current="dicCatalogVm.subject" view-mode="dicCatalogVm.viewMode"></div>  ' +
+'       <div nb-select-items category="学科" current-changed="subjectChanged" items="dicCatalogVm.subjects" current="dicCatalogVm.subject" view-mode="' + mode + '"></div>  ' +
 '   </div>  ' +
 '   <div ng-if="dicCatalogVm.grades">  ' +
-'       <div nb-select-items category="年级" current-changed="gradeChanged" items="dicCatalogVm.grades" current="dicCatalogVm.grade" view-mode="dicCatalogVm.viewMode"></div>  ' +
+'       <div nb-select-items category="年级" current-changed="gradeChanged" items="dicCatalogVm.grades" current="dicCatalogVm.grade" view-mode="' + mode + '"></div>  ' +
 '  </div>  ';
         };
 
@@ -113,13 +122,16 @@
             require: '^nbSelectItems',
             scope: {
                 resultChanged: '=',
-                dicCatalogVm: '='
+                dicCatalogVm: '=',
+                viewMode: '@'
             },
+            template: getTemplate,
             controller: function ($scope, $element, $attrs, $transclude) {
 
                 var dicCatalogVm = $scope.dicCatalogVm;
                 //console.log('nbDicSearch ctrl');
-                //console.log(dicCatalogVm.viewMode);
+                ////console.log(dicCatalogVm.viewMode);
+                //console.log($scope.viewMode);
 
                 var notifyChanged = function (event) {
                     if ($scope.resultChanged) {
@@ -152,8 +164,7 @@
                     dicCatalogVm.grade = newItem;
                     notifyChanged({ ChangeBy: "Grade", NewItem: newItem, OldItem: oldItem });
                 };
-            },
-            template: getTemplate()
+            }
         };
     });
 }());
