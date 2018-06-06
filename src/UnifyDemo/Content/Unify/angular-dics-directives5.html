@@ -28,10 +28,137 @@
     <script src="../scripts/zqnb.js"></script>
     <script src="../scripts/zqnb.mainApp.js"></script>
     <script src="../scripts/zqnb.mainApp.unify.js"></script>
+    <script src="../scripts/dicCatalogDirectives5.js"></script>
     <script>
         (function () {
             'use strict';
             var mainApp = zqnb.mainApp;
+
+            var dicHelper = function () {
+
+                var equalIgnoreCase = function (str, str2) {
+                    if (str === null || str2 === null) {
+                        return true;
+                    }
+                    if (typeof str !== 'string' || typeof str2 !== 'string') {
+                        return false;
+                    }
+                    if (str === '' && str2 === '') {
+                        return true;
+                    }
+                    return (str2.toUpperCase() === str.toUpperCase());
+                },
+                    sameCodeItem = function (item1, item2) {
+                        return item1 === item2 || equalIgnoreCase(item1.Code, item2.Code);
+                    },
+                    containItem = function (items, itemToCheck) {
+                        if (!items || !itemToCheck) {
+                            return false;
+                        }
+                        for (var i = 0; i < items.length; i++) {
+                            if (sameCodeItem(items[i], itemToCheck)) {
+                                return true;
+                            }
+                        }
+                        return false;
+                    },
+                    createEmptyItem = function () {
+                        return { Code: "", Name: "全部" };
+                    },
+                    createArrayCode = function (arr) {
+                        if (arr.length === 0) {
+                            return '';
+                        }
+                        var code = arr.join(',');
+                        return code;
+                    },
+                    createCodeItem = function () {
+                        var arr = Array.from(arguments);
+                        var code = createArrayCode(arr);
+                        var codeItem = { Code: code };
+                        return codeItem;
+                    },
+                    createOrgTypePhaseCodeItem = function (org, phase) {
+                        var orgTypePhaseCodeItem = { Code: org.OrgTypeCode + ',' + phase.Code };
+                        return orgTypePhaseCodeItem;
+                    };
+
+                return {
+                    sameCodeItem: sameCodeItem,
+                    containItem: containItem,
+                    createEmptyItem: createEmptyItem,
+                    createCodeItem: createCodeItem,
+                    createOrgTypePhaseCodeItem: createOrgTypePhaseCodeItem,
+                };
+            }();
+
+            var mockHelper = function() {
+
+                var setupInitData = function(initData, dicSettings) {
+
+                    //initCodes
+                    initData.initCodes = { OrgCode: 'Org2', PhaseCode: 'Phase2', SubjectCode: 'GS001', GradeCode: 'GO003' };
+
+                    //all dic items
+                    var orgs = [];
+                    var phases = [];
+                    var subjects = [];
+                    var grades = [];
+
+                    //mock set orgs
+                    orgs.push({ Code: "Org1", Name: "组织1", OrgTypeCode: "OrgType1" });
+                    orgs.push({ Code: "Org2", Name: "组织2", OrgTypeCode: "OrgType2" });
+                    orgs.push({ Code: "Org3", Name: "组织3", OrgTypeCode: "OrgType3" });
+
+                    angular.forEach(dicSettings, function(phase, key) {
+                        if (!phase.InUse) {
+                            return;
+                        }
+                        phases.push({ Code: phase.Code, Name: phase.Name, Hidden: false });
+                        //subjects
+                        angular.forEach(phase.Subjects, function(subject, key) {
+                            if (!subject.InUse) {
+                                return;
+                            }
+                            if (!dicHelper.containItem(subjects, subject)) {
+                                subjects.push({ Code: subject.Code, Name: subject.Name, Hidden: false });
+                            }
+                        });
+                        //grades
+                        angular.forEach(phase.Grades, function(grade, key) {
+                            if (!grade.InUse) {
+                                return;
+                            }
+                            if (!dicHelper.containItem(grades, grade)) {
+                                grades.push({ Code: grade.Code, Name: grade.Name, Hidden: false });
+                            }
+                        });
+                    });
+
+                    initData.orgs = orgs;
+                    initData.phases = phases;
+                    initData.subjects = subjects;
+                    initData.grades = grades;
+
+
+                    //mock relations
+                    initData.orgTypePhases = [
+                        { OrgTypeCode: "OrgType1", PhaseCode: "Phase0" },
+                        { OrgTypeCode: "OrgType1", PhaseCode: "Phase1" },
+                        { OrgTypeCode: "OrgType1", PhaseCode: "Phase2" },
+                        { OrgTypeCode: "OrgType1", PhaseCode: "Phase3" },
+                        { OrgTypeCode: "OrgType2", PhaseCode: "Phase2" },
+                        { OrgTypeCode: "OrgType3", PhaseCode: "Phase3" }
+                    ];
+
+                    return initData;
+                };
+
+                return {
+                    setupInitData: setupInitData
+                };
+            }();
+
 
             mainApp.factory('dicCatalogAppService', ['$http', function ($http) {
                 var serviceUrl = '/Content/scripts/GetDicCatalogs.js';
@@ -51,13 +178,10 @@
                 var dicCatalogVm = function () {
                     var vm = {};
 
-                    var createEmptyItem = function() {
-                            return { Code: "", Name: "全部" };
-                        },
-                        emptyOrg = createEmptyItem(),
-                        emptyPhase = createEmptyItem(),
-                        emptySubject = createEmptyItem(),
-                        emptyGrade = createEmptyItem(),
+                    var emptyOrg = dicHelper.createEmptyItem(),
+                        emptyPhase = dicHelper.createEmptyItem(),
+                        emptySubject = dicHelper.createEmptyItem(),
+                        emptyGrade = dicHelper.createEmptyItem(),
                         findItem = function (items, code) {
                             var theOne = null;
                             angular.forEach(items, function (item, key) {
@@ -113,7 +237,7 @@
                             });
                             dicCatalogVm.grades = grades;
 
-                            console.log(dicCatalogVm);
+                            //console.log(dicCatalogVm);
                         },
                         initCurrent = function (initData) {
                             var initCodes = initData.initCodes;
@@ -151,12 +275,94 @@
                                 dicCatalogVm.grade = theGrade;
                             }
                         },
-                        initRelation = function () {
-                            //todo
+                        initRelation = function (initData) {
+                            //dic relations
+                            var visiablePhases = [];
+                            //var visiablePhaseSubjects = [];
+                            //var visiablePhaseGrades = [];
+                            //var visiablePhaseSubjectGrades = [];
+
+                            var orgTypePhases = initData.orgTypePhases;
+
+                            angular.forEach(orgTypePhases, function (orgTypePhase, key) {
+                                var orgTypePhaseCodeItem = dicHelper.createCodeItem(orgTypePhase.OrgTypeCode, orgTypePhase.PhaseCode);
+                                if (!dicHelper.containItem(visiablePhases, orgTypePhaseCodeItem)) {
+                                    visiablePhases.push(orgTypePhaseCodeItem);
+                                }
+                            });
+
+                            vm.visiablePhases = visiablePhases;
+                            //theVm.visiablePhaseSubjects = visiablePhaseSubjects;
+                            //theVm.visiablePhaseGrades = visiablePhaseGrades;
+                            //theVm.visiablePhaseSubjectGrades = visiablePhaseSubjectGrades;
+
                         };
-        
+
+                    var isEmptyItem = function (item) {
+                        //console.log(item);
+                        return item.Code === '';
+                    }
+                    var shouldShowThisPhase = function (visiablePhaseCodesForOrg, phase, currentOrg) {
+                        //当前全部组织，所有【学科】永远显示
+                        if (isEmptyItem(currentOrg)) {
+                            return true;
+                        }
+                        // 未知组织类型，所有【学科】永远显示
+                        if (!currentOrg.OrgTypeCode) {
+                            return true;
+                        }
+
+                        //【学科（全部）】按钮永远显示
+                        if (isEmptyItem(phase)) {
+                            return true;
+                        }
+
+                        //按关系查找
+                        var orgTypePhaseCodeItem = dicHelper.createCodeItem(currentOrg.OrgTypeCode, phase.Code);
+                        var shouldShow = dicHelper.containItem(visiablePhaseCodesForOrg, orgTypePhaseCodeItem);
+                        return shouldShow;
+                    };
+                    var updateView = function () {
+
+                        //console.log('updateView');
+                        //console.log(getSelectCodes());
+                        //console.log(vm.org);
+
+                        //refresh phases by current Org
+                        angular.forEach(vm.phases, function (phase) {
+                            phase.Hidden = true;
+                            var shouldShow = shouldShowThisPhase(vm.visiablePhases, phase, vm.org);
+                            if (shouldShow) {
+                                phase.Hidden = false;
+                            }
+                        });
+                    };
+                    var resultChanged = function (event) {
+                        if (!event) {
+                            return;
+                        }
+                        if (event.ChangeBy === 'Org') {
+                            vm.phase = emptyPhase;
+                            vm.subject = emptySubject;
+                            vm.grade = emptyGrade;
+                            return;
+                        }
+
+                        if (event.ChangeBy === 'Phase') {
+                            vm.subject = emptySubject;
+                            vm.grade = emptyGrade;
+                            return;
+                        }
+
+                        if (event.ChangeBy === 'Subject') {
+                            vm.grade = emptyGrade;
+                            return;
+                        }
+                        //do nothing for grade
+                    };
+
                     vm = {
-                        initCodes : initCodes,
+                        initCodes: initCodes,
                         org: emptyOrg,
                         orgs: null,
                         phase: emptyPhase,
@@ -168,102 +374,25 @@
                         getSelectCodes: getSelectCodes,
                         initItems: initItems,
                         initCurrent: initCurrent,
-                        initRelation: initRelation
+                        initRelation: initRelation,
+                        resultChanged: resultChanged,
+                        visiablePhaseCodes: null,
+                        visiablePhaseSubjectCodes: null,
+                        updateView : updateView
                     };
                     return vm;
                 }();
 
                 $scope.dicCatalogVm = dicCatalogVm;
 
-                $scope.resultChanged = function () {
+                $scope.resultChanged = function (event) {
                     //console.log('ctrl get resultChanged!');
+                    //console.log(event);
+                    dicCatalogVm.resultChanged(event);
+                    dicCatalogVm.updateView();
                 };
 
-
-                var setupDicCatalogVm = function (theVm, dicSettings) {
-
-
-                    var equalIgnoreCase = function (str, str2) {
-                        if (str === null || str2 === null) {
-                            return true;
-                        }
-                        if (typeof str !== 'string' || typeof str2 !== 'string') {
-                            return false;
-                        }
-                        if (str === '' && str2 === '') {
-                            return true;
-                        }
-                        return (str2.toUpperCase() === str.toUpperCase());
-                    };
-                    var sameCodeItem = function (item1, item2) {
-                        return item1 === item2 || equalIgnoreCase(item1.Code, item2.Code);
-                    };
-                    var containItem = function (items, itemToCheck) {
-                        if (!items || !itemToCheck) {
-                            return false;
-                        }
-                        for (var i = 0; i < items.length; i++) {
-                            if (sameCodeItem(items[i], itemToCheck)) {
-                                return true;
-                            }
-                        }
-                        return false;
-                    };
-
-                    //all dic items
-                    var orgs = [];
-                    var phases = [];
-                    var subjects = [];
-                    var grades = [];
-
-                    //mock set orgs
-                    for (var i = 1; i <= 3; i++) {
-                        orgs.push({ Code: "Org" + i, Name: "组织" + i });
-                    }
-
-                    angular.forEach(dicSettings, function (phase, key) {
-                        if (!phase.InUse) {
-                            return;
-                        }
-                        phases.push({ Code: phase.Code, Name: phase.Name, Hidden: false });
-                        //subjects
-                        angular.forEach(phase.Subjects, function (subject, key) {
-                            if (!subject.InUse) {
-                                return;
-                            }
-                            if (!containItem(subjects, subject)) {
-                                subjects.push({ Code: subject.Code, Name: subject.Name, Hidden: false });
-                            }
-                        });
-                        //grades
-                        angular.forEach(phase.Grades, function (grade, key) {
-                            if (!grade.InUse) {
-                                return;
-                            }
-                            if (!containItem(grades, grade)) {
-                                grades.push({ Code: grade.Code, Name: grade.Name, Hidden: false });
-                            }
-                        });
-                    });
-
-                    theVm.orgs = orgs;
-                    theVm.phases = phases;
-                    theVm.subjects = subjects;
-                    theVm.grades = grades;
-
-                    ////dic relations todo
-                    //var visiablePhases = [];
-                    //var visiablePhaseSubjects = [];
-                    //var visiablePhaseGrades = [];
-                    //var visiablePhaseSubjectGrades = [];
-
-                    //theVm.visiablePhases = visiablePhases;
-                    //theVm.visiablePhaseSubjects = visiablePhaseSubjects;
-                    //theVm.visiablePhaseGrades = visiablePhaseGrades;
-                    //theVm.visiablePhaseSubjectGrades = visiablePhaseSubjectGrades;
-
-                    return theVm;
-                };
+                //todo
 
                 dicCatalogAppService.getDicCatalogs()
                     .success(function (result) {
@@ -273,138 +402,16 @@
                             orgs: [],
                             phases: [],
                             subjects: [],
-                            grades: []
+                            grades: [],
+                            orgTypePhases: [],
+                            initCodes: { OrgCode: '', PhaseCode: '', SubjectCode: '', GradeCode: '' }
                         };
-
-                        setupDicCatalogVm(initData, result);
+                        mockHelper.setupInitData(initData, result);
                         dicCatalogVm.initItems(initData);
-                        initData.initCodes = { OrgCode: 'Org2', PhaseCode: 'Phase2', SubjectCode: 'GS001', GradeCode: 'GO003' };
                         dicCatalogVm.initCurrent(initData);
+                        dicCatalogVm.initRelation(initData);
+                        dicCatalogVm.updateView();
                     });
-            });
-
-            mainApp.directive('nbSelectItems', function () {
-
-                var template1 = function () {
-                    return '' +
-                        '<div class="term-box">  ' +
-                        '    <span class="term">{{category}}(<span class="selectedDicCatalogItem">{{current.Name}}</span>)</span>  ' +
-                        '    <ul class="nav nav-pills overflow-h">  ' +
-                        '        <li ng-repeat="item in items" ng-class="{active: isCurrentItem(item), hidden: item.Hidden}">  ' +
-                        '            <a href="javascript:void(0)" ng-click="selectItem(item)">  ' +
-                        '                {{item.Name}}  ' +
-                        '            </a>  ' +
-                        '        </li>  ' +
-                        '    </ul>  ' +
-                        '</div>  ';
-                }();
-                var template2 = '';
-                var template3 = '';
-                var template4 = '';
-                var getTemplate = function (tElem, tAttrs) {
-                    var mode = tAttrs.dicViewMode;
-                    if (!mode) {
-                        return template1;
-                    }
-
-                    if (mode === "1") {
-                        return template1;
-                    }
-                    if (mode === "2") {
-                        return template2;
-                    }
-                    if (mode === "3") {
-                        return template3;
-                    }
-                    if (mode === "4") {
-                        return template4;
-                    }
-
-                    return template1;
-                }
-
-                return {
-                    scope: {
-                        category: '@',
-                        currentChanged: '=',
-                        items: '=',
-                        current: '=',
-                        dicViewMode: '@'
-                    },
-                    controller: function ($scope, $element, $attrs, $transclude) {
-
-                        $scope.isCurrentItem = function (item) {
-                            return $scope.current === item;
-                        };
-
-                        $scope.selectItem = function (item) {
-                            if ($scope.current === item) {
-                                return;
-                            }
-                            var old = $scope.current;
-                            $scope.current = item;
-                            if ($scope.currentChanged) {
-                                $scope.currentChanged(item, old);
-                            }
-                        };
-                    },
-                    template: getTemplate
-                };
-            });
-            mainApp.directive('nbDicSearch', function () {
-
-                var getTemplate = function () {
-                    return '' +
- '   <div ng-if="dicCatalogVm.orgs">  ' +
- '       <div nb-select-items category="学校" current-changed="orgChanged" items="dicCatalogVm.orgs" current="dicCatalogVm.org" view-mode="dicCatalogVm.viewMode"></div>  ' +
- '   </div>  ' +
- '   <div ng-if="dicCatalogVm.phases">  ' +
- '       <div nb-select-items category="学段" current-changed="phaseChanged" items="dicCatalogVm.phases" current="dicCatalogVm.phase" view-mode="dicCatalogVm.viewMode"></div>  ' +
- '   </div>  ' +
- '   <div ng-if="dicCatalogVm.subjects">  ' +
- '       <div nb-select-items category="学科" current-changed="subjectChanged" items="dicCatalogVm.subjects" current="dicCatalogVm.subject" view-mode="dicCatalogVm.viewMode"></div>  ' +
- '   </div>  ' +
- '   <div ng-if="dicCatalogVm.grades">  ' +
- '       <div nb-select-items category="年级" current-changed="gradeChanged" items="dicCatalogVm.grades" current="dicCatalogVm.grade" view-mode="dicCatalogVm.viewMode"></div>  ' +
- '  </div>  ';
-                };
-
-                return {
-                    require: '^nbSelectItems',
-                    scope: {
-                        resultChanged: '=',
-                        dicCatalogVm: '='
-                    },
-                    controller: function ($scope, $element, $attrs, $transclude) {
-
-                        var notifyChanged = function () {
-                            if ($scope.resultChanged) {
-                                $scope.resultChanged();
-                            }
-                        };
-
-                        $scope.orgChanged = function (newItem, oldItem) {
-                            //console.log('orgChanged: ' + oldItem.Code + ' -> ' + newItem.Code);
-                            notifyChanged();
-                        };
-
-                        $scope.phaseChanged = function (newItem, oldItem) {
-                            //console.log('phaseChanged: ' + oldItem.Code + ' -> ' + newItem.Code);
-                            notifyChanged();
-                        };
-
-                        $scope.subjectChanged = function (newItem, oldItem) {
-                            //console.log('subjectChanged: ' + oldItem.Code + ' -> ' + newItem.Code);
-                            notifyChanged();
-                        };
-
-                        $scope.gradeChanged = function (newItem, oldItem) {
-                            //console.log('gradeChanged: ' + oldItem.Code + ' -> ' + newItem.Code);
-                            notifyChanged();
-                        };
-                    },
-                    template: getTemplate()
-                };
             });
 
         }());

@@ -88,6 +88,7 @@
     <Content Include="Content\libs\angular1.2\ui-bootstrap\ui-bootstrap-tpls-0.10rating.js" />
     <Content Include="Content\libs\angular1.2\ui-bootstrap\ui-bootstrap-tpls-0.11.0.min.js" />
     <Content Include="Content\libs\angular1.2\ui-bootstrap\ui-bootstrap-tpls-0.12.0.js" />
+    <Content Include="Content\scripts\dicCatalogDirectives5.js" />
     <Content Include="Content\scripts\dicCatalogDirectives3.js" />
     <Content Include="Content\scripts\dicCatalogDirectives2.js" />
     <Content Include="Content\scripts\dicCatalogDirectives_temp2.js" />
