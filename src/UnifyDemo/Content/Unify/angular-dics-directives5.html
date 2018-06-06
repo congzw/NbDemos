@@ -243,11 +243,12 @@
                                 vm.visiablePhaseGrades = visiablePhaseGrades;
                                 vm.visiablePhaseSubjectGrades = visiablePhaseSubjectGrades;
 
-                                console.log('initRelation');
-                                console.log(vm);
+                                //console.log('initRelation');
+                                //console.log(vm);
                                 
                             };
 
+                        //private method
                         var isEmptyItem = function (item) {
                             //console.log(item);
                             return item.Code === '';
@@ -272,20 +273,59 @@
                         };
                         var shouldShowThisPhaseSubject = function (theVm, subject) {
                             var currentPhase = theVm.phase;
-                            //当前全部学科，或未知学科类型，所有【年级】永远显示
+                            //当前全部学段，或未知学段类型，所有【学科】永远显示
                             if (isEmptyItem(currentPhase) || !currentPhase.Code) {
                                 return true;
                             }
-                            //【年级（全部）】按钮永远显示
+                            //【学科（全部）】按钮永远显示
                             if (isEmptyItem(subject)) {
                                 return true;
                             }
 
                             //按关系查找
                             var codeItem = createCodeItem(currentPhase.Code, subject.Code);
-                            var shouldShow = containItem(vm.visiablePhaseSubjects, codeItem);
+                            var shouldShow = containItem(theVm.visiablePhaseSubjects, codeItem);
                             if (shouldShow) {
                                 //console.log("refresh phase subjects: " + currentPhase.Name + ',' + subject.Name + ' ' + shouldShow);
+                            }
+                            return shouldShow;
+                        };
+                        var shouldShowThisPhaseGrade = function (theVm, grade) {
+                            var currentPhase = theVm.phase;
+                            //当前全部学段，或未知学段类型，所有【年级】永远显示
+                            if (isEmptyItem(currentPhase) || !currentPhase.Code) {
+                                return true;
+                            }
+                            //【年级（全部）】按钮永远显示
+                            if (isEmptyItem(grade)) {
+                                return true;
+                            }
+
+                            //按关系查找
+                            var codeItem = createCodeItem(currentPhase.Code, grade.Code);
+                            var shouldShow = containItem(theVm.visiablePhaseGrades, codeItem);
+                            if (shouldShow) {
+                                //console.log("refresh phase grades: " + currentPhase.Name + ',' + grade.Name + ' ' + shouldShow);
+                            }
+                            return shouldShow;
+                        };
+                        var shouldShowThisPhaseSubjectGrade = function (theVm, grade) {
+                            var currentPhase = theVm.phase;
+                            var currentSubject = theVm.subject;
+                            //当前全部学段、学科，或未知学段、学科类型，所有【年级】永远显示
+                            if (isEmptyItem(currentPhase) || !currentPhase.Code || isEmptyItem(currentSubject) || !currentSubject.Code) {
+                                return true;
+                            }
+                            //【年级（全部）】按钮永远显示
+                            if (isEmptyItem(grade)) {
+                                return true;
+                            }
+
+                            //按关系查找
+                            var codeItem = createCodeItem(currentPhase.Code, currentSubject.Code, grade.Code);
+                            var shouldShow = containItem(theVm.visiablePhaseSubjectGrades, codeItem);
+                            if (shouldShow) {
+                                //console.log("refresh phase subject grades: " + currentPhase.Name + ',' + currentSubject.Name + ',' + grade.Name + ' ' + shouldShow);
                             }
                             return shouldShow;
                         };
@@ -311,6 +351,35 @@
                                 var shouldShow = shouldShowThisPhaseSubject(vm, subject);
                                 if (shouldShow) {
                                     subject.Hidden = false;
+                                }
+                            });
+                            
+                            //refresh phase grade by current phase
+                            angular.forEach(vm.grades, function (grade) {
+                                grade.Hidden = true;
+                                var shouldShow = shouldShowThisPhaseGrade(vm, grade);
+                                if (shouldShow) {
+                                    grade.Hidden = false;
+                                }
+                            });
+
+                            //二次筛选
+                            //refresh phase subject grade by current phase
+                            angular.forEach(vm.grades, function (grade) {
+
+                                //var needChangeToEmptyGrade = true;
+
+                                //如果学段和学科同时不为空，则需要二次筛选
+                                if (!(isEmptyItem(vm.phase)) && !isEmptyItem(vm.subject)) {
+                                    var shouldShow = shouldShowThisPhaseSubjectGrade(vm, grade);
+                                    if (!shouldShow) {
+                                        grade.Hidden = true;
+                                    } else {
+                                        if (sameCodeItem(grade, vm.grade)) {
+                                            //console.log("当前的选中的年级在隐藏的按钮中: " + grade.Code + ',' + theVm.selectResult.Grade.Code);
+                                            //needChangeToEmptyGrade = false;
+                                        }
+                                    }
                                 }
                             });
                         };
@@ -369,7 +438,7 @@
             }();
 
             mainApp.factory('dicCatalogAppService', ['$http', function ($http) {
-                var serviceUrl = '/Content/scripts/GetDicCatalogs.js';
+                var serviceUrl = '/Content/scripts/GetDicCatalogs2.js';
                 return {
                     getDicCatalogs: function () {
                         return $http.get(serviceUrl);
@@ -460,6 +529,8 @@
                                 orgTypePhases: [],
                                 initCodes: { OrgCode: '', PhaseCode: '', SubjectCode: '', GradeCode: '' }
                             };
+
+                            //result[0].InUse = true;
                             mockHelper.setupInitData(initData, result);
                             dicCatalogVm.initItems(initData);
                             dicCatalogVm.initCurrent(initData);
