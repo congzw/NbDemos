@@ -363,6 +363,7 @@
 
         var getTemplate = function (tElem, tAttrs) {
             var mode = tAttrs.dicViewMode;
+            console.log(mode);
             if (!mode) {
                 return template1;
             }

@@ -1,7 +1,7 @@
 ﻿(function () {
     'use strict';
     var mainApp = zqnb.mainApp;
-    
+
     //'&' and '=' function binding
     //https://stackoverflow.com/questions/25808193/angularjs-isolate-scope-vs
 
@@ -20,11 +20,24 @@
                 '    </ul>  ' +
                 '</div>  ';
         }();
-        var template2 = '';
+        var template2 = '' +
+                '<li class="dropdown">  ' +
+                '    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">  ' +
+                '        {{category}}(<span class="selectedDicCatalogItem">{{current.Name}}</span>)  ' +
+                '    </a>  ' +
+                '    <ul class="dropdown-menu">  ' +
+                '        <li ng-repeat="item in items" ng-class="{active: isCurrentPhase(item), hidden: item.Hidden}">  ' +
+                '            <a href="javascript:void(0)" ng-click="vm.selectPhase(item)">{{item.Name}}</a>  ' +
+                '        </li>  ' +
+                '    </ul>  ' +
+                '</li>  ';
         var template3 = '';
         var template4 = '';
         var getTemplate = function (tElem, tAttrs) {
-            var mode = tAttrs.dicViewMode;
+            var mode = tAttrs.viewMode;
+            console.log('getTemplate');
+            //console.log(tAttrs);
+            console.log(mode);
             if (!mode) {
                 return template1;
             }
@@ -51,9 +64,13 @@
                 currentChanged: '=',
                 items: '=',
                 current: '=',
-                dicViewMode: '@'
+                viewMode: '='
             },
+            template: getTemplate,
             controller: function ($scope, $element, $attrs, $transclude) {
+
+                console.log('nbSelectItems ctrl');
+                console.log($scope.viewMode);
 
                 $scope.isCurrentItem = function (item) {
                     return $scope.current === item;
@@ -71,8 +88,7 @@
                         $scope.currentChanged(item, old);
                     }
                 };
-            },
-            template: getTemplate
+            }
         };
     });
     mainApp.directive('nbDicSearch', function () {
@@ -102,6 +118,8 @@
             controller: function ($scope, $element, $attrs, $transclude) {
 
                 var dicCatalogVm = $scope.dicCatalogVm;
+                //console.log('nbDicSearch ctrl');
+                //console.log(dicCatalogVm.viewMode);
 
                 var notifyChanged = function (event) {
                     if ($scope.resultChanged) {
@@ -114,7 +132,7 @@
                     //fix angular auto watch slow problem!
                     dicCatalogVm.org = newItem;
                     //console.log(dicCatalogVm.org);
-                    notifyChanged({ ChangeBy: "Org", NewItem: newItem, OldItem :oldItem });
+                    notifyChanged({ ChangeBy: "Org", NewItem: newItem, OldItem: oldItem });
                 };
 
                 $scope.phaseChanged = function (newItem, oldItem) {
