@@ -4,7 +4,6 @@
 
     //'&' and '=' function binding
     //https://stackoverflow.com/questions/25808193/angularjs-isolate-scope-vs
-
     mainApp.directive('nbSelectItems', function () {
 
         var template1 = function () {
@@ -20,17 +19,20 @@
                 '    </ul>  ' +
                 '</div>  ';
         }();
-        var template2 = '' +
-                '<li class="dropdown">  ' +
-                '    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">  ' +
-                '        {{category}}(<span class="selectedDicCatalogItem">{{current.Name}}</span>)  ' +
-                '    </a>  ' +
-                '    <ul class="dropdown-menu">  ' +
-                '        <li ng-repeat="item in items" ng-class="{active: isCurrentPhase(item), hidden: item.Hidden}">  ' +
-                '            <a href="javascript:void(0)" ng-click="vm.selectPhase(item)">{{item.Name}}</a>  ' +
-                '        </li>  ' +
-                '    </ul>  ' +
-                '</li>  ';
+        var template2 = function () {
+            return '' +
+                    '<li class="dropdown">  ' +
+                    '    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">  ' +
+                    '        {{category}}(<span class="selectedDicCatalogItem">{{current.Name}}</span>)  ' +
+                    '    </a>  ' +
+                    '    <ul class="dropdown-menu">  ' +
+                    '        <li ng-repeat="item in items" ng-class="{active: isCurrentPhase(item), hidden: item.Hidden}">  ' +
+                    '            <a href="javascript:void(0)" ng-click="vm.selectPhase(item)">{{item.Name}}</a>  ' +
+                    '        </li>  ' +
+                    '    </ul>  ' +
+                    '</li>  ';
+        }();
+
         var template3 = '';
         var template4 = '';
         var getTemplate = function (tElem, tAttrs) {
@@ -38,8 +40,8 @@
             if (tAttrs.viewMode) {
                 mode = tAttrs.viewMode;
             }
+            //console.log(tAttrs);
             //console.log('nbSelectItems getTemplate');
-            ////console.log(tAttrs);
             //console.log(mode);
             if (!mode) {
                 return template1;
@@ -70,7 +72,7 @@
                 itemViewMode: '@'
             },
             template: getTemplate,
-            controller: function ($scope, $element, $attrs, $transclude) {
+            controller: function($scope, $element, $attrs, $transclude) {
 
                 //console.log('nbSelectItems ctrl');
                 //console.log($scope.viewMode);
@@ -97,15 +99,15 @@
     mainApp.directive('nbDicSearch', function () {
 
         var getTemplate = function (tElem, tAttrs) {
-            //console.log('nbDicSearch getTemplate');
             var mode = "1";
             if (tAttrs.viewMode) {
                 mode = tAttrs.viewMode;
             }
+            //console.log('nbDicSearch getTemplate');
             //console.log(mode);
             return '' +
 '   <div ng-if="dicCatalogVm.orgs">  ' +
-'       <div nb-select-items category="学校" current-changed="orgChanged" items="dicCatalogVm.orgs" current="dicCatalogVm.org" view-mode="'+ mode +'"></div>  ' +
+'       <div nb-select-items category="学校" current-changed="orgChanged" items="dicCatalogVm.orgs" current="dicCatalogVm.org" view-mode="' + mode + '"></div>  ' +
 '   </div>  ' +
 '   <div ng-if="dicCatalogVm.phases">  ' +
 '       <div nb-select-items category="学段" current-changed="phaseChanged" items="dicCatalogVm.phases" current="dicCatalogVm.phase" view-mode="' + mode + '"></div>  ' +
