@@ -143,36 +143,35 @@
                 initGrades(theVm, config.orgTypes);
             }
         },
-        dicVm = {};
+        dicVm = {
+            //是否自动补齐【全部】按钮
+            autoAppendEmpty: true,
 
-        //是否自动补齐【全部】按钮
-        dicVm.autoAppendEmpty = true;
-        //组织类型
-        dicVm.orgTypes = null;
-        dicVm.emptyOrgType = createEmptyItem();
-        //组织
-        dicVm.orgs = null;
-        dicVm.emptyOrg = createEmptyItem();
-        //学段
-        dicVm.phases = null;
-        dicVm.emptyPhase = createEmptyItem();
-        //学科
-        dicVm.subjects = null;
-        dicVm.emptySubject = createEmptyItem();
-        //年级
-        dicVm.grades = null;
-        dicVm.emptyGrade = createEmptyItem();
+            //-------------字典项-------------
+            //组织类型
+            orgTypes: null,
+            emptyOrgType: createEmptyItem(),
+            //组织
+            orgs: null,
+            emptyOrg: createEmptyItem(),
+            //学段
+            phases: null,
+            emptyPhase: createEmptyItem(),
+            //学科
+            subjects: null,
+            emptySubject: createEmptyItem(),
+            //年级
+            grades: null,
+            emptyGrade: createEmptyItem(),
+            //-------------字典关系-------------
+            orgTypePhases: null,
+            visiableOrgTypePhases: null
+        };
 
-        //-------------字典项-------------
         dicVm.initItems = function (config) {
             return initItems(dicVm, config);
         };
-
-        //-------------字典关系-------------
-        dicVm.orgTypePhases = null;
-        dicVm.visiableOrgTypePhases = null;
         dicVm.shouldShowThisPhase = function (theVm, phase) {
-
         };
 
         //-------------视图状态-------------
@@ -196,15 +195,15 @@
         //        return true;
         //    }
 
-            //    //【学科（全部）】按钮永远显示
-                //    if (isEmptyItem(phase)) {
-                //        return true;
-                //    }
+        //    //【学科（全部）】按钮永远显示
+        //    if (isEmptyItem(phase)) {
+        //        return true;
+        //    }
 
-                //    //按关系查找
-                //    var orgTypePhaseCodeItem = createCodeItem(currentOrg.OrgTypeCode, phase.Code);
-                    //    var shouldShow = containItem(theVm.visiableOrgTypePhases, orgTypePhaseCodeItem);
-                    //    return shouldShow;
+        //    //按关系查找
+        //    var orgTypePhaseCodeItem = createCodeItem(currentOrg.OrgTypeCode, phase.Code);
+        //    var shouldShow = containItem(theVm.visiableOrgTypePhases, orgTypePhaseCodeItem);
+        //    return shouldShow;
         //};
 
         var createOrgTypePhaseCodeItem = function (org, phase) {
