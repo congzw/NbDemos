@@ -1,39 +1,6 @@
 ﻿(function () {
     'use strict';
     var mainApp = zqnb.mainApp;
-
-    mainApp.directive('nbDicItem', function () {
-
-        //级联关系的逻辑
-        //学段（空）：展示所有学科、所有年级
-        //学段（非空）：筛选学段的学科、学段的年级
-        //学段+ 年级（同时非空）：筛选学段的学科、学段的年级、学段的年级的学科
-        //hacks:
-        //https://stackoverflow.com/questions/21177582/directive-is-being-rendered-before-promise-is-resolved
-
-        //org : {OrgId : '', OrgName:'', OrgTypeCode:''}
-        //phaseOrgTypes : [{PhaseCode: 'Phase1', OrgTypeCode: 'XueXiao-001'}]}
-        //=> org : {OrgId : '', OrgName:'', VisiablePhaseCodes:['Phase0','Phase1']}
-        //非学校？ => 教育局，科室？
-        //todo just add visiablePhaseCode for user or org...
-
-        var createEmptyItem = function () {
-            return { Code: "", Name: "全部", Selected: true, Hidden: false };
-        }
-        , createEmptyOrg = function () {
-            return { OrgId: '', OrgName: '全部', VisiablePhaseCodes: [] };
-        }
-        , searchResult = {
-            phase: createEmptyItem(),
-            subject: createEmptyItem(),
-            grade: createEmptyItem(),
-            org: createEmptyOrg()
-        }
-        , isEmptyItem = function () {
-        }
-        , foo = '';
-
-    });
     
     mainApp.directive('nbDicCatalog', function () {
 
