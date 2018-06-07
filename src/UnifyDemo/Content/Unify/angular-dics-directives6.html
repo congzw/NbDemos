@@ -27,15 +27,13 @@
     <script src="../scripts/zqnb.js"></script>
     <script src="../scripts/zqnb.mainApp.js"></script>
     <script src="../scripts/zqnb.mainApp.unify.js"></script>
+    <script src="../scripts/zqnb.dicCatalogVm.js"></script>
     <script src="../scripts/dicCatalogDirectives5.js"></script>
-    <script src="../scripts/zqnb.dicCatalogHelper.js"></script>
     <script>
         (function () {
             'use strict';
             var mainApp = zqnb.mainApp;
-
-            var dicHelper = zqnb.createDicCatalogHelper();
-
+            
             mainApp.factory('dicCatalogAppService', ['$http', function ($http) {
                 var serviceUrl = '/Content/scripts/GetDicCatalogs2.js';
                 return {
@@ -46,6 +44,8 @@
             }
             ]);
             mainApp.factory('dicCatalogMockData', ['dicCatalogAppService', function (dicCatalogAppService) {
+
+                var dicHelper = zqnb.createDicHelper();
 
                 var mockHelper = function () {
 
@@ -115,7 +115,7 @@
                     };
                 }();
 
-                var init = function (dicCatalogVm) {
+                var init = function (vm) {
                     dicCatalogAppService.getDicCatalogs()
                         .success(function (result) {
 
@@ -131,10 +131,10 @@
 
                             //result[0].InUse = true;
                             mockHelper.setupInitData(initData, result);
-                            dicCatalogVm.initItems(initData);
-                            dicCatalogVm.initCurrent(initData);
-                            dicCatalogVm.initRelation(initData);
-                            dicCatalogVm.updateView();
+                            vm.initOrgTypes(initData.orgTypes);
+                            vm.initOrgs(initData.orgs);
+                            //vm.initRelation(initData);
+                            //vm.updateView();
                         });
                 };
                 return { init: init };
@@ -144,7 +144,7 @@
 
             mainApp.controller('demoCtrl', function ($scope, dicCatalogMockData) {
 
-                var dicCatalogVm = dicHelper.createDicCatalogVm();
+                var dicCatalogVm = zqnb.createDicCatalogVm();
 
                 dicCatalogVm.viewMode = "2";
 
@@ -174,11 +174,13 @@
             <div class="container">
                 <div ng-controller="demoCtrl as vm">
                     <div class="row">
-                        <h2>{{dicCatalogVm.getSelectCodes()}}</h2>
+                        <h2>{{1 + 1}}</h2>
                         <hr />
                         <div class="search-block">
                             <div>
-                                <div nb-dic-search result-changed="resultChanged" dic-catalog-vm="dicCatalogVm" view-mode="1"></div>
+                                <p>
+                                    {{dicCatalogVm.orgs}}
+                                </p>
                             </div>
                         </div>
                     </div>
