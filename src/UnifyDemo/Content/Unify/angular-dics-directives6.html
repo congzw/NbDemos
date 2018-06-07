@@ -1,0 +1,190 @@
+﻿<!DOCTYPE html>
+<!--[if IE 8]>
+<html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9]>
+<html lang="en" class="ie9"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+<head>
+    <title>angular-dics</title>
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link href="assets/plugins/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link href="assets/css/style.css" rel="stylesheet" />
+    <link href="assets/plugins/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="assets/css/theme-colors/blue.css" rel="stylesheet" />
+    <link href="assets/plugins/sky-forms-pro/skyforms/css/sky-forms.css" rel="stylesheet" />
+    <link href="/Content/css/layout_template.css" rel="stylesheet">
+    <link href="../css/dics.css" rel="stylesheet" />
+    <!-- JS Global Compulsory -->
+    <script src="assets/plugins/jquery/jquery.js"></script>
+    <script src="assets/plugins/bootstrap/js/bootstrap.js"></script>
+    <script src="../libs/angular1.2/angular.js"></script>
+    <script src="../scripts/zqnb.js"></script>
+    <script src="../scripts/zqnb.mainApp.js"></script>
+    <script src="../scripts/zqnb.mainApp.unify.js"></script>
+    <script src="../scripts/dicCatalogDirectives5.js"></script>
+    <script src="../scripts/zqnb.dicCatalogHelper.js"></script>
+    <script>
+        (function () {
+            'use strict';
+            var mainApp = zqnb.mainApp;
+
+            var dicHelper = zqnb.createDicCatalogHelper();
+
+            mainApp.factory('dicCatalogAppService', ['$http', function ($http) {
+                var serviceUrl = '/Content/scripts/GetDicCatalogs2.js';
+                return {
+                    getDicCatalogs: function () {
+                        return $http.get(serviceUrl);
+                    }
+                }
+            }
+            ]);
+            mainApp.factory('dicCatalogMockData', ['dicCatalogAppService', function (dicCatalogAppService) {
+
+                var mockHelper = function () {
+
+                    var setupInitData = function (initData, dicSettings) {
+
+                        initData.dicSettings = dicSettings;
+                        //initCodes
+                        initData.initCodes = { OrgCode: 'Org2', PhaseCode: 'Phase2', SubjectCode: 'GS001', GradeCode: 'GO003' };
+
+                        //all dic items
+                        var orgs = [];
+                        var phases = [];
+                        var subjects = [];
+                        var grades = [];
+
+                        //mock set orgs
+                        orgs.push({ Code: "Org1", Name: "组织1", OrgTypeCode: "OrgType1" });
+                        orgs.push({ Code: "Org2", Name: "组织2", OrgTypeCode: "OrgType2" });
+                        orgs.push({ Code: "Org3", Name: "组织3", OrgTypeCode: "OrgType3" });
+
+                        angular.forEach(dicSettings, function (phase) {
+                            if (!phase.InUse) {
+                                return;
+                            }
+                            phases.push({ Code: phase.Code, Name: phase.Name, Hidden: false });
+                            //subjects
+                            angular.forEach(phase.Subjects, function (subject) {
+                                if (!subject.InUse) {
+                                    return;
+                                }
+                                if (!dicHelper.containItem(subjects, subject)) {
+                                    subjects.push({ Code: subject.Code, Name: subject.Name, Hidden: false });
+                                }
+                            });
+                            //grades
+                            angular.forEach(phase.Grades, function (grade) {
+                                if (!grade.InUse) {
+                                    return;
+                                }
+                                if (!dicHelper.containItem(grades, grade)) {
+                                    grades.push({ Code: grade.Code, Name: grade.Name, Hidden: false });
+                                }
+                            });
+                        });
+
+                        initData.orgs = orgs;
+                        initData.phases = phases;
+                        initData.subjects = subjects;
+                        initData.grades = grades;
+
+
+                        //mock relations
+                        initData.orgTypePhases = [
+                            { OrgTypeCode: "OrgType1", PhaseCode: "Phase0" },
+                            { OrgTypeCode: "OrgType1", PhaseCode: "Phase1" },
+                            { OrgTypeCode: "OrgType1", PhaseCode: "Phase2" },
+                            { OrgTypeCode: "OrgType1", PhaseCode: "Phase3" },
+                            { OrgTypeCode: "OrgType2", PhaseCode: "Phase2" },
+                            { OrgTypeCode: "OrgType3", PhaseCode: "Phase3" }
+                        ];
+
+                        return initData;
+                    };
+
+                    return {
+                        setupInitData: setupInitData
+                    };
+                }();
+
+                var init = function (dicCatalogVm) {
+                    dicCatalogAppService.getDicCatalogs()
+                        .success(function (result) {
+
+                            var initData = {
+                                autoAppendEmpty: true,
+                                orgs: [],
+                                phases: [],
+                                subjects: [],
+                                grades: [],
+                                orgTypePhases: [],
+                                initCodes: { OrgCode: '', PhaseCode: '', SubjectCode: '', GradeCode: '' }
+                            };
+
+                            //result[0].InUse = true;
+                            mockHelper.setupInitData(initData, result);
+                            dicCatalogVm.initItems(initData);
+                            dicCatalogVm.initCurrent(initData);
+                            dicCatalogVm.initRelation(initData);
+                            dicCatalogVm.updateView();
+                        });
+                };
+                return { init: init };
+            }
+            ]);
+
+
+            mainApp.controller('demoCtrl', function ($scope, dicCatalogMockData) {
+
+                var dicCatalogVm = dicHelper.createDicCatalogVm();
+
+                dicCatalogVm.viewMode = "2";
+
+                $scope.dicCatalogVm = dicCatalogVm;
+
+                $scope.resultChanged = function (event) {
+                    //console.log('ctrl get resultChanged!');
+                    //console.log(event);
+                    dicCatalogVm.resultChanged(event);
+                    dicCatalogVm.updateView();
+                };
+
+                dicCatalogMockData.init(dicCatalogVm);
+
+            });
+        }());
+    </script>
+    <!--[if lt IE 9]>
+            <script src="assets/plugins/respond.js"></script>
+            <script src="assets/plugins/html5shiv.js"></script>
+            <script src="assets/plugins/placeholder-IE-fixes.js"></script>
+        <![endif]-->
+</head>
+<body>
+    <div class="wrapper">
+        <div ng-app="mainApp">
+            <div class="container">
+                <div ng-controller="demoCtrl as vm">
+                    <div class="row">
+                        <h2>{{dicCatalogVm.getSelectCodes()}}</h2>
+                        <hr />
+                        <div class="search-block">
+                            <div>
+                                <div nb-dic-search result-changed="resultChanged" dic-catalog-vm="dicCatalogVm" view-mode="1"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
