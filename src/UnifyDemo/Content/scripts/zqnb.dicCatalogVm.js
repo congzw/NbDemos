@@ -87,6 +87,8 @@
     var createDicCatalogVm = function () {
 
         var dicVm = {};
+
+        //private methods
         var fixOrgModels = function (orgs) {
             var fixOrgs = [];
             for (var i = 0; i < orgs.length; i++) {
@@ -119,6 +121,26 @@
             dicVm.grades = createInitItems(grades, appendEmptyItem);
         };
 
+
+        //var shouldShowThisPhase = function (theVm, phase) {
+
+        //    var currentOrg = theVm.org;
+        //    //当前全部组织，或未知组织类型，所有【学科】永远显示
+        //    if (isEmptyItem(currentOrg) || !currentOrg.OrgTypeCode) {
+        //        return true;
+        //    }
+
+        //    //【学科（全部）】按钮永远显示
+        //    if (isEmptyItem(phase)) {
+        //        return true;
+        //    }
+
+        //    //按关系查找
+        //    var orgTypePhaseCodeItem = createCodeItem(currentOrg.OrgTypeCode, phase.Code);
+        //    var shouldShow = containItem(theVm.visiableOrgTypePhases, orgTypePhaseCodeItem);
+        //    return shouldShow;
+        //};
+
         //是否自动补齐【全部】按钮
         dicVm.autoAppendEmpty = true;
 
@@ -126,22 +148,19 @@
         //组织类型
         dicVm.orgTypes = null;
         dicVm.emptyOrgType = createEmptyItem();
-
         //组织
         dicVm.orgs = null;
         dicVm.emptyOrg = createEmptyItem();
-
         //学段
         dicVm.phases = null;
         dicVm.emptyPhase = createEmptyItem();
-
         //学科
         dicVm.subjects = null;
         dicVm.emptySubject = createEmptyItem();
-
         //年级
         dicVm.grades = null;
         dicVm.emptyGrade = createEmptyItem();
+
         dicVm.initItems = function (config) {
             if (!config) {
                 return;
@@ -169,6 +188,11 @@
         };
 
         //-------------字典关系-------------
+        dicVm.orgTypePhases = null;
+        dicVm.visiableOrgTypePhases = null;
+        dicVm.shouldShowThisPhase = function (theVm, phase) {
+
+        };
 
         //-------------视图状态-------------
         dicVm.result = {
