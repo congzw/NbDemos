@@ -86,8 +86,6 @@
 
     var createDicCatalogVm = function () {
 
-        var dicVm = {};
-
         //private methods
         var fixOrgModels = function (orgs) {
             var fixOrgs = [];
@@ -96,55 +94,59 @@
                 fixOrgs.push({ Code: current.Id, Name: current.Name, OrgTypeCode: current.OrgTypeCode });
             }
             return fixOrgs;
-        };
-        var initOrgTypes = function (orgTypes) {
-            var appendEmptyItem = dicVm.autoAppendEmpty ? dicVm.emptyOrgType : null;
-            dicVm.orgTypes = createInitItems(orgTypes, appendEmptyItem);
-        };
-        var initOrgs = function (orgs) {
+        },
+        initOrgTypes = function (theVm, orgTypes) {
+            var appendEmptyItem = theVm.autoAppendEmpty ? theVm.emptyOrgType : null;
+            theVm.orgTypes = createInitItems(orgTypes, appendEmptyItem);
+        },
+        initOrgs = function (theVm, orgs) {
             //fix orgs
-            dicVm.emptyOrg.OrgTypeCode = "";
+            theVm.emptyOrg.OrgTypeCode = "";
             var items = fixOrgModels(orgs);
-            var appendEmptyItem = dicVm.autoAppendEmpty ? dicVm.emptyOrg : null;
-            dicVm.orgs = createInitItems(items, appendEmptyItem);
-        };
-        var initPhases = function (phases) {
-            var appendEmptyItem = dicVm.autoAppendEmpty ? dicVm.emptyPhase : null;
-            dicVm.phases = createInitItems(phases, appendEmptyItem);
-        };
-        var initSubjects = function (subjects) {
-            var appendEmptyItem = dicVm.autoAppendEmpty ? dicVm.emptySubject : null;
-            dicVm.subjects = createInitItems(subjects, appendEmptyItem);
-        };
-        var initGrades = function (grades) {
-            var appendEmptyItem = dicVm.autoAppendEmpty ? dicVm.emptyGrade : null;
-            dicVm.grades = createInitItems(grades, appendEmptyItem);
-        };
+            var appendEmptyItem = theVm.autoAppendEmpty ? theVm.emptyOrg : null;
+            theVm.orgs = createInitItems(items, appendEmptyItem);
+        },
+        initPhases = function (theVm, phases) {
+            var appendEmptyItem = theVm.autoAppendEmpty ? theVm.emptyPhase : null;
+            theVm.phases = createInitItems(phases, appendEmptyItem);
+        },
+        initSubjects = function (theVm, subjects) {
+            var appendEmptyItem = theVm.autoAppendEmpty ? theVm.emptySubject : null;
+            theVm.subjects = createInitItems(subjects, appendEmptyItem);
+        },
+        initGrades = function (theVm, grades) {
+            var appendEmptyItem = theVm.autoAppendEmpty ? theVm.emptyGrade : null;
+            theVm.grades = createInitItems(grades, appendEmptyItem);
+        },
+        initItems = function (theVm, config) {
+            if (!config) {
+                return;
+            }
 
+            if (config.orgTypes) {
+                initOrgTypes(dicVm, config.orgTypes);
+            }
 
-        //var shouldShowThisPhase = function (theVm, phase) {
+            if (config.orgs) {
+                initOrgs(theVm, config.orgs);
+            }
 
-        //    var currentOrg = theVm.org;
-        //    //当前全部组织，或未知组织类型，所有【学科】永远显示
-        //    if (isEmptyItem(currentOrg) || !currentOrg.OrgTypeCode) {
-        //        return true;
-        //    }
+            if (config.phases) {
+                initPhases(theVm, config.phases);
+            }
 
-        //    //【学科（全部）】按钮永远显示
-        //    if (isEmptyItem(phase)) {
-        //        return true;
-        //    }
+            if (config.subjects) {
+                initSubjects(theVm, config.subjects);
+            }
 
-        //    //按关系查找
-        //    var orgTypePhaseCodeItem = createCodeItem(currentOrg.OrgTypeCode, phase.Code);
-        //    var shouldShow = containItem(theVm.visiableOrgTypePhases, orgTypePhaseCodeItem);
-        //    return shouldShow;
-        //};
+            if (config.grades) {
+                initGrades(theVm, config.orgTypes);
+            }
+        },
+        dicVm = {};
 
         //是否自动补齐【全部】按钮
         dicVm.autoAppendEmpty = true;
-
-        //-------------字典项-------------
         //组织类型
         dicVm.orgTypes = null;
         dicVm.emptyOrgType = createEmptyItem();
@@ -161,30 +163,9 @@
         dicVm.grades = null;
         dicVm.emptyGrade = createEmptyItem();
 
+        //-------------字典项-------------
         dicVm.initItems = function (config) {
-            if (!config) {
-                return;
-            }
-
-            if (config.orgTypes) {
-                initOrgTypes(config.orgTypes);
-            }
-
-            if (config.orgs) {
-                initOrgs(config.orgs);
-            }
-
-            if (config.phases) {
-                initPhases(config.phases);
-            }
-
-            if (config.subjects) {
-                initSubjects(config.subjects);
-            }
-
-            if (config.grades) {
-                initGrades(config.orgTypes);
-            }
+            return initItems(dicVm, config);
         };
 
         //-------------字典关系-------------
@@ -205,6 +186,26 @@
                 return [this.orgType.Name, this.org.Name, this.phase.Name, this.subject.Name, this.grade.Name];
             }
         };
+
+
+        //var shouldShowThisPhase = function (theVm, phase) {
+
+        //    var currentOrg = theVm.org;
+        //    //当前全部组织，或未知组织类型，所有【学科】永远显示
+        //    if (isEmptyItem(currentOrg) || !currentOrg.OrgTypeCode) {
+        //        return true;
+        //    }
+
+            //    //【学科（全部）】按钮永远显示
+                //    if (isEmptyItem(phase)) {
+                //        return true;
+                //    }
+
+                //    //按关系查找
+                //    var orgTypePhaseCodeItem = createCodeItem(currentOrg.OrgTypeCode, phase.Code);
+                    //    var shouldShow = containItem(theVm.visiableOrgTypePhases, orgTypePhaseCodeItem);
+                    //    return shouldShow;
+        //};
 
         var createOrgTypePhaseCodeItem = function (org, phase) {
             var orgTypePhaseCodeItem = { Code: org.OrgTypeCode + ',' + phase.Code };
