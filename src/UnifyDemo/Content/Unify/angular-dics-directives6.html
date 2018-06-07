@@ -32,7 +32,7 @@
         (function () {
             'use strict';
             var mainApp = zqnb.mainApp;
-            
+
             mainApp.factory('dicCatalogAppService', ['$http', function ($http) {
                 var serviceUrl = '/Content/scripts/GetDicCatalogs2.js';
                 return {
@@ -138,7 +138,7 @@
                 return { init: init };
             }
             ]);
-            
+
             mainApp.controller('demoCtrl', function ($scope, dicCatalogMockData) {
 
                 var vm = zqnb.createDicCatalogVm();
@@ -159,36 +159,101 @@
 
             });
 
-            mainApp.directive('nbDicCatalog', function() {
+            mainApp.directive('nbDicCatalog', function () {
 
-                var template1 = function () {
+                var categories = function () {
+                    return [
+                        {
+                            key: "orgType",
+                            name: "组织类型"
+                        },
+                        {
+                            key: "org",
+                            name: "组织"
+                        },
+                        {
+                            key: "phase",
+                            name: "学段"
+                        },
+                        {
+                            key: "subject",
+                            name: "学科"
+                        },
+                        {
+                            key: "grade",
+                            name: "年级"
+                        }]
+                    ;
+                }();
+                var createCategoryTemplate1 = function (category) {
+                    var key = category.key;
+                    var name = category.name;
+                    //<div class="term-box">
+                    //    <span class="term">组织类型(<span class="selectedDicCatalogItem">{{vm.selectResult.orgType.Name}}</span>)</span>
+                    //    <ul class="nav nav-pills overflow-h">
+                    //        <li ng-repeat="item in vm.orgTypes" ng-class="{active: isCurrentItem(item, 'orgType'), hidden: item.Hidden}">
+                    //            <a href="javascript:void(0)" ng-click="selectItem(item, 'orgType')"> {{item.Name}} </a>
+                    //        </li>
+                    //    </ul>
+                    //</div>
+
                     return '' +
 ' <div class="term-box">  ' +
-'      <span class="term">学段(<span class="selectedDicCatalogItem">{{vm.selectResult.Phase.Name}}</span>)</span>  ' +
+'      <span class="term">' + name + '(<span class="selectedDicCatalogItem">{{vm.selectResult.' + key + '.Name}}</span>)</span>  ' +
 '      <ul class="nav nav-pills overflow-h">  ' +
-'          <li ng-repeat="item in vm.phases" ng-class="{active: vm.selectResult.Phase === item, hidden: item.Hidden}">  ' +
-'              <a href="javascript:void(0)" ng-click="vm.selectResult.Phase = item">  ' +
+'          <li ng-repeat="item in vm.' + key + 's" ng-class="{active: isCurrentItem(item, \'' + key + '\'), hidden: item.Hidden}">  ' +
+'              <a href="javascript:void(0)" ng-click="selectItem(item, \'' + key + '\')">  ' +
 '                  {{item.Name}}  ' +
 '              </a>  ' +
 '          </li>  ' +
 '      </ul>  ' +
-'  </div>  ' +
-'  <div class="term-box">  ' +
-'      <span class="term">学科(<span class="selectedDicCatalogItem">{{vm.selectResult.Subject.Name}}</span>)</span>  ' +
-'      <ul class="nav nav-pills overflow-h">  ' +
-'          <li ng-repeat="item in vm.subjects" ng-class="{active: vm.isCurrentSubject(item), hidden: item.Hidden}"><a href="javascript:void(0)" ng-click="vm.selectSubject(item)">{{item.Name}}</a></li>  ' +
-'      </ul>  ' +
-'  </div>  ' +
-'  <div class="term-box">  ' +
-'      <span class="term">年级(<span class="selectedDicCatalogItem">{{vm.selectResult.Grade.Name}}</span>)</span>  ' +
-'      <ul class="nav nav-pills overflow-h">  ' +
-'          <li ng-repeat="item in vm.grades" ng-class="{active: vm.isCurrentGrade(item), hidden: item.Hidden}"><a href="javascript:void(0)" ng-click="vm.selectGrade(item)">{{item.Name}}</a></a></li>  ' +
-'      </ul>  ' +
-' </div>';
+'  </div>';
+                };
+                var template1 = function () {
+                    var templateValue = '';
+                    for (var i = 0; i < categories.length; i++) {
+                        var category = categories[i];
+                        var value = createCategoryTemplate1(category);
+                        //console.log(value);
+                        templateValue += value;
+                    }
+                    return templateValue;
                 }();
-                var template2 = function() {
+                var template2 = function () {
+                    return 'todo';
                     return '' +
-                        '<h2>todo template2</h2>';
+' <ul class="search-dropdown col margin-top-bottom">  ' +
+'      <li class="dropdown">  ' +
+'          <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">  ' +
+'              学段(<span class="selectedDicCatalogItem">{{vm.selectResult.Phase.Name}}</span>)  ' +
+'          </a>  ' +
+'          <ul class="dropdown-menu">  ' +
+'              <li ng-repeat="item in vm.phases" ng-class="{active: vm.isCurrentPhase(item), hidden: item.Hidden}">  ' +
+'                  <a href="javascript:void(0)" ng-click="vm.selectPhase(item)">{{item.Name}}</a>  ' +
+'              </li>  ' +
+'          </ul>  ' +
+'      </li>  ' +
+'      <li class="dropdown">  ' +
+'          <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">  ' +
+'              学科(<span class="selectedDicCatalogItem">{{vm.selectResult.Subject.Name}}</span>)  ' +
+'          </a>  ' +
+'          <ul class="dropdown-menu style-width">  ' +
+'              <li ng-repeat="item in vm.subjects" ng-class="{active: vm.isCurrentSubject(item), hidden: item.Hidden}">  ' +
+'                  <a href="javascript:void(0)" ng-click="vm.selectSubject(item)">{{item.Name}}</a>  ' +
+'              </li>  ' +
+'          </ul>  ' +
+'      </li>  ' +
+'      <li class="dropdown">  ' +
+'          <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">  ' +
+'              年级(<span class="selectedDicCatalogItem">{{vm.selectResult.Grade.Name}}</span>)  ' +
+'          </a>  ' +
+'          <ul class="dropdown-menu style-width">  ' +
+'              <li ng-repeat="item in vm.grades" ng-class="{active: vm.isCurrentGrade(item), hidden: item.Hidden}">  ' +
+'                  <a href="javascript:void(0)" ng-click="vm.selectGrade(item)">{{item.Name}}</a>  ' +
+'              </li>  ' +
+'          </ul>  ' +
+'      </li>  ' +
+' </ul>  ';
                 }();
                 var template3 = function () {
                     return '' +
@@ -221,10 +286,9 @@
 
                     return template1;
                 }
-                
+
                 return {
                     scope: {
-                        selectResult: '=',
                         vm: '=',
                         viewMode: '@'
                     },
@@ -233,25 +297,29 @@
                         console.log('nbDicCatalog Ctrl');
                         console.log(vm);
 
-                        //$scope.isCurrentItem = function (item, category) {
-                        //    if (category === "Org") {
-                                
-                        //    }
-                        //    return $scope.current === item;
-                        //};
+                        $scope.isCurrentItem = function (item, category) {
+                            var currentItem = vm.selectResult[category];
+                            if (currentItem) {
+                                return currentItem === item;
+                            }
+                            return false;
+                        };
 
-                        //$scope.selectItem = function (item) {
-                        //    if ($scope.current === item) {
-                        //        return;
-                        //    }
-                        //    var old = $scope.current;
-                        //    $scope.current = item;
-                        //    //console.log('selected:');
-                        //    //console.log(item);
-                        //    if ($scope.currentChanged) {
-                        //        $scope.currentChanged(item, old);
-                        //    }
-                        //};
+                        $scope.selectItem = function (item, category) {
+                            var oldItem = vm.selectResult[category];
+                            if (oldItem) {
+                                if (oldItem === item) {
+                                    //no change
+                                    return;
+                                }
+                                vm.selectResult[category] = item;
+                                console.log('selected:');
+                                console.log(item);
+                                if ($scope.currentChangedCallback) {
+                                    $scope.currentChangedCallback(item, old);
+                                }
+                            }
+                        };
 
                     },
                     template: getTemplate
@@ -266,27 +334,31 @@
     <![endif]-->
 </head>
 <body>
-<div class="wrapper">
-    <div ng-app="mainApp">
-        <div class="container">
-            <div ng-controller="demoCtrl as vm">
-                <div class="row">
-                    <h2>{{dicCatalogVm.selectResult.display()}}</h2>
-                    <p>{{dicCatalogVm.selectResult}}</p>
+    <div class="wrapper">
+        <div ng-app="mainApp">
+            <div class="container">
+                <div ng-controller="demoCtrl as vm">
+                    <div class="row">
+                        <h2>{{dicCatalogVm.selectResult.display()}}</h2>
+                        <p>{{dicCatalogVm.selectResult}}</p>
                         <hr />
-                    <div class="search-block">
-                        
-                        <div nb-dic-catalog vm="dicCatalogVm" view-mode="1"></div>
-                        <hr/>
-                        <div>
-                            <button ng-click="callTest()">DEMO</button>
+                        <div class="search-block">
+
+                            <div nb-dic-catalog vm="dicCatalogVm" view-mode="1"></div>
+                            <hr />
+                            <div>
+                                <button ng-click="callTest()">DEMO</button>
+                            </div>
+                            <p>{{dicCatalogVm}}</p>
+                            <hr />
                         </div>
-                        <p>{{dicCatalogVm}}</p>
-                        <hr/>
-                    </div>
                     </div>
                 </div>
             </div>
+
+            <h2>在此基础上，完成所有项</h2>
+
+
         </div>
     </div>
 </body>
