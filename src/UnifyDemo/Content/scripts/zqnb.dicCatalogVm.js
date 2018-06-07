@@ -68,6 +68,22 @@
         return initItems;
     };
 
+    var dicHelper = function () {
+        return {
+            equalIgnoreCase: equalIgnoreCase,
+            sameCodeItem: sameCodeItem,
+            containItem: containItem,
+            findItem: findItem,
+            createEmptyItem: createEmptyItem,
+            createArrayCode: createArrayCode,
+            createCodeItem: createCodeItem,
+            createInitItems: createInitItems
+        };
+    }();
+    _.createDicHelper = function () {
+        return dicHelper;
+    };
+
     var createDicCatalogVm = function () {
 
         var fixOrgModels = function (orgs) {
@@ -84,6 +100,7 @@
         //是否自动补齐【全部】按钮
         dicVm.autoAppendEmpty = true;
 
+        //-------------字典项-------------
         //组织类型
         dicVm.orgTypes = null;
         dicVm.emptyOrgType = createEmptyItem();
@@ -104,20 +121,55 @@
         };
 
         //学段
-        //emptyOrg
+        dicVm.phases = null;
+        dicVm.emptyPhase = createEmptyItem();
+        dicVm.initPhases = function (phases) {
+            var appendEmptyItem = dicVm.autoAppendEmpty ? dicVm.emptyPhase : null;
+            dicVm.phases = createInitItems(phases, appendEmptyItem);
+        };
+
+        //学科
+        dicVm.subjects = null;
+        dicVm.emptySubject = createEmptyItem();
+        dicVm.initSubjects = function (subjects) {
+            var appendEmptyItem = dicVm.autoAppendEmpty ? dicVm.emptySubject : null;
+            dicVm.subjects = createInitItems(subjects, appendEmptyItem);
+        };
+
+        //年级
+        dicVm.grades = null;
+        dicVm.emptyGrade = createEmptyItem();
+        dicVm.initGrades = function (grades) {
+            var appendEmptyItem = dicVm.autoAppendEmpty ? dicVm.emptyGrade : null;
+            dicVm.grades = createInitItems(grades, appendEmptyItem);
+        };
+
+        //-------------字典关系-------------
+
+        //-------------视图状态-------------
+        dicVm.result = {
+            orgType: dicVm.emptyOrgType,
+            org: dicVm.emptyOrg,
+            phase: dicVm.emptyPhase,
+            subject: dicVm.emptySubject,
+            grade: dicVm.emptyGrade,
+            display: function () {
+                return [this.orgType.Name, this.org.Name, this.phase.Name, this.subject.Name, this.grade.Name];
+            }
+        };
 
         var createOrgTypePhaseCodeItem = function (org, phase) {
-            var orgTypePhaseCodeItem = { Code: org.OrgTypeCode + ',' + phase.Code };
+            var orgTypePhaseCodeItem = { Code : org.OrgTypeCode + ',' + phase.Code };
             return orgTypePhaseCodeItem;
         },
             createDicCatalogVm = function () {
-                var vm = {};
+                var vm = { };
 
                 var emptyOrg = createEmptyItem(),
                     emptyPhase = createEmptyItem(),
                     emptySubject = createEmptyItem(),
                     emptyGrade = createEmptyItem(),
-                    initCodes = { OrgCode: '', PhaseCode: '', SubjectCode: '', GradeCode: '' },
+                    initCodes = { OrgCode : '', PhaseCode: '', SubjectCode: '', GradeCode: '' },
                     getSelectCodes = function () {
                         return [vm.org.Code, vm.phase.Code, vm.subject.Code, vm.grade.Code];
                     },
@@ -221,12 +273,12 @@
 
                         angular.forEach(initData.dicSettings, function (phase) {
 
-                            if (!phase.InUse) {
+                            if(!phase.InUse) {
                                 return;
                             }
 
                             angular.forEach(phase.Grades, function (grade) {
-                                if (!grade.InUse) {
+                                if(!grade.InUse) {
                                     return;
                                 }
                                 var phaseGradeCodeItem = createCodeItem(phase.Code, grade.Code);
@@ -236,7 +288,7 @@
                             });
 
                             angular.forEach(phase.Subjects, function (subject) {
-                                if (!subject.InUse) {
+                                if(!subject.InUse) {
                                     return;
                                 }
                                 var subjectCodeItem = createCodeItem(phase.Code, subject.Code);
@@ -245,7 +297,7 @@
                                 }
 
                                 angular.forEach(subject.Grades, function (grade) {
-                                    if (!grade.InUse) {
+                                    if(!grade.InUse) {
                                         return;
                                     }
                                     var phaseSubjectGradeCodeItem = createCodeItem(phase.Code, subject.Code, grade.Code);
@@ -388,7 +440,7 @@
                         //var needChangeToEmptyGrade = true;
 
                         //如果学段和学科同时不为空，则需要二次筛选
-                        if (!(isEmptyItem(vm.phase)) && !isEmptyItem(vm.subject)) {
+                        if(!(isEmptyItem(vm.phase)) && !isEmptyItem(vm.subject)) {
                             var shouldShow = shouldShowThisPhaseSubjectGrade(vm, grade);
                             if (!shouldShow) {
                                 grade.Hidden = true;
@@ -402,7 +454,7 @@
                     });
                 };
                 var resultChanged = function (event) {
-                    if (!event) {
+                    if(!event) {
                         return;
                     }
                     if (event.ChangeBy === 'Org') {
@@ -426,45 +478,28 @@
                 };
 
                 vm = {
-                    initCodes: initCodes,
-                    org: emptyOrg,
-                    orgs: null,
-                    phase: emptyPhase,
-                    phases: null,
-                    subject: emptySubject,
-                    subjects: null,
-                    grade: emptyGrade,
-                    grades: null,
-                    getSelectCodes: getSelectCodes,
-                    initItems: initItems,
-                    initCurrent: initCurrent,
-                    initRelation: initRelation,
-                    resultChanged: resultChanged,
-                    updateView: updateView
-                };
+                        initCodes: initCodes,
+                        org: emptyOrg,
+                        orgs: null,
+                        phase: emptyPhase,
+                        phases: null,
+                        subject: emptySubject,
+                        subjects: null,
+                        grade: emptyGrade,
+                        grades: null,
+                        getSelectCodes: getSelectCodes,
+                        initItems: initItems,
+                        initCurrent: initCurrent,
+                        initRelation: initRelation,
+                        resultChanged: resultChanged,
+                        updateView: updateView
+                    };
                 return vm;
             };
 
         return dicVm;
     };
-    var dicHelper = function () {
-        return {
-            equalIgnoreCase: equalIgnoreCase,
-            sameCodeItem: sameCodeItem,
-            containItem: containItem,
-            findItem: findItem,
-            createEmptyItem: createEmptyItem,
-            createArrayCode: createArrayCode,
-            createCodeItem: createCodeItem,
-            createInitItems: createInitItems
-        };
-    }();
-
     _.createDicCatalogVm = function () {
         return createDicCatalogVm();
     };
-    _.createDicHelper = function () {
-        return dicHelper;
-    };
-
-})(zqnb || {});
+}) (zqnb || { });

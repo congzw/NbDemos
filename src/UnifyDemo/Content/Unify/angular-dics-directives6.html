@@ -133,6 +133,9 @@
                             mockHelper.setupInitData(initData, result);
                             vm.initOrgTypes(initData.orgTypes);
                             vm.initOrgs(initData.orgs);
+                            vm.initPhases(initData.phases);
+                            vm.initSubjects(initData.subjects);
+                            vm.initGrades(initData.grades);
                             //vm.initRelation(initData);
                             //vm.updateView();
                         });
@@ -140,8 +143,7 @@
                 return { init: init };
             }
             ]);
-
-
+            
             mainApp.controller('demoCtrl', function ($scope, dicCatalogMockData) {
 
                 var dicCatalogVm = zqnb.createDicCatalogVm();
@@ -149,6 +151,9 @@
                 dicCatalogVm.viewMode = "2";
 
                 $scope.dicCatalogVm = dicCatalogVm;
+                $scope.callTest = function () {
+                    dicCatalogVm.result.phase.Name = "ABC";
+                }
 
                 $scope.resultChanged = function (event) {
                     //console.log('ctrl get resultChanged!');
@@ -174,13 +179,11 @@
             <div class="container">
                 <div ng-controller="demoCtrl as vm">
                     <div class="row">
-                        <h2>{{1 + 1}}</h2>
+                        <h2>{{dicCatalogVm.result.display()}}</h2>
                         <hr />
                         <div class="search-block">
                             <div>
-                                <p>
-                                    {{dicCatalogVm.orgs}}
-                                </p>
+                                <button ng-click="callTest()">DEMO</button>
                             </div>
                         </div>
                     </div>
