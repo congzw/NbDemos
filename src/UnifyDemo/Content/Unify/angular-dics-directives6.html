@@ -28,7 +28,6 @@
     <script src="../scripts/zqnb.mainApp.js"></script>
     <script src="../scripts/zqnb.mainApp.unify.js"></script>
     <script src="../scripts/zqnb.dicCatalogVm.js"></script>
-    <script src="../scripts/dicCatalogDirectives5.js"></script>
     <script>
         (function () {
             'use strict';
@@ -142,49 +141,149 @@
             
             mainApp.controller('demoCtrl', function ($scope, dicCatalogMockData) {
 
-                var dicCatalogVm = zqnb.createDicCatalogVm();
+                var vm = zqnb.createDicCatalogVm();
 
-                dicCatalogVm.viewMode = "2";
-
-                $scope.dicCatalogVm = dicCatalogVm;
+                $scope.dicCatalogVm = vm;
                 $scope.callTest = function () {
-                    dicCatalogVm.result.phase.Name = "ABC";
+                    vm.selectResult.phase.Name = "ABC";
                 }
 
                 $scope.resultChanged = function (event) {
                     //console.log('ctrl get resultChanged!');
                     //console.log(event);
-                    dicCatalogVm.resultChanged(event);
-                    dicCatalogVm.updateView();
+                    vm.resultChanged(event);
+                    vm.updateView();
                 };
 
-                dicCatalogMockData.init(dicCatalogVm);
+                dicCatalogMockData.init(vm);
 
+            });
+
+            mainApp.directive('nbDicCatalog', function() {
+
+                var template1 = function () {
+                    return '' +
+' <div class="term-box">  ' +
+'      <span class="term">学段(<span class="selectedDicCatalogItem">{{vm.selectResult.Phase.Name}}</span>)</span>  ' +
+'      <ul class="nav nav-pills overflow-h">  ' +
+'          <li ng-repeat="item in vm.phases" ng-class="{active: vm.selectResult.Phase === item, hidden: item.Hidden}">  ' +
+'              <a href="javascript:void(0)" ng-click="vm.selectResult.Phase = item">  ' +
+'                  {{item.Name}}  ' +
+'              </a>  ' +
+'          </li>  ' +
+'      </ul>  ' +
+'  </div>  ' +
+'  <div class="term-box">  ' +
+'      <span class="term">学科(<span class="selectedDicCatalogItem">{{vm.selectResult.Subject.Name}}</span>)</span>  ' +
+'      <ul class="nav nav-pills overflow-h">  ' +
+'          <li ng-repeat="item in vm.subjects" ng-class="{active: vm.isCurrentSubject(item), hidden: item.Hidden}"><a href="javascript:void(0)" ng-click="vm.selectSubject(item)">{{item.Name}}</a></li>  ' +
+'      </ul>  ' +
+'  </div>  ' +
+'  <div class="term-box">  ' +
+'      <span class="term">年级(<span class="selectedDicCatalogItem">{{vm.selectResult.Grade.Name}}</span>)</span>  ' +
+'      <ul class="nav nav-pills overflow-h">  ' +
+'          <li ng-repeat="item in vm.grades" ng-class="{active: vm.isCurrentGrade(item), hidden: item.Hidden}"><a href="javascript:void(0)" ng-click="vm.selectGrade(item)">{{item.Name}}</a></a></li>  ' +
+'      </ul>  ' +
+' </div>';
+                }();
+                var template2 = function() {
+                    return '' +
+                        '<h2>todo template2</h2>';
+                }();
+                var template3 = function () {
+                    return '' +
+                        '<h2>todo template3</h2>';
+                }();
+                var template4 = function () {
+                    return '' +
+                        '<h2>todo template4</h2>';
+                }();
+                var getTemplate = function (tElem, tAttrs) {
+                    var mode = tAttrs.viewMode;
+                    console.log('nbDicCatalog getTemplate');
+                    console.log(mode);
+                    if (!mode) {
+                        return template1;
+                    }
+
+                    if (mode === "1") {
+                        return template1;
+                    }
+                    if (mode === "2") {
+                        return template2;
+                    }
+                    if (mode === "3") {
+                        return template3;
+                    }
+                    if (mode === "4") {
+                        return template4;
+                    }
+
+                    return template1;
+                }
+                
+                return {
+                    scope: {
+                        selectResult: '=',
+                        vm: '=',
+                        viewMode: '@'
+                    },
+                    controller: function ($scope, $element, $attrs, $transclude) {
+                        var vm = $scope.vm;
+                        console.log('nbDicCatalog Ctrl');
+                        console.log(vm);
+
+                        //$scope.isCurrentItem = function (item, category) {
+                        //    if (category === "Org") {
+                                
+                        //    }
+                        //    return $scope.current === item;
+                        //};
+
+                        //$scope.selectItem = function (item) {
+                        //    if ($scope.current === item) {
+                        //        return;
+                        //    }
+                        //    var old = $scope.current;
+                        //    $scope.current = item;
+                        //    //console.log('selected:');
+                        //    //console.log(item);
+                        //    if ($scope.currentChanged) {
+                        //        $scope.currentChanged(item, old);
+                        //    }
+                        //};
+
+                    },
+                    template: getTemplate
+                };
             });
         }());
     </script>
     <!--[if lt IE 9]>
-            <script src="assets/plugins/respond.js"></script>
-            <script src="assets/plugins/html5shiv.js"></script>
-            <script src="assets/plugins/placeholder-IE-fixes.js"></script>
-        <![endif]-->
+        <script src="assets/plugins/respond.js"></script>
+        <script src="assets/plugins/html5shiv.js"></script>
+        <script src="assets/plugins/placeholder-IE-fixes.js"></script>
+    <![endif]-->
 </head>
 <body>
-    <div class="wrapper">
-        <div ng-app="mainApp">
-            <div class="container">
-                <div ng-controller="demoCtrl as vm">
-                    <div class="row">
-                        <h2>{{dicCatalogVm.result.display()}}</h2>
+<div class="wrapper">
+    <div ng-app="mainApp">
+        <div class="container">
+            <div ng-controller="demoCtrl as vm">
+                <div class="row">
+                    <h2>{{dicCatalogVm.selectResult.display()}}</h2>
+                    <p>{{dicCatalogVm.selectResult}}</p>
                         <hr />
-                        <div class="search-block">
-                            <hr/>
-                            <div>
-                                <button ng-click="callTest()">DEMO</button>
-                            </div>
-                            <p>{{dicCatalogVm}}</p>
-                            <hr />
+                    <div class="search-block">
+                        
+                        <div nb-dic-catalog vm="dicCatalogVm" view-mode="1"></div>
+                        <hr/>
+                        <div>
+                            <button ng-click="callTest()">DEMO</button>
                         </div>
+                        <p>{{dicCatalogVm}}</p>
+                        <hr/>
+                    </div>
                     </div>
                 </div>
             </div>
