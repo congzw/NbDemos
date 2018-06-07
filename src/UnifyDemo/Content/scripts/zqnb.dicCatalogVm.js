@@ -143,34 +143,36 @@
                 initGrades(theVm, config.orgTypes);
             }
         },
-        dicVm = {
-            //是否自动补齐【全部】按钮
-            autoAppendEmpty: true,
+        dicVm = function() {
+                return {
+                    //是否自动补齐【全部】按钮
+                    autoAppendEmpty: true,
 
-            //-------------字典项-------------
-            //组织类型
-            orgTypes: null,
-            emptyOrgType: createEmptyItem(),
-            //组织
-            orgs: null,
-            emptyOrg: createEmptyItem(),
-            //学段
-            phases: null,
-            emptyPhase: createEmptyItem(),
-            //学科
-            subjects: null,
-            emptySubject: createEmptyItem(),
-            //年级
-            grades: null,
-            emptyGrade: createEmptyItem(),
-            //-------------字典关系-------------
-            orgTypePhases: null,
-            visiableOrgTypePhases: null
-        };
+                    //组织类型
+                    orgTypes: null,
+                    emptyOrgType: createEmptyItem(),
+                    //组织
+                    orgs: null,
+                    emptyOrg: createEmptyItem(),
+                    //学段
+                    phases: null,
+                    emptyPhase: createEmptyItem(),
+                    //学科
+                    subjects: null,
+                    emptySubject: createEmptyItem(),
+                    //年级
+                    grades: null,
+                    emptyGrade: createEmptyItem(),
+                    orgTypePhases: null,
+                    visiableOrgTypePhases: null
+                }
+            }();
 
+        //-------------字典项-------------
         dicVm.initItems = function (config) {
             return initItems(dicVm, config);
         };
+        //-------------字典关系-------------
         dicVm.shouldShowThisPhase = function (theVm, phase) {
         };
 
