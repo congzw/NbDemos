@@ -131,11 +131,7 @@
 
                             //result[0].InUse = true;
                             mockHelper.setupInitData(initData, result);
-                            vm.initOrgTypes(initData.orgTypes);
-                            vm.initOrgs(initData.orgs);
-                            vm.initPhases(initData.phases);
-                            vm.initSubjects(initData.subjects);
-                            vm.initGrades(initData.grades);
+                            vm.initItems(initData);
                             //vm.initRelation(initData);
                             //vm.updateView();
                         });
@@ -182,9 +178,12 @@
                         <h2>{{dicCatalogVm.result.display()}}</h2>
                         <hr />
                         <div class="search-block">
+                            <hr/>
                             <div>
                                 <button ng-click="callTest()">DEMO</button>
                             </div>
+                            <p>{{dicCatalogVm}}</p>
+                            <hr />
                         </div>
                     </div>
                 </div>
