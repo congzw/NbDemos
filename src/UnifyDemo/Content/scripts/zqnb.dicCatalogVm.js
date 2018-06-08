@@ -383,6 +383,8 @@
             vm.visiablePhaseGrades = visiablePhaseGrades;
             vm.visiablePhaseSubjectGrades = visiablePhaseSubjectGrades;
 
+            vm.dicSettings = config.dicSettings;
+
             //console.log('initRelation');
             //console.log(dicVm);
         };
@@ -439,6 +441,36 @@
                 }
             }
             vm.updateView();
+        };
+
+        //个人空间多选
+        var shouldShowPhase = function(theVm, orgTypeCode, phase) {
+            if (isEmptyItem(orgTypeCode) || orgTypeCode.Code === "JiGou-KeShi" || !orgTypeCode) {
+                return true;
+            }
+            if (isEmptyItem(phase)) {
+                return true;
+            }
+            //按关系查找
+            var shouldShow = containItem(theVm.visiableOrgTypePhases, createCodeItem(orgTypeCode, phase.Code));
+            return shouldShow;
+        };
+        //为多选场景准备的方法
+        vm.createCurrentOrgTypeCodePhases = function (orgTypeCode) {
+            var phases = vm.dicSettings;
+            var phasesCopy = [];
+            angular.forEach(phases, function (phase) {
+                var shouldShow = shouldShowPhase(vm, orgTypeCode, phase);
+                if (!shouldShow) {
+                    return;
+                }
+                var phaseCopy = { Code: phase.Code, Name: phase.Name, Hidden: !shouldShow, Subjects:[] };
+                phasesCopy.push(phaseCopy);
+                angular.forEach(phase.Subjects, function (subject) {
+                    phaseCopy.Subjects.push({ Code: subject.Code, Name: subject.Name });
+                });
+            });
+            return phasesCopy;
         };
 
         return vm;
