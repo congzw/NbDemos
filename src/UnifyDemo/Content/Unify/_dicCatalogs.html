@@ -38,7 +38,6 @@
             mainApp.controller('demoCtrl', function ($scope, dicCatalogMockService) {
 
                 console.log('demoCtrl');
-
                 dicCatalogMockService.initAsync(function (initData) {
 
                     //console.log('dicCatalogMock.initAsync complete!');
@@ -65,14 +64,14 @@
     <div class="wrapper">
         <div ng-app="mainApp">
             <div class="container">
-                <!--<div ng-controller="demoCtrl">
+                <div ng-controller="demoCtrl">
                     <div class="row">
                         <h2>{{dicCatalogVm.selectResult.display()}}</h2>
                         <hr />
                         <div class="search-block" ng-if="dicCatalogVm">
                             <div nb-dic-catalog vm="dicCatalogVm" view-mode="1"></div>
                         </div>
-                    </div>-->
+                    </div>
 
             </div>
 
