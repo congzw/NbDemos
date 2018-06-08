@@ -97,6 +97,7 @@
     <Content Include="Content\scripts\dicCatalogDirectives.js" />
     <Content Include="Content\scripts\dicCatalogMockService.js" />
     <Content Include="Content\scripts\dicCatalogSearch.js" />
+    <Content Include="Content\scripts\_nbDicCatalog.js" />
     <Content Include="Content\scripts\GetDicOrgTypes.js" />
     <Content Include="Content\scripts\zqnb.dicCatalogVm.js" />
     <Content Include="Content\scripts\zqnb.dicCatalogHelper.js" />
@@ -104,6 +105,7 @@
     <Content Include="Content\scripts\zqnb.mainApp.js" />
     <Content Include="Content\scripts\zqnb.mainApp.unify.js" />
     <Content Include="Content\scripts\_temp.js" />
+    <Content Include="Content\Unify\_dicCatalogs.html" />
     <Content Include="Content\Unify\angular-dics-directives6.html" />
     <Content Include="Content\Unify\angular-dics-directives5.html" />
     <Content Include="Content\Unify\angular-directive-function.html" />

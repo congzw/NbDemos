@@ -141,15 +141,58 @@
     var createDicCatalogVm = function () {
 
         //private methods
-        var fixOrgModels = function (orgs) {
+        var fixOrgModels = function(orgs) {
             var fixOrgs = [];
             for (var i = 0; i < orgs.length; i++) {
                 var current = orgs[i];
                 fixOrgs.push({ Code: current.Id, Name: current.Name, OrgTypeCode: current.OrgTypeCode, ParentCode: current.ParentId });
             }
             return fixOrgs;
-        },
-        initItems = function (theVm, config) {
+        };
+
+        //return model
+        var dicCatalogVm = {
+            //选择结果
+            selectResult: {},
+            //是否自动补齐全部
+            autoAppendEmpty: true
+        };
+
+        //setup properties for categories
+        for (var i = 0; i < categories.length; i++) {
+            var emptyItem = createEmptyItem();
+            var category = categories[i];
+
+            var categoryKey = getCategoryKey(category);
+            var categoryItemsKey = getCategoryItemsKey(category);
+            var categoryEmptyItemKey = getCategoryEmptyItemKey(category);
+
+            //items: null
+            //emptyItem: createEmptyItem()
+            dicCatalogVm[categoryItemsKey] = null;
+            dicCatalogVm[categoryEmptyItemKey] = emptyItem;
+            //selectResult.item = emptyItem;
+            dicCatalogVm.selectResult[categoryKey] = emptyItem;
+        }
+
+        //[this.orgType.Name, this.org.Name, this.phase.Name, this.subject.Name, this.grade.Name];
+        dicCatalogVm.selectResult.display = function () {
+            //console.log('display');
+            //console.log(dicCatalogVm.selectResult);
+            //return [this.orgType.Name, this.org.Name, this.phase.Name, this.subject.Name, this.grade.Name];
+            var items = [];
+            for (var i = 0; i < categories.length; i++) {
+                var category = categories[i];
+                var categoryKey = getCategoryKey(category);
+                items.push(dicCatalogVm.selectResult[categoryKey].Name);
+            }
+            return items;
+        }
+        dicCatalogVm.orgTypePhases = null;
+        dicCatalogVm.visiableOrgTypePhases = null;
+
+        //初始化字典项
+        dicCatalogVm.initItems = function(config) {
             if (!config) {
                 return;
             }
@@ -163,89 +206,25 @@
                     if (categoryItemsKey === "orgs") {
                         items = fixOrgModels(items);
                     }
-                    var appendEmptyItem = theVm.autoAppendEmpty ? theVm[categoryEmptyItemKey] : null;
-                    theVm[categoryItemsKey] = createInitItems(items, appendEmptyItem);
+                    var appendEmptyItem = dicCatalogVm.autoAppendEmpty ? dicCatalogVm[categoryEmptyItemKey] : null;
+                    dicCatalogVm[categoryItemsKey] = createInitItems(items, appendEmptyItem);
                 }
             }
-        },
-        isEmptyItems = function (theVm, category) {
-            //theVm.phases, theVm.orgs, ...
-            var categoryItemsKey = getCategoryItemsKey(category);
-            var currentItems = theVm[categoryItemsKey];
-            if (!currentItems) {
-                return false;
-            }
-            if (currentItems.length === 0 || (currentItems.length === 1 && currentItems[0].Code === '')) {
-                return false;
-            }
-            return true;
-        },
-        dicVm = function (categories) {
-
-            var model = {};
-            //选择结果
-            model.selectResult = {};
-            //是否自动补齐全部
-            model.autoAppendEmpty = true;
-
-            ////组织类型
-            //orgTypes: null,
-            //emptyOrgType: createEmptyItem(),
-            ////组织
-            //orgs: null,
-            //emptyOrg: createEmptyItem(),
-            ////学段
-            //phases: null,
-            //emptyPhase: createEmptyItem(),
-            ////学科
-            //subjects: null,
-            //emptySubject: createEmptyItem(),
-            ////年级
-            //grades: null,
-            //emptyGrade: createEmptyItem(),
-
-            //setup properties
-            for (var i = 0; i < categories.length; i++) {
-                var emptyItem = createEmptyItem();
-                var category = categories[i];
-                var categoryItemsKey = getCategoryItemsKey(category);
-                var categoryEmptyItemKey = getCategoryEmptyItemKey(category);
-                model[categoryEmptyItemKey] = emptyItem;
-                model[categoryItemsKey] = null;
-
-                //selectResult
-                var categoryKey = getCategoryKey(category);
-                //console.log('set model.selectResult.' +categoryKey);
-                model.selectResult[categoryKey] = emptyItem;
-            }
-            model.selectResult.display = function () {
-                //console.log('display');
-                //console.log(model.selectResult);
-                //return [this.orgType.Name, this.org.Name, this.phase.Name, this.subject.Name, this.grade.Name];
-                var items = [];
-                for (var i = 0; i < categories.length; i++) {
-                    var category = categories[i];
-                    var categoryKey = getCategoryKey(category);
-                    items.push(model.selectResult[categoryKey].Name);
-                }
-                return items;
-            }
-            model.orgTypePhases = null;
-            model.visiableOrgTypePhases = null;
-
-            return model;
-        }(categories);
-
-        //-------------字典项-------------
-        dicVm.initItems = function (config) {
-            return initItems(dicVm, config);
         };
         //是否是空的集合（或只有【全部】按钮）
-        dicVm.isEmptyItems = function (category) {
-            return isEmptyItems(dicVm, category);
-        };
-
-        return dicVm;
+        dicCatalogVm.isEmptyItems = function (currentCategory) {
+                //theVm.phases, theVm.orgs, ...
+            var categoryItemsKey = getCategoryItemsKey(currentCategory);
+                var currentItems = dicCatalogVm[categoryItemsKey];
+                if (!currentItems) {
+                    return false;
+                }
+                if (currentItems.length === 0 || (currentItems.length === 1 && currentItems[0].Code === '')) {
+                    return false;
+                }
+                return true;
+            };
+        return dicCatalogVm;
     };
     _.createDicCatalogVm = function () {
         return createDicCatalogVm();
