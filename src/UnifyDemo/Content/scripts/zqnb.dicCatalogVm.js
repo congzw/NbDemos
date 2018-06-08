@@ -63,7 +63,16 @@
         }
         for (var i = 0; i < items.length; i++) {
             var current = items[i];
-            initItems.push({ Code: current.Code, Name: current.Name });
+            var copy = { Code: current.Code, Name: current.Name };
+    
+            //hack for org
+            if (current.ParentCode) {
+                copy.ParentCode = current.ParentCode;
+            }
+            if (current.OrgTypeCode) {
+                copy.OrgTypeCode = current.OrgTypeCode;
+            }
+            initItems.push(copy);
         }
         return initItems;
     };
@@ -91,7 +100,7 @@
             var fixOrgs = [];
             for (var i = 0; i < orgs.length; i++) {
                 var current = orgs[i];
-                fixOrgs.push({ Code: current.Id, Name: current.Name, OrgTypeCode: current.OrgTypeCode });
+                fixOrgs.push({ Code: current.Id, Name: current.Name, OrgTypeCode: current.OrgTypeCode, ParentCode: current.ParentId });
             }
             return fixOrgs;
         },
@@ -143,30 +152,30 @@
                 initGrades(theVm, config.grades);
             }
         },
-        dicVm = function() {
-                return {
-                    //是否自动补齐【全部】按钮
-                    autoAppendEmpty: true,
+        dicVm = function () {
+            return {
+                //是否自动补齐【全部】按钮
+                autoAppendEmpty: true,
 
-                    //组织类型
-                    orgTypes: null,
-                    emptyOrgType: createEmptyItem(),
-                    //组织
-                    orgs: null,
-                    emptyOrg: createEmptyItem(),
-                    //学段
-                    phases: null,
-                    emptyPhase: createEmptyItem(),
-                    //学科
-                    subjects: null,
-                    emptySubject: createEmptyItem(),
-                    //年级
-                    grades: null,
-                    emptyGrade: createEmptyItem(),
-                    orgTypePhases: null,
-                    visiableOrgTypePhases: null
-                }
-            }();
+                //组织类型
+                orgTypes: null,
+                emptyOrgType: createEmptyItem(),
+                //组织
+                orgs: null,
+                emptyOrg: createEmptyItem(),
+                //学段
+                phases: null,
+                emptyPhase: createEmptyItem(),
+                //学科
+                subjects: null,
+                emptySubject: createEmptyItem(),
+                //年级
+                grades: null,
+                emptyGrade: createEmptyItem(),
+                orgTypePhases: null,
+                visiableOrgTypePhases: null
+            }
+        }();
 
         //-------------字典项-------------
         dicVm.initItems = function (config) {
