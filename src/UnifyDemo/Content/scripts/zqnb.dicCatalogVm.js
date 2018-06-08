@@ -104,7 +104,7 @@
         if (category === undefined) {
             console.log('getCategoryKey typeof');
             console.log(typeof category);
-            throw {name : 'bad'};
+            throw { name: 'bad' };
         }
         if (typeof category === "string") {
             return category;
@@ -150,91 +150,91 @@
             return fixOrgs;
         },
         initItems = function (theVm, config) {
-                if (!config) {
-                    return;
+            if (!config) {
+                return;
+            }
+            for (var i = 0; i < categories.length; i++) {
+                var category = categories[i];
+                var categoryItemsKey = getCategoryItemsKey(category);
+                var categoryEmptyItemKey = getCategoryEmptyItemKey(category);
+                var items = config[categoryItemsKey];
+                if (items) {
+                    //hack for orgs
+                    if (categoryItemsKey === "orgs") {
+                        items = fixOrgModels(items);
+                    }
+                    var appendEmptyItem = theVm.autoAppendEmpty ? theVm[categoryEmptyItemKey] : null;
+                    theVm[categoryItemsKey] = createInitItems(items, appendEmptyItem);
                 }
+            }
+        },
+        isEmptyItems = function (theVm, category) {
+            //theVm.phases, theVm.orgs, ...
+            var categoryItemsKey = getCategoryItemsKey(category);
+            var currentItems = theVm[categoryItemsKey];
+            if (!currentItems) {
+                return false;
+            }
+            if (currentItems.length === 0 || (currentItems.length === 1 && currentItems[0].Code === '')) {
+                return false;
+            }
+            return true;
+        },
+        dicVm = function (categories) {
+
+            var model = {};
+            //选择结果
+            model.selectResult = {};
+            //是否自动补齐全部
+            model.autoAppendEmpty = true;
+
+            ////组织类型
+            //orgTypes: null,
+            //emptyOrgType: createEmptyItem(),
+            ////组织
+            //orgs: null,
+            //emptyOrg: createEmptyItem(),
+            ////学段
+            //phases: null,
+            //emptyPhase: createEmptyItem(),
+            ////学科
+            //subjects: null,
+            //emptySubject: createEmptyItem(),
+            ////年级
+            //grades: null,
+            //emptyGrade: createEmptyItem(),
+
+            //setup properties
+            for (var i = 0; i < categories.length; i++) {
+                var emptyItem = createEmptyItem();
+                var category = categories[i];
+                var categoryItemsKey = getCategoryItemsKey(category);
+                var categoryEmptyItemKey = getCategoryEmptyItemKey(category);
+                model[categoryEmptyItemKey] = emptyItem;
+                model[categoryItemsKey] = null;
+
+                //selectResult
+                var categoryKey = getCategoryKey(category);
+                //console.log('set model.selectResult.' +categoryKey);
+                model.selectResult[categoryKey] = emptyItem;
+            }
+            model.selectResult.display = function () {
+                //console.log('display');
+                //console.log(model.selectResult);
+                //return [this.orgType.Name, this.org.Name, this.phase.Name, this.subject.Name, this.grade.Name];
+                var items = [];
                 for (var i = 0; i < categories.length; i++) {
                     var category = categories[i];
-                    var categoryItemsKey = getCategoryItemsKey(category);
-                    var categoryEmptyItemKey = getCategoryEmptyItemKey(category);
-                    var items = config[categoryItemsKey];
-                    if (items) {
-                        //hack for orgs
-                        if (categoryItemsKey === "orgs") {
-                            items = fixOrgModels(items);
-                        }
-                        var appendEmptyItem = theVm.autoAppendEmpty ? theVm[categoryEmptyItemKey] : null;
-                        theVm[categoryItemsKey] = createInitItems(items, appendEmptyItem);
-                    }
+                    var categoryKey = getCategoryKey(category);
+                    items.push(model.selectResult[categoryKey].Name);
                 }
-            },
-            isEmptyItems = function (theVm, category) {
-                //theVm.phases, theVm.orgs, ...
-                var categoryItemsKey = getCategoryItemsKey(category);
-                var currentItems = theVm[categoryItemsKey];
-                if (!currentItems) {
-                    return false;
-                }
-                if (currentItems.length === 0 || (currentItems.length === 1 && currentItems[0].Code === '')) {
-                    return false;
-                }
-                return true;
-            },
-             dicVm = function (categories) {
+                return items;
+            }
+            model.orgTypePhases = null;
+            model.visiableOrgTypePhases = null;
 
-                 var model = {};
-                 //选择结果
-                 model.selectResult = {};
-                 //是否自动补齐全部
-                 model.autoAppendEmpty = true;
-
-                 ////组织类型
-                 //orgTypes: null,
-                 //emptyOrgType: createEmptyItem(),
-                 ////组织
-                 //orgs: null,
-                 //emptyOrg: createEmptyItem(),
-                 ////学段
-                 //phases: null,
-                 //emptyPhase: createEmptyItem(),
-                 ////学科
-                 //subjects: null,
-                 //emptySubject: createEmptyItem(),
-                 ////年级
-                 //grades: null,
-                 //emptyGrade: createEmptyItem(),
-
-                 //setup properties
-                 for (var i = 0; i < categories.length; i++) {
-                     var emptyItem = createEmptyItem();
-                     var category = categories[i];
-                     var categoryItemsKey = getCategoryItemsKey(category);
-                     var categoryEmptyItemKey = getCategoryEmptyItemKey(category);
-                     model[categoryEmptyItemKey] = emptyItem;
-                     model[categoryItemsKey] = null;
-
-                     //selectResult
-                     var categoryKey = getCategoryKey(category);
-                     //console.log('set model.selectResult.' +categoryKey);
-                     model.selectResult[categoryKey] = emptyItem;
-                 }
-                 model.selectResult.display = function () {
-                     //console.log('display');
-                     //console.log(model.selectResult);
-                     //return [this.orgType.Name, this.org.Name, this.phase.Name, this.subject.Name, this.grade.Name];
-                     var items = [];
-                     for (var i = 0; i < categories.length; i++) {
-                         var category = categories[i];
-                         var categoryKey = getCategoryKey(category);
-                         items.push(model.selectResult[categoryKey].Name);
-                     }
-                     return items;
-                 }
-                 model.orgTypePhases = null;
-                 model.visiableOrgTypePhases = null;
-
-                 return model;
-             }(categories);
+            return model;
+        }(categories);
 
         //-------------字典项-------------
         dicVm.initItems = function (config) {
@@ -244,31 +244,6 @@
         dicVm.isEmptyItems = function (category) {
             return isEmptyItems(dicVm, category);
         };
-
-        //-------------字典关系-------------
-        //dicVm.shouldShowThisPhase = function (theVm, phase) {
-        //};
-
-
-
-        //var shouldShowThisPhase = function (theVm, phase) {
-
-        //    var currentOrg = theVm.org;
-        //    //当前全部组织，或未知组织类型，所有【学科】永远显示
-        //    if (isEmptyItem(currentOrg) || !currentOrg.OrgTypeCode) {
-        //        return true;
-        //    }
-
-        //    //【学科（全部）】按钮永远显示
-        //    if (isEmptyItem(phase)) {
-        //        return true;
-        //    }
-
-        //    //按关系查找
-        //    var orgTypePhaseCodeItem = createCodeItem(currentOrg.OrgTypeCode, phase.Code);
-        //    var shouldShow = containItem(theVm.visiableOrgTypePhases, orgTypePhaseCodeItem);
-        //    return shouldShow;
-        //};
 
         return dicVm;
     };

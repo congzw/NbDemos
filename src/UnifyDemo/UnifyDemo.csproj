@@ -95,6 +95,7 @@
     <Content Include="Content\scripts\dicCatalogDirectives_temp2.js" />
     <Content Include="Content\scripts\dicCatalogDirectives_temp.js" />
     <Content Include="Content\scripts\dicCatalogDirectives.js" />
+    <Content Include="Content\scripts\dicCatalogMockService.js" />
     <Content Include="Content\scripts\dicCatalogSearch.js" />
     <Content Include="Content\scripts\GetDicOrgTypes.js" />
     <Content Include="Content\scripts\zqnb.dicCatalogVm.js" />

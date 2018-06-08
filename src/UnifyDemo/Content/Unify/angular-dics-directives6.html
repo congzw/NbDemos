@@ -28,184 +28,38 @@
     <script src="../scripts/zqnb.mainApp.js"></script>
     <script src="../scripts/zqnb.mainApp.unify.js"></script>
     <script src="../scripts/zqnb.dicCatalogVm.js"></script>
+    <script src="../scripts/dicCatalogMockService.js"></script>
     <script>
         (function () {
             'use strict';
             var mainApp = zqnb.mainApp;
-
-            var dicHelper = zqnb.createDicHelper();
-
-            mainApp.factory('dicCatalogAppService', ['$http', function ($http) {
-                var serviceUrl = '/Content/scripts/GetDicCatalogs.js';
-                return {
-                    getDicCatalogs: function () {
-                        return $http.get(serviceUrl);
-                    }
-                }
-            }
-            ]).factory('dicOrgTypeAppService', ['$http', function ($http) {
-                var serviceUrl = '/Content/scripts/GetDicOrgTypes.js';
-                return {
-                    getDicOrgTypes: function () {
-                        return $http.get(serviceUrl);
-                    }
-                }
-            }
-            ]);
-
-            mainApp.factory('dicCatalogMockData', ['dicCatalogAppService', 'dicOrgTypeAppService', function (dicCatalogAppService, dicOrgTypeAppService) {
-
-
-                var mockHelper = function () {
-
-                    var setupInitData = function (initData, dicSettings) {
-
-                        initData.dicSettings = dicSettings;
-                        //initCodes
-                        initData.initCodes = { OrgCode: 'Org2', PhaseCode: 'Phase2', SubjectCode: 'GS001', GradeCode: 'GO003' };
-
-                        //all dic items
-                        //var orgs = [];
-                        var phases = [];
-                        var subjects = [];
-                        var grades = [];
-
-                        ////mock set orgs
-                        //orgs.push({ Code: "Org1", Name: "组织1", OrgTypeCode: "OrgType1" });
-                        //orgs.push({ Code: "Org2", Name: "组织2", OrgTypeCode: "OrgType2" });
-                        //orgs.push({ Code: "Org3", Name: "组织3", OrgTypeCode: "OrgType3" });
-
-                        angular.forEach(dicSettings, function (phase) {
-                            if (!phase.InUse) {
-                                return;
-                            }
-                            phases.push({ Code: phase.Code, Name: phase.Name, Hidden: false });
-                            //subjects
-                            angular.forEach(phase.Subjects, function (subject) {
-                                if (!subject.InUse) {
-                                    return;
-                                }
-                                if (!dicHelper.containItem(subjects, subject)) {
-                                    subjects.push({ Code: subject.Code, Name: subject.Name, Hidden: false });
-                                }
-                            });
-                            //grades
-                            angular.forEach(phase.Grades, function (grade) {
-                                if (!grade.InUse) {
-                                    return;
-                                }
-                                if (!dicHelper.containItem(grades, grade)) {
-                                    grades.push({ Code: grade.Code, Name: grade.Name, Hidden: false });
-                                }
-                            });
-                        });
-
-                        //initData.orgs = orgs;
-                        initData.phases = phases;
-                        initData.subjects = subjects;
-                        initData.grades = grades;
-
-
-                        ////mock relations
-                        //initData.orgTypePhases = [
-                        //    { OrgTypeCode: "OrgType1", PhaseCode: "Phase0" },
-                        //    { OrgTypeCode: "OrgType1", PhaseCode: "Phase1" },
-                        //    { OrgTypeCode: "OrgType1", PhaseCode: "Phase2" },
-                        //    { OrgTypeCode: "OrgType1", PhaseCode: "Phase3" },
-                        //    { OrgTypeCode: "OrgType2", PhaseCode: "Phase2" },
-                        //    { OrgTypeCode: "OrgType3", PhaseCode: "Phase3" }
-                        //];
-
-                        return initData;
-                    };
-
-                    return {
-                        setupInitData: setupInitData
-                    };
-                }();
-
-                var init = function (vm) {
-                    dicCatalogAppService.getDicCatalogs()
-                        .success(function (result) {
-
-                            var initData = {
-                                autoAppendEmpty: true,
-                                orgs: [],
-                                phases: [],
-                                subjects: [],
-                                grades: [],
-                                orgTypePhases: [],
-                                initCodes: { OrgCode: '', PhaseCode: '', SubjectCode: '', GradeCode: '' }
-                            };
-
-                            //result[0].InUse = true;
-                            mockHelper.setupInitData(initData, result);
-
-                            dicOrgTypeAppService.getDicOrgTypes()
-                                .success(function (result) {
-
-                                    var orgTypes = [];
-                                    var orgTypePhases = [];
-                                    var orgs = [];
-
-                                    for (var i = 0; i < result.length; i++) {
-                                        var orgType = result[i];
-                                        orgTypes.push({ Code: orgType.Code, Name: orgType.Name });
-                                        for (var j = 0; j < orgType.Phases.length; j++) {
-                                            orgTypePhases.push({ OrgTypeCode: orgType.Code, PhaseCode: orgType.Phases[j] });
-                                        }
-                                    }
-
-                                    //mock orgs
-                                    orgs.push({ Id: "whhc", Name: "威海环翠", OrgTypeCode: "JiaoYuJu", ParentId: "" });
-                                    orgs.push({ Id: "jyz", Name: "教研组", OrgTypeCode: "JiGou-KeShi", ParentId: "whhc" });
-                                    orgs.push({ Id: "ywjyz", Name: "语文教研组", OrgTypeCode: "JiGou-KeShi", ParentId: "jyz" });
-                                    orgs.push({ Id: "sxjyz", Name: "数学教研组", OrgTypeCode: "JiGou-KeShi", ParentId: "jyz" });
-                                    orgs.push({ Id: "whsyxx", Name: "威海试验小学", OrgTypeCode: "XueXiao-211", ParentId: "whhc" });
-                                    orgs.push({ Id: "whyz", Name: "威海一中（完中）", OrgTypeCode: "XueXiao-341", ParentId: "whhc" });
-                                    orgs.push({ Id: "whez", Name: "威海二中（高中）", OrgTypeCode: "XueXiao-342", ParentId: "whhc" });
-                                    orgs.push({ Id: "whsz", Name: "威海三中（高中）", OrgTypeCode: "XueXiao-342", ParentId: "whhc" });
-
-                                    initData.orgTypes = orgTypes;
-                                    initData.orgTypePhases = orgTypePhases;
-                                    initData.orgs = orgs;
-
-                                    vm.initItems(initData);
-
-                                    //console.log('dicCatalogMockData');
-                                    //console.log('vm.initItems(initData)');
-
-                                    ////hide orgTypes
-                                    //vm.orgTypes = [];
-                                    ////hide orgs
-                                    //vm.orgs = [];
-
-                                    //vm.initRelation(initData);
-                                    //vm.updateView();
-                                });
-                        });
-
-                };
-                return { init: init };
-            }
-            ]);
-
-            mainApp.controller('demoCtrl', function ($scope, dicCatalogMockData) {
+            
+            mainApp.controller('demoCtrl', function ($scope, dicCatalogMockService) {
 
                 console.log('demoCtrl');
-                var vm = zqnb.createDicCatalogVm();
-                dicCatalogMockData.init(vm);
 
-                $scope.dicCatalogVm = vm;
-                $scope.callTest = function () {
-                    vm.selectResult.phase.Name = "ABC";
-                }
-                $scope.resultChanged = function (event) {
-                    //console.log('ctrl get resultChanged!');
-                    //console.log(event);
-                    vm.resultChanged(event);
-                    vm.updateView();
-                };
+                dicCatalogMockService.initAsync(function (initData) {
+
+                    //console.log('dicCatalogMock.initAsync complete!');
+                    //console.log(initData);
+
+                    var dicCatalogVm = zqnb.createDicCatalogVm();
+                    dicCatalogVm.initItems(initData);
+                    //console.log(dicCatalogVm);
+
+                    $scope.dicCatalogVm = dicCatalogVm;
+
+                    //$scope.callTest = function () {
+                    //    dicCatalogVm.selectResult.phase.Name = "ABC";
+                    //}
+
+                    //$scope.resultChanged = function (event) {
+                    //    //console.log('ctrl get resultChanged!');
+                    //    //console.log(event);
+                    //    vm.resultChanged(event);
+                    //    vm.updateView();
+                    //};
+                });
 
             });
 
@@ -342,11 +196,10 @@
                     controller: function ($scope, $element, $attrs, $transclude) {
                         var vm = $scope.vm;
                         console.log('nbDicCatalog Ctrl');
+                        //console.log(vm);
 
                         //是否是空的集合（或只有【全部】按钮）
                         $scope.isEmptyItems = function (category) {
-                            //console.log('$scope.isEmptyItems ');
-                            //console.log(category);
                             return vm.isEmptyItems(category);
                         }
 
@@ -390,13 +243,12 @@
     <div class="wrapper">
         <div ng-app="mainApp">
             <div class="container">
-                <div ng-controller="demoCtrl as vm">
+                <div ng-controller="demoCtrl">
                     <div class="row">
                         <h2>{{dicCatalogVm.selectResult.display()}}</h2>
-                        <p>{{dicCatalogVm.selectResult}}</p>
-                        <hr />
-                        <div class="search-block">
-
+                        <!--<p>{{dicCatalogVm.selectResult}}</p>-->
+                                              <hr />
+                        <div class="search-block" ng-if="dicCatalogVm">
                             <div nb-dic-catalog vm="dicCatalogVm" view-mode="1"></div>
                             <hr />
                             <div>
