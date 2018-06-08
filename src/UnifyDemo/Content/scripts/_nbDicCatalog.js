@@ -146,10 +146,8 @@
                             return;
                         }
                         vm.selectResult[category] = item;
-                        //console.log('selected:');
-                        //console.log(item);
-                        if ($scope.currentChangedCallback) {
-                            $scope.currentChangedCallback(item, old);
+                        if (vm.resultChanged) {
+                            vm.resultChanged(category, item, oldItem);
                         }
                     }
                 };
