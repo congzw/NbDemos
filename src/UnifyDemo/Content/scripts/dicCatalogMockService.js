@@ -75,7 +75,7 @@
                 var orgType = returnOrgTypes[i];
                 orgTypes.push({ Code: orgType.Code, Name: orgType.Name });
                 for (var j = 0; j < orgType.Phases.length; j++) {
-                    orgTypePhases.push({ OrgTypeCode: orgType.Code, PhaseCode: orgType.Phases[j] });
+                    orgTypePhases.push({ OrgTypeCode: orgType.Code, PhaseCode: orgType.Phases[j].Code });
                 }
             }
             vm.orgTypes = orgTypes;
@@ -94,7 +94,6 @@
             orgs.push({ Id: "whsz", Name: "威海三中（高中）", OrgTypeCode: "XueXiao-342", ParentId: "whhc" });
 
             vm.orgs = orgs;
-
         };
 
         var initAsync = function (callback) {

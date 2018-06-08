@@ -53,6 +53,11 @@
         var codeItem = { Code: code };
         return codeItem;
     },
+    addCodeItemIfNotExist = function (codeItems, codeItem) {
+        if (!containItem(codeItems, codeItem)) {
+            codeItems.push(codeItem);
+        }
+    },
     createInitItems = function (items, emptyItem) {
         if (!items || items.length === 0) {
             return null;
@@ -151,7 +156,7 @@
         };
 
         //return model
-        var dicCatalogVm = {
+        var dicVm = {
             //选择结果
             selectResult: {},
             //是否自动补齐全部
@@ -169,14 +174,14 @@
 
             //items: null
             //emptyItem: createEmptyItem()
-            dicCatalogVm[categoryItemsKey] = null;
-            dicCatalogVm[categoryEmptyItemKey] = emptyItem;
+            dicVm[categoryItemsKey] = null;
+            dicVm[categoryEmptyItemKey] = emptyItem;
             //selectResult.item = emptyItem;
-            dicCatalogVm.selectResult[categoryKey] = emptyItem;
+            dicVm.selectResult[categoryKey] = emptyItem;
         }
 
         //[this.orgType.Name, this.org.Name, this.phase.Name, this.subject.Name, this.grade.Name];
-        dicCatalogVm.selectResult.display = function () {
+        dicVm.selectResult.display = function () {
             //console.log('display');
             //console.log(dicCatalogVm.selectResult);
             //return [this.orgType.Name, this.org.Name, this.phase.Name, this.subject.Name, this.grade.Name];
@@ -184,15 +189,13 @@
             for (var i = 0; i < categories.length; i++) {
                 var category = categories[i];
                 var categoryKey = getCategoryKey(category);
-                items.push(dicCatalogVm.selectResult[categoryKey].Name);
+                items.push(dicVm.selectResult[categoryKey].Name);
             }
             return items;
         }
-        dicCatalogVm.orgTypePhases = null;
-        dicCatalogVm.visiableOrgTypePhases = null;
 
         //初始化字典项
-        dicCatalogVm.initItems = function(config) {
+        dicVm.initItems = function(config) {
             if (!config) {
                 return;
             }
@@ -206,16 +209,81 @@
                     if (categoryItemsKey === "orgs") {
                         items = fixOrgModels(items);
                     }
-                    var appendEmptyItem = dicCatalogVm.autoAppendEmpty ? dicCatalogVm[categoryEmptyItemKey] : null;
-                    dicCatalogVm[categoryItemsKey] = createInitItems(items, appendEmptyItem);
+                    var appendEmptyItem = dicVm.autoAppendEmpty ? dicVm[categoryEmptyItemKey] : null;
+                    dicVm[categoryItemsKey] = createInitItems(items, appendEmptyItem);
                 }
             }
         };
+
+        //初始化字典项的关系
+        dicVm.initRelations = function (config) {
+            
+            //dic relations
+
+            var visiableOrgTypeOrgs = [];
+            var orgTypes = config.orgTypes; //org.OrgTypeCode
+            var orgs = config.orgs; //org.OrgTypeCode
+            angular.forEach(orgTypes, function (orgType) {
+                angular.forEach(orgs, function (org) {
+                    if (org.OrgTypeCode === "" || equalIgnoreCase(org.OrgTypeCode, orgType.Code)) {
+                        //组织类型空，或者二者匹配
+                        addCodeItemIfNotExist(visiableOrgTypeOrgs, createCodeItem(orgType.Code, org.Id));
+                    } 
+                });
+            });
+
+            var visiableOrgTypePhases = [];
+            var orgTypePhases = config.orgTypePhases;
+            angular.forEach(orgTypePhases, function (orgTypePhase) {
+                //console.log(orgTypePhase);
+                addCodeItemIfNotExist(visiableOrgTypePhases, createCodeItem(orgTypePhase.OrgTypeCode, orgTypePhase.PhaseCode));
+            });
+
+            var visiablePhaseSubjects = [];
+            var visiablePhaseGrades = [];
+            var visiablePhaseSubjectGrades = [];
+            angular.forEach(config.dicSettings, function (phase) {
+                if (!phase.InUse) {
+                    return;
+                }
+
+                angular.forEach(phase.Grades, function (grade) {
+                    if (!grade.InUse) {
+                        return;
+                    }
+                    addCodeItemIfNotExist(visiablePhaseGrades, createCodeItem(phase.Code, grade.Code));
+                });
+
+                angular.forEach(phase.Subjects, function (subject) {
+                    if (!subject.InUse) {
+                        return;
+                    }
+                    addCodeItemIfNotExist(visiablePhaseSubjects, createCodeItem(phase.Code, subject.Code));
+
+                    angular.forEach(subject.Grades, function (grade) {
+                        if (!grade.InUse) {
+                            return;
+                        }
+                        addCodeItemIfNotExist(visiablePhaseSubjectGrades, createCodeItem(phase.Code, subject.Code, grade.Code));
+                    });
+                });
+            });
+
+            dicVm.visiableOrgTypeOrgs = visiableOrgTypeOrgs;
+            dicVm.visiableOrgTypePhases = visiableOrgTypePhases;
+            dicVm.visiablePhaseSubjects = visiablePhaseSubjects;
+            dicVm.visiablePhaseGrades = visiablePhaseGrades;
+            dicVm.visiablePhaseSubjectGrades = visiablePhaseSubjectGrades;
+
+            //console.log('initRelation');
+            //console.log(dicVm);
+        };
+
         //是否是空的集合（或只有【全部】按钮）
-        dicCatalogVm.isEmptyItems = function (currentCategory) {
+        dicVm.isEmptyItems = function (currentCategory) {
                 //theVm.phases, theVm.orgs, ...
             var categoryItemsKey = getCategoryItemsKey(currentCategory);
-                var currentItems = dicCatalogVm[categoryItemsKey];
+                var currentItems = dicVm[categoryItemsKey];
                 if (!currentItems) {
                     return false;
                 }
@@ -224,7 +292,7 @@
                 }
                 return true;
             };
-        return dicCatalogVm;
+        return dicVm;
     };
     _.createDicCatalogVm = function () {
         return createDicCatalogVm();
