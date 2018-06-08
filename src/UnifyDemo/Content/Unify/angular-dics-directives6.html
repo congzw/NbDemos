@@ -139,40 +139,42 @@
 
                             //result[0].InUse = true;
                             mockHelper.setupInitData(initData, result);
-                            vm.initItems(initData);
-                            //vm.initRelation(initData);
-                            //vm.updateView();
-                        });
+                            
+                            dicOrgTypeAppService.getDicOrgTypes()
+                                .success(function (result) {
+
+                                    var orgTypes = [];
+                                    var orgTypePhases = [];
+                                    var orgs = [];
+
+                                    for (var i = 0; i < result.length; i++) {
+                                        var orgType = result[i];
+                                        orgTypes.push({ Code: orgType.Code, Name: orgType.Name });
+                                        for (var j = 0; j < orgType.Phases.length; j++) {
+                                            orgTypePhases.push({ OrgTypeCode: orgType.Code, PhaseCode: orgType.Phases[j] });
+                                        }
+                                    }
+
+                                    //mock orgs
+                                    orgs.push({ Code: "whhc", Name: "威海环翠", OrgTypeCode: "JiaoYuJu", ParentCode: "" });
+                                    orgs.push({ Code: "jyz", Name: "教研组", OrgTypeCode: "JiGou-KeShi", ParentCode: "whhc" });
+                                    orgs.push({ Code: "ywjyz", Name: "语文教研组", OrgTypeCode: "JiGou-KeShi", ParentCode: "jyz" });
+                                    orgs.push({ Code: "sxjyz", Name: "数学教研组", OrgTypeCode: "JiGou-KeShi", ParentCode: "jyz" });
+                                    orgs.push({ Code: "whsyxx", Name: "威海试验小学", OrgTypeCode: "XueXiao-211", ParentCode: "whhc" });
+                                    orgs.push({ Code: "whyz", Name: "威海一中（完中）", OrgTypeCode: "XueXiao-341", ParentCode: "whhc" });
+                                    orgs.push({ Code: "whez", Name: "威海二中（高中）", OrgTypeCode: "XueXiao-342", ParentCode: "whhc" });
+                                    orgs.push({ Code: "whsz", Name: "威海三中（高中）", OrgTypeCode: "XueXiao-342", ParentCode: "whhc" });
+
+                                    initData.orgTypes = orgTypes;
+                                    initData.orgTypePhases = orgTypePhases;
+                                    initData.orgs = orgs;
+                                    
+                                    vm.initItems(initData);
 
 
-                    dicOrgTypeAppService.getDicOrgTypes()
-                        .success(function (result) {
-
-                            var orgTypes = [];
-                            var orgTypePhases = [];
-                            var orgs = [];
-
-                            for (var i = 0; i < result.length; i++) {
-                                var orgType = result[i];
-                                orgTypes.push({ Code: orgType.Code, Name: orgType.Name });
-                                for (var j = 0; j < orgType.Phases.length; j++) {
-                                    orgTypePhases.push({ OrgTypeCode: orgType.Code, PhaseCode: orgType.Phases[j]});
-                                }
-                            }
-
-                            //mock orgs
-                            orgs.push({ Code: "whhc", Name: "威海环翠", OrgTypeCode: "JiaoYuJu", ParentCode: "" });
-                            orgs.push({ Code: "jyz", Name: "教研组", OrgTypeCode: "JiGou-KeShi", ParentCode: "whhc" });
-                            orgs.push({ Code: "ywjyz", Name: "语文教研组", OrgTypeCode: "JiGou-KeShi", ParentCode: "jyz" });
-                            orgs.push({ Code: "sxjyz", Name: "数学教研组", OrgTypeCode: "JiGou-KeShi", ParentCode: "jyz" });
-                            orgs.push({ Code: "whsyxx", Name: "威海试验小学", OrgTypeCode: "XueXiao-211", ParentCode: "whhc" });
-                            orgs.push({ Code: "whyz", Name: "威海一中（完中）", OrgTypeCode: "XueXiao-341", ParentCode: "whhc" });
-                            orgs.push({ Code: "whez", Name: "威海二中（高中）", OrgTypeCode: "XueXiao-342", ParentCode: "whhc" });
-                            orgs.push({ Code: "whsz", Name: "威海三中（高中）", OrgTypeCode: "XueXiao-342", ParentCode: "whhc" });
-
-                            vm.orgTypes = orgTypes;
-                            vm.orgTypePhases = orgTypePhases;
-                            vm.orgs = orgs;
+                                    //vm.initRelation(initData);
+                                    //vm.updateView();
+                                });
                         });
 
                 };
