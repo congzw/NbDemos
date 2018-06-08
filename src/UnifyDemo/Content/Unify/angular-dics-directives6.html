@@ -33,7 +33,7 @@
         (function () {
             'use strict';
             var mainApp = zqnb.mainApp;
-            
+
             mainApp.controller('demoCtrl', function ($scope, dicCatalogMockService) {
 
                 console.log('demoCtrl');
@@ -48,10 +48,6 @@
                     //console.log(dicCatalogVm);
 
                     $scope.dicCatalogVm = dicCatalogVm;
-
-                    //$scope.callTest = function () {
-                    //    dicCatalogVm.selectResult.phase.Name = "ABC";
-                    //}
 
                     //$scope.resultChanged = function (event) {
                     //    //console.log('ctrl get resultChanged!');
@@ -112,6 +108,22 @@
 '      </ul>  ' +
 '  </div>';
                 };
+                var createCategoryTemplate2 = function (category) {
+                    var key = category.key;
+                    var name = category.name;
+                    return '' +
+'      <li class="dropdown" ng-if="isEmptyItems(\'' + key + '\')">  ' +
+'          <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">  ' +
+'              ' + name + '(<span class="selectedDicCatalogItem">{{vm.selectResult.' + key + '.Name}}</span>)  ' +
+'          </a>  ' +
+'          <ul class="dropdown-menu">  ' +
+'               <li ng-repeat="item in vm.' + key + 's" ng-class="{active: isCurrentItem(item, \'' + key + '\'), hidden: item.Hidden}">  ' +
+'                  <a href="javascript:void(0)" ng-click="selectItem(item, \'' + key + '\')">  ' +
+'                  {{item.Name}}  ' +
+'              </li>  ' +
+'          </ul>  ' +
+'      </li>  ';
+                };
                 var template1 = function () {
                     var templateValue = '';
                     for (var i = 0; i < categories.length; i++) {
@@ -122,40 +134,13 @@
                     return templateValue;
                 }();
                 var template2 = function () {
-                    return 'todo';
-                    return '' +
-' <ul class="search-dropdown col margin-top-bottom">  ' +
-'      <li class="dropdown">  ' +
-'          <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">  ' +
-'              学段(<span class="selectedDicCatalogItem">{{vm.selectResult.Phase.Name}}</span>)  ' +
-'          </a>  ' +
-'          <ul class="dropdown-menu">  ' +
-'              <li ng-repeat="item in vm.phases" ng-class="{active: vm.isCurrentPhase(item), hidden: item.Hidden}">  ' +
-'                  <a href="javascript:void(0)" ng-click="vm.selectPhase(item)">{{item.Name}}</a>  ' +
-'              </li>  ' +
-'          </ul>  ' +
-'      </li>  ' +
-'      <li class="dropdown">  ' +
-'          <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">  ' +
-'              学科(<span class="selectedDicCatalogItem">{{vm.selectResult.Subject.Name}}</span>)  ' +
-'          </a>  ' +
-'          <ul class="dropdown-menu style-width">  ' +
-'              <li ng-repeat="item in vm.subjects" ng-class="{active: vm.isCurrentSubject(item), hidden: item.Hidden}">  ' +
-'                  <a href="javascript:void(0)" ng-click="vm.selectSubject(item)">{{item.Name}}</a>  ' +
-'              </li>  ' +
-'          </ul>  ' +
-'      </li>  ' +
-'      <li class="dropdown">  ' +
-'          <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">  ' +
-'              年级(<span class="selectedDicCatalogItem">{{vm.selectResult.Grade.Name}}</span>)  ' +
-'          </a>  ' +
-'          <ul class="dropdown-menu style-width">  ' +
-'              <li ng-repeat="item in vm.grades" ng-class="{active: vm.isCurrentGrade(item), hidden: item.Hidden}">  ' +
-'                  <a href="javascript:void(0)" ng-click="vm.selectGrade(item)">{{item.Name}}</a>  ' +
-'              </li>  ' +
-'          </ul>  ' +
-'      </li>  ' +
-' </ul>  ';
+                    var templateValue = ' <ul class="search-dropdown col margin-top-bottom">  ';
+                    for (var i = 0; i < categories.length; i++) {
+                        var category = categories[i];
+                        var value = createCategoryTemplate2(category);
+                        templateValue += value;
+                    }
+                    return templateValue + ' </ul>  ';
                 }();
                 var template3 = function () {
                     return '' +
@@ -246,22 +231,40 @@
                 <div ng-controller="demoCtrl">
                     <div class="row">
                         <h2>{{dicCatalogVm.selectResult.display()}}</h2>
-                        <!--<p>{{dicCatalogVm.selectResult}}</p>-->
-                                              <hr />
+                        <hr />
                         <div class="search-block" ng-if="dicCatalogVm">
                             <div nb-dic-catalog vm="dicCatalogVm" view-mode="1"></div>
-                            <hr />
-                            <div>
-                                <button ng-click="callTest()">DEMO</button>
-                            </div>
-                            <p>{{dicCatalogVm}}</p>
-                            <hr />
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <h2>在此基础上，完成所有项</h2>
+                </div>
+
+
+                <!--<div ng-controller="demoCtrl">
+
+                    <div class="row">
+                        <h2>{{dicCatalogVm.selectResult.display()}}</h2>
+                        <hr/>
+                        <div class="form-search margin-bottom-25" ng-if="dicCatalogVm">
+                            <form action="" class="sky-form">
+
+
+                                <div nb-dic-catalog vm="dicCatalogVm" view-mode="2"></div>
+
+                                <br class="clear-both">
+                            </form>
+                            <span class="search-result">
+                                共找到
+                                <span class="color-orange">125</span>
+                                个视频
+                            </span>
+                        </div>
+                    </div>
+
+                </div>-->
+
+
+            </div>
 
 
         </div>
