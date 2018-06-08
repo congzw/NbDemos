@@ -34,15 +34,24 @@
             var mainApp = zqnb.mainApp;
 
             mainApp.factory('dicCatalogAppService', ['$http', function ($http) {
-                var serviceUrl = '/Content/scripts/GetDicCatalogs2.js';
+                var serviceUrl = '/Content/scripts/GetDicCatalogs.js';
                 return {
                     getDicCatalogs: function () {
                         return $http.get(serviceUrl);
                     }
                 }
             }
+            ]).factory('dicOrgTypeAppService', ['$http', function ($http) {
+                var serviceUrl = '/Content/scripts/GetDicOrgTypes.js';
+                return {
+                    getDicOrgTypes: function () {
+                        return $http.get(serviceUrl);
+                    }
+                }
+            }
             ]);
-            mainApp.factory('dicCatalogMockData', ['dicCatalogAppService', function (dicCatalogAppService) {
+
+            mainApp.factory('dicCatalogMockData', ['dicCatalogAppService', 'dicOrgTypeAppService', function (dicCatalogAppService, dicOrgTypeAppService) {
 
                 var dicHelper = zqnb.createDicHelper();
 
@@ -55,15 +64,15 @@
                         initData.initCodes = { OrgCode: 'Org2', PhaseCode: 'Phase2', SubjectCode: 'GS001', GradeCode: 'GO003' };
 
                         //all dic items
-                        var orgs = [];
+                        //var orgs = [];
                         var phases = [];
                         var subjects = [];
                         var grades = [];
 
-                        //mock set orgs
-                        orgs.push({ Code: "Org1", Name: "组织1", OrgTypeCode: "OrgType1" });
-                        orgs.push({ Code: "Org2", Name: "组织2", OrgTypeCode: "OrgType2" });
-                        orgs.push({ Code: "Org3", Name: "组织3", OrgTypeCode: "OrgType3" });
+                        ////mock set orgs
+                        //orgs.push({ Code: "Org1", Name: "组织1", OrgTypeCode: "OrgType1" });
+                        //orgs.push({ Code: "Org2", Name: "组织2", OrgTypeCode: "OrgType2" });
+                        //orgs.push({ Code: "Org3", Name: "组织3", OrgTypeCode: "OrgType3" });
 
                         angular.forEach(dicSettings, function (phase) {
                             if (!phase.InUse) {
@@ -90,21 +99,21 @@
                             });
                         });
 
-                        initData.orgs = orgs;
+                        //initData.orgs = orgs;
                         initData.phases = phases;
                         initData.subjects = subjects;
                         initData.grades = grades;
 
 
-                        //mock relations
-                        initData.orgTypePhases = [
-                            { OrgTypeCode: "OrgType1", PhaseCode: "Phase0" },
-                            { OrgTypeCode: "OrgType1", PhaseCode: "Phase1" },
-                            { OrgTypeCode: "OrgType1", PhaseCode: "Phase2" },
-                            { OrgTypeCode: "OrgType1", PhaseCode: "Phase3" },
-                            { OrgTypeCode: "OrgType2", PhaseCode: "Phase2" },
-                            { OrgTypeCode: "OrgType3", PhaseCode: "Phase3" }
-                        ];
+                        ////mock relations
+                        //initData.orgTypePhases = [
+                        //    { OrgTypeCode: "OrgType1", PhaseCode: "Phase0" },
+                        //    { OrgTypeCode: "OrgType1", PhaseCode: "Phase1" },
+                        //    { OrgTypeCode: "OrgType1", PhaseCode: "Phase2" },
+                        //    { OrgTypeCode: "OrgType1", PhaseCode: "Phase3" },
+                        //    { OrgTypeCode: "OrgType2", PhaseCode: "Phase2" },
+                        //    { OrgTypeCode: "OrgType3", PhaseCode: "Phase3" }
+                        //];
 
                         return initData;
                     };
@@ -134,6 +143,38 @@
                             //vm.initRelation(initData);
                             //vm.updateView();
                         });
+
+
+                    dicOrgTypeAppService.getDicOrgTypes()
+                        .success(function (result) {
+
+                            var orgTypes = [];
+                            var orgTypePhases = [];
+                            var orgs = [];
+
+                            for (var i = 0; i < result.length; i++) {
+                                var orgType = result[i];
+                                orgTypes.push({ Code: orgType.Code, Name: orgType.Name });
+                                for (var j = 0; j < orgType.Phases.length; j++) {
+                                    orgTypePhases.push({ OrgTypeCode: orgType.Code, PhaseCode: orgType.Phases[j]});
+                                }
+                            }
+
+                            //mock orgs
+                            orgs.push({ Code: "whhc", Name: "威海环翠", OrgTypeCode: "JiaoYuJu", ParentCode: "" });
+                            orgs.push({ Code: "jyz", Name: "教研组", OrgTypeCode: "JiGou-KeShi", ParentCode: "whhc" });
+                            orgs.push({ Code: "ywjyz", Name: "语文教研组", OrgTypeCode: "JiGou-KeShi", ParentCode: "jyz" });
+                            orgs.push({ Code: "sxjyz", Name: "数学教研组", OrgTypeCode: "JiGou-KeShi", ParentCode: "jyz" });
+                            orgs.push({ Code: "whsyxx", Name: "威海试验小学", OrgTypeCode: "XueXiao-211", ParentCode: "whhc" });
+                            orgs.push({ Code: "whyz", Name: "威海一中（完中）", OrgTypeCode: "XueXiao-341", ParentCode: "whhc" });
+                            orgs.push({ Code: "whez", Name: "威海二中（高中）", OrgTypeCode: "XueXiao-342", ParentCode: "whhc" });
+                            orgs.push({ Code: "whsz", Name: "威海三中（高中）", OrgTypeCode: "XueXiao-342", ParentCode: "whhc" });
+
+                            vm.orgTypes = orgTypes;
+                            vm.orgTypePhases = orgTypePhases;
+                            vm.orgs = orgs;
+                        });
+
                 };
                 return { init: init };
             }
@@ -265,8 +306,8 @@
                 }();
                 var getTemplate = function (tElem, tAttrs) {
                     var mode = tAttrs.viewMode;
-                    console.log('nbDicCatalog getTemplate');
-                    console.log(mode);
+                    //console.log('nbDicCatalog getTemplate');
+                    //console.log(mode);
                     if (!mode) {
                         return template1;
                     }
@@ -294,8 +335,8 @@
                     },
                     controller: function ($scope, $element, $attrs, $transclude) {
                         var vm = $scope.vm;
-                        console.log('nbDicCatalog Ctrl');
-                        console.log(vm);
+                        //console.log('nbDicCatalog Ctrl');
+                        //console.log(vm);
 
                         $scope.isCurrentItem = function (item, category) {
                             var currentItem = vm.selectResult[category];
@@ -313,8 +354,8 @@
                                     return;
                                 }
                                 vm.selectResult[category] = item;
-                                console.log('selected:');
-                                console.log(item);
+                                //console.log('selected:');
+                                //console.log(item);
                                 if ($scope.currentChangedCallback) {
                                     $scope.currentChangedCallback(item, old);
                                 }
