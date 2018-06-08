@@ -162,6 +162,106 @@
             }
             return fixOrgs;
         };
+        var isEmptyItem = function (item) {
+            //console.log(item);
+            return item.Code === '';
+        };
+        var hiddenByRelation = function (theVm, items, showShowFunc) {
+            //refresh hidden
+            angular.forEach(items, function (item) {
+                item.Hidden = true;
+                var shouldShow = showShowFunc(theVm, item);
+                if (shouldShow) {
+                    item.Hidden = false;
+                }
+            });
+        };
+        var shouldShowOrgTypeOrg = function (theVm, org) {
+            var currentOrgType = theVm.selectResult.orgType;
+            //当前上级类型为【全部】，或未知组织类型，所有【组织】永远显示
+            if (isEmptyItem(currentOrgType) || !org.OrgTypeCode) {
+                return true;
+            }
+            //【全部】按钮永远显示
+            if (isEmptyItem(org)) {
+                return true;
+            }
+            //按关系查找
+            var shouldShow = containItem(theVm.visiableOrgTypeOrgs, createCodeItem(currentOrgType.Code, org.Code));
+            //console.log('shouldShowThisOrg: ' + createCodeItem(currentOrgType.Code, org.Code).Code + "+" + org.OrgTypeCode + " = " + shouldShow);
+            return shouldShow;
+        };
+        var shouldShowOrgTypePhase = function (theVm, phase) {
+            var currentOrgType = theVm.selectResult.orgType;
+            //当前上级类型为【全部】，所有【学段】永远显示
+            if (isEmptyItem(currentOrgType) || currentOrgType.Code === "JiGou-KeShi") {
+                return true;
+            }
+            //【全部】按钮永远显示
+            if (isEmptyItem(phase)) {
+                return true;
+            }
+            //按关系查找
+            var shouldShow = containItem(theVm.visiableOrgTypePhases, createCodeItem(currentOrgType.Code, phase.Code));
+            return shouldShow;
+        };
+        var shouldShowPhaseSubject = function (theVm, subject) {
+            var currentPhase = theVm.selectResult.phase;
+            //当前上级类型为【全部】，所有【学段】永远显示
+            if (isEmptyItem(currentPhase) || !currentPhase.Code) {
+                return true;
+            }
+            //【学科（全部）】按钮永远显示
+            if (isEmptyItem(subject)) {
+                return true;
+            }
+            //按关系查找
+            var codeItem = createCodeItem(currentPhase.Code, subject.Code);
+            var shouldShow = containItem(theVm.visiablePhaseSubjects, codeItem);
+            if (shouldShow) {
+                //console.log("refresh phase subjects: " + currentPhase.Name + ',' + subject.Name + ' ' + shouldShow);
+            }
+            return shouldShow;
+        };
+        var shouldShowPhaseGrade = function (theVm, grade) {
+            var currentPhase = theVm.selectResult.phase;
+            //当前全部学段，或未知学段类型，所有【年级】永远显示
+            if (isEmptyItem(currentPhase) || !currentPhase.Code) {
+                return true;
+            }
+            //【年级（全部）】按钮永远显示
+            if (isEmptyItem(grade)) {
+                return true;
+            }
+
+            //按关系查找
+            var codeItem = createCodeItem(currentPhase.Code, grade.Code);
+            var shouldShow = containItem(theVm.visiablePhaseGrades, codeItem);
+            if (shouldShow) {
+                //console.log("refresh phase grades: " + currentPhase.Name + ',' + grade.Name + ' ' + shouldShow);
+            }
+            return shouldShow;
+        };
+        var shouldShowPhaseSubjectGrade = function (theVm, grade) {
+            var currentPhase = theVm.selectResult.phase;
+            var currentSubject = theVm.selectResult.subject;
+            //当前全部学段、学科，或未知学段、学科类型，所有【年级】永远显示
+            if (isEmptyItem(currentPhase) || !currentPhase.Code || isEmptyItem(currentSubject) || !currentSubject.Code) {
+                return true;
+            }
+            //【年级（全部）】按钮永远显示
+            if (isEmptyItem(grade)) {
+                return true;
+            }
+
+            //按关系查找
+            var codeItem = createCodeItem(currentPhase.Code, currentSubject.Code, grade.Code);
+            var shouldShow = containItem(theVm.visiablePhaseSubjectGrades, codeItem);
+            if (shouldShow) {
+                //console.log("refresh phase subject grades: " + currentPhase.Name + ',' + currentSubject.Name + ',' + grade.Name + ' ' + shouldShow);
+            }
+            return shouldShow;
+        };
 
         //return model
         var vm = {
@@ -301,28 +401,6 @@
             return true;
         };
 
-        var isEmptyItem = function (item) {
-            //console.log(item);
-            return item.Code === '';
-        }
-        var shouldShowThisOrg = function (theVm, org) {
-            //console.log('shouldShowThisOrg');
-            //console.log(org);
-            //console.log(theVm);
-            var currentOrgType = theVm.selectResult.orgType;
-            //当前上级类型为【全部】，或未知组织类型，所有【组织】永远显示
-            if (isEmptyItem(currentOrgType) || !org.OrgTypeCode) {
-                return true;
-            }
-            //【全部】按钮永远显示
-            if (isEmptyItem(org)) {
-                return true;
-            }
-            //按关系查找
-            var shouldShow = containItem(theVm.visiableOrgTypeOrgs, createCodeItem(currentOrgType.Code, org.Code));
-            console.log('shouldShowThisOrg: ' + createCodeItem(currentOrgType.Code, org.Code).Code + "+" + org.OrgTypeCode + " = " + shouldShow);
-            return shouldShow;
-        };
 
         vm.updateView = function () {
 
@@ -330,62 +408,17 @@
             //console.log(getSelectCodes());
             //console.log(vm.org);
 
-
-            //refresh visiableOrgTypeOrgs
-            angular.forEach(vm.orgs, function (org) {
-                org.Hidden = true;
-                var shouldShow = shouldShowThisOrg(vm, org);
-                if (shouldShow) {
-                    org.Hidden = false;
-                }
-            });
-
-            ////refresh phases by current Org
-            //angular.forEach(vm.phases, function (phase) {
-            //    phase.Hidden = true;
-            //    var shouldShow = shouldShowThisPhase(vm, phase);
-            //    if (shouldShow) {
-            //        phase.Hidden = false;
-            //    }
-            //});
-
-            ////refresh phase subjects by current phase
-            //angular.forEach(vm.subjects, function (subject) {
-            //    subject.Hidden = true;
-            //    var shouldShow = shouldShowThisPhaseSubject(vm, subject);
-            //    if (shouldShow) {
-            //        subject.Hidden = false;
-            //    }
-            //});
-
-            ////refresh phase grade by current phase
-            //angular.forEach(vm.grades, function (grade) {
-            //    grade.Hidden = true;
-            //    var shouldShow = shouldShowThisPhaseGrade(vm, grade);
-            //    if (shouldShow) {
-            //        grade.Hidden = false;
-            //    }
-            //});
-
-            ////二次筛选
-            ////refresh phase subject grade by current phase
-            //angular.forEach(vm.grades, function (grade) {
-
-            //    //var needChangeToEmptyGrade = true;
-
-            //    //如果学段和学科同时不为空，则需要二次筛选
-            //    if (!(isEmptyItem(vm.phase)) && !isEmptyItem(vm.subject)) {
-            //        var shouldShow = shouldShowThisPhaseSubjectGrade(vm, grade);
-            //        if (!shouldShow) {
-            //            grade.Hidden = true;
-            //        } else {
-            //            if (sameCodeItem(grade, vm.grade)) {
-            //                //console.log("当前的选中的年级在隐藏的按钮中: " + grade.Code + ',' + theVm.selectResult.Grade.Code);
-            //                //needChangeToEmptyGrade = false;
-            //            }
-            //        }
-            //    }
-            //});
+            hiddenByRelation(vm, vm.orgs, shouldShowOrgTypeOrg);
+            //console.log('shouldShowOrgTypeOrg');
+            hiddenByRelation(vm, vm.phases, shouldShowOrgTypePhase);
+            //console.log('shouldShowOrgTypePhase');
+            hiddenByRelation(vm, vm.subjects, shouldShowPhaseSubject);
+            //console.log('shouldShowPhaseSubject');
+            hiddenByRelation(vm, vm.grades, shouldShowPhaseGrade);
+            //console.log('shouldShowPhaseGrade');
+            //二次筛选
+            hiddenByRelation(vm, vm.grades, shouldShowPhaseSubjectGrade);
+            //console.log('shouldShowPhaseSubjectGrade');
         };
 
         vm.resultChanged = function (category, newItem, oldItem) {
@@ -405,7 +438,6 @@
                     }
                 }
             }
-
             vm.updateView();
         };
 

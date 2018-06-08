@@ -62,6 +62,7 @@
 '               <li ng-repeat="item in vm.' + key + 's" ng-class="{active: isCurrentItem(item, \'' + key + '\'), hidden: item.Hidden}">  ' +
 '                  <a href="javascript:void(0)" ng-click="selectItem(item, \'' + key + '\')">  ' +
 '                  {{item.Name}}  ' +
+'                  </a>  ' +
 '              </li>  ' +
 '          </ul>  ' +
 '      </li>  ';
