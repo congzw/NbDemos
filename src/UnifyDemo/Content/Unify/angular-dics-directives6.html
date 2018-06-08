@@ -33,6 +33,8 @@
             'use strict';
             var mainApp = zqnb.mainApp;
 
+            var dicHelper = zqnb.createDicHelper();
+
             mainApp.factory('dicCatalogAppService', ['$http', function ($http) {
                 var serviceUrl = '/Content/scripts/GetDicCatalogs.js';
                 return {
@@ -53,7 +55,6 @@
 
             mainApp.factory('dicCatalogMockData', ['dicCatalogAppService', 'dicOrgTypeAppService', function (dicCatalogAppService, dicOrgTypeAppService) {
 
-                var dicHelper = zqnb.createDicHelper();
 
                 var mockHelper = function () {
 
@@ -139,7 +140,7 @@
 
                             //result[0].InUse = true;
                             mockHelper.setupInitData(initData, result);
-                            
+
                             dicOrgTypeAppService.getDicOrgTypes()
                                 .success(function (result) {
 
@@ -168,9 +169,16 @@
                                     initData.orgTypes = orgTypes;
                                     initData.orgTypePhases = orgTypePhases;
                                     initData.orgs = orgs;
-                                    
+
                                     vm.initItems(initData);
 
+                                    //console.log('dicCatalogMockData');
+                                    //console.log('vm.initItems(initData)');
+
+                                    ////hide orgTypes
+                                    //vm.orgTypes = [];
+                                    ////hide orgs
+                                    //vm.orgs = [];
 
                                     //vm.initRelation(initData);
                                     //vm.updateView();
@@ -184,21 +192,20 @@
 
             mainApp.controller('demoCtrl', function ($scope, dicCatalogMockData) {
 
+                console.log('demoCtrl');
                 var vm = zqnb.createDicCatalogVm();
+                dicCatalogMockData.init(vm);
 
                 $scope.dicCatalogVm = vm;
                 $scope.callTest = function () {
                     vm.selectResult.phase.Name = "ABC";
                 }
-
                 $scope.resultChanged = function (event) {
                     //console.log('ctrl get resultChanged!');
                     //console.log(event);
                     vm.resultChanged(event);
                     vm.updateView();
                 };
-
-                dicCatalogMockData.init(vm);
 
             });
 
@@ -239,9 +246,8 @@
                     //        </li>
                     //    </ul>
                     //</div>
-
                     return '' +
-' <div class="term-box">  ' +
+' <div class="term-box" ng-if="isEmptyItems(\'' + key + '\')">  ' +
 '      <span class="term">' + name + '(<span class="selectedDicCatalogItem">{{vm.selectResult.' + key + '.Name}}</span>)</span>  ' +
 '      <ul class="nav nav-pills overflow-h">  ' +
 '          <li ng-repeat="item in vm.' + key + 's" ng-class="{active: isCurrentItem(item, \'' + key + '\'), hidden: item.Hidden}">  ' +
@@ -257,7 +263,6 @@
                     for (var i = 0; i < categories.length; i++) {
                         var category = categories[i];
                         var value = createCategoryTemplate1(category);
-                        //console.log(value);
                         templateValue += value;
                     }
                     return templateValue;
@@ -308,8 +313,7 @@
                 }();
                 var getTemplate = function (tElem, tAttrs) {
                     var mode = tAttrs.viewMode;
-                    //console.log('nbDicCatalog getTemplate');
-                    //console.log(mode);
+                    console.log('nbDicCatalog getTemplate: ' + mode);
                     if (!mode) {
                         return template1;
                     }
@@ -337,8 +341,14 @@
                     },
                     controller: function ($scope, $element, $attrs, $transclude) {
                         var vm = $scope.vm;
-                        //console.log('nbDicCatalog Ctrl');
-                        //console.log(vm);
+                        console.log('nbDicCatalog Ctrl');
+
+                        //是否是空的集合（或只有【全部】按钮）
+                        $scope.isEmptyItems = function (category) {
+                            //console.log('$scope.isEmptyItems ');
+                            //console.log(category);
+                            return vm.isEmptyItems(category);
+                        }
 
                         $scope.isCurrentItem = function (item, category) {
                             var currentItem = vm.selectResult[category];
