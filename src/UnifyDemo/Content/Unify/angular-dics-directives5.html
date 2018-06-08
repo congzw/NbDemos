@@ -438,7 +438,7 @@
             }();
 
             mainApp.factory('dicCatalogAppService', ['$http', function ($http) {
-                var serviceUrl = '/Content/scripts/GetDicCatalogs2.js';
+                var serviceUrl = '/Content/scripts/GetDicCatalogs.js';
                 return {
                     getDicCatalogs: function () {
                         return $http.get(serviceUrl);
