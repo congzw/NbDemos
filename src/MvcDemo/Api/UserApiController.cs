@@ -1,47 +1,69 @@
 ﻿using System.Web.Http;
 using MvcDemo.Api.AppServices;
+using MvcDemo.Api.Libs;
 
 namespace MvcDemo.Api
 {
     public class UserApiController : ApiController
     {
         private readonly IUserAppService _userAppService = MyFactory.CreateUserAppService();
+        
         public UserVo GetUser(int id)
         {
             return _userAppService.GetUser(id);
         }
 
-        public dynamic GetUserDynamic(int id)
+        [HttpPost]
+        public string SaveUser(UserVo vo)
         {
-            return _userAppService.GetUserDynamic(id);
+            var objectHash = ObjectHashHelper.CreateObjectHash(vo);
+            return objectHash;
         }
 
-        public DictionaryVo GetUserDic(int id)
+        #region DictionaryVo OK
+
+        public HashedVo GetUserDic(int id)
         {
             return _userAppService.GetUserDic(id);
         }
 
+        [HttpPost]
+        public string SaveUserDic(HashedVo vo)
+        {
+            var objectHash = ObjectHashHelper.CreateObjectHash(vo);
+            return objectHash;
+        }
 
-        //// GET api/values
-        //public IEnumerable<string> Get()
+        #endregion
+
+        #region IDictionaryWithHash NG!
+
+        [HttpGet]
+        public IHashedObjects GetUserDicHash(int id)
+        {
+            //OK
+            return _userAppService.GetUserDicHash(id);
+        }
+
+        [HttpPost]
+        public string SaveUserDicHash(IHashedObjects vo)
+        {
+            //NG! post not null but receive null
+            var objectHash = ObjectHashHelper.CreateObjectHash(vo);
+            return objectHash;
+        }
+
+        #endregion
+
+        #region dynamic NG!
+
+        ////需要自行处理序列化，不合适！
+        //public dynamic GetUserDynamic(int id)
         //{
-        //    return new string[] { "value1", "value2" };
+        //    return _userAppService.GetUserDynamic(id);
         //}
 
 
-        // POST api/values
-        public void Post([FromBody]string value)
-        {
-        }
-
-        // PUT api/values/5
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE api/values/5
-        public void Delete(int id)
-        {
-        }
+        #endregion
     }
 }

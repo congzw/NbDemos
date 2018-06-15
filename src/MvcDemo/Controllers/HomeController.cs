@@ -19,5 +19,11 @@ namespace MvcDemo.Controllers
         {
             return RedirectToAction("Index").WithError("Hello World From Server!");
         }
+
+
+        public ActionResult AngularForm()
+        {
+            return View();
+        }
 	}
 }

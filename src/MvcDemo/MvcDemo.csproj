@@ -124,7 +124,7 @@
   <ItemGroup>
     <Compile Include="Api\AppServices\UserAppService.cs" />
     <Compile Include="Api\Libs\Dynamics.cs" />
-    <Compile Include="Api\Libs\HashHelper.cs" />
+    <Compile Include="Api\Libs\ModelHelper.cs" />
     <Compile Include="Api\Libs\Rbac\UserRoleService.cs" />
     <Compile Include="Api\Libs\Users\UserService.cs" />
     <Compile Include="Api\UserApiController.cs" />
@@ -153,6 +153,7 @@
     <Content Include="Views\Home\Demo.cshtml" />
     <Content Include="Api\UserDic.json" />
     <Content Include="Api\User.json" />
+    <Content Include="Views\Home\AngularForm.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

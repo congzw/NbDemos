@@ -1,0 +1,134 @@
+﻿@model dynamic
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>angular form</title>
+    <script src="~/Content/libs/angular/angular.js"></script>
+    <script>
+
+        //controller定义为module的一部分
+        var myApp = angular.module('myApp', []);
+
+        //dynamic GetUserDynamic(int userId);
+        //UserVo GetUser(int userId);
+        //DictionaryVo GetUserDic(int userId);
+
+        myApp.factory('userAppService', ['$http', function ($http) {
+            
+            return {
+                GetUser: function () {
+                    return $http.get('/Api/UserApi/GetUser?id=1');
+                },
+                SaveUser: function (data) {
+                    return $http.post('/Api/UserApi/SaveUser', data);
+                },
+
+                GetUserDic: function () {
+                    return $http.get('/Api/UserApi/GetUserDic?id=1');
+                },
+                SaveUserDic: function (data) {
+                    return $http.post('/Api/UserApi/SaveUserDic', data);
+                },
+
+                GetUserDicHash: function () {
+                    return $http.get('/Api/UserApi/GetUserDicHash?id=1');
+                },
+                SaveUserDicHash: function (data) {
+                    return $http.post('/Api/UserApi/SaveUserDicHash', data);
+                }
+            }
+        }
+        ]);
+
+        myApp.controller('SimpleController', ['$scope', 'userAppService', function ($scope, userAppService) {
+
+            var _this = this;
+
+            //JSON.stringify(YOUR_OBJECT.FCLASS);
+            //JSON.parse(YOUR_OBJECT.FCLASS);
+            //var json = JSON.parse(JSON.stringify(vo));
+            //$scope.UserJson = JSON.stringify(vo, null, 4);
+
+            //$scope.items = [];
+            //$scope.GetMethodName = "";
+            //$scope.SaveMethodName = "";
+
+
+            var saveCount = 0;
+
+            $scope.FromJson = function () {
+                var json = angular.toJson($scope.User);
+                $scope.JsonDisplay = json;
+                //return angular.fromJson(json);
+            };
+            $scope.ToJson = function () {
+                var model = $scope.User;
+                var json = angular.toJson(model);
+                var newObj = angular.fromJson(json);
+                var json2 = angular.toJson(newObj);
+                $scope.ObjectDisplay = json2;
+                //return angular.toJson(model);
+            };
+
+            var userVo = {};
+            userVo.UserSaveResult = '';
+            userVo.UserJson = null;
+            $scope.UserVo = userVo;
+
+            $scope.GetUser = function () {
+                //userAppService.GetUser()
+                //userAppService.GetUserDic()
+                userAppService.GetUserDicHash()
+                    .success(function (data) {
+                        console.log(data);
+                        userVo.UserJson = angular.toJson(data);
+                    });
+            };
+            $scope.SaveUser = function () {
+                if (!userVo.UserJson) {
+                    return;
+                }
+                console.log(userVo.UserJson);
+                var user = angular.fromJson(userVo.UserJson);
+                //userAppService.SaveUser(user)
+                //userAppService.SaveUserDic(user)
+                userAppService.SaveUserDicHash(user)
+                    .success(function (data) {
+                        saveCount++;
+                        userVo.UserSaveResult = 'SaveSuccess: ' + saveCount + ' => ' + data;
+                    });
+            };
+
+            //$scope.name = "foo";
+            //$scope.email = "a@b.com";
+
+            //$scope.save = function () {
+            //    $scope.Message = $scope.name + ' -> ' + $scope.email;
+            //}
+        }]);
+    </script>
+</head>
+<body>
+    <div ng-app='myApp'>
+        <div ng-controller="SimpleController">
+            <h2>{{1 + 1}}</h2>
+            <hr/>
+
+            <h3>{{UserVo.UserSaveResult}}</h3>
+            <hr />
+            <form name="userForm">
+                <div ng-if="UserVo.UserJson">
+                    <textarea style="width: 400px; height: 200px;" ng-model="UserVo.UserJson"></textarea>
+                </div>
+                <hr/>
+                <button ng-click="GetUser()">GetUser</button>
+                <hr/>
+                <button ng-click="SaveUser()">SaveUser</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
