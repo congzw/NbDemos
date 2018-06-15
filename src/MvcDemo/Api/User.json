@@ -1,0 +1,21 @@
+{
+    "User": {
+        "Id": 1,
+        "LoginName": "admin",
+        "FullName": "[admin]"
+    },
+    "UserRoles": [
+        {
+            "UserLoginName": "admin",
+            "RoleCode": "RoleA"
+        },
+        {
+            "UserLoginName": "admin",
+            "RoleCode": "RoleB"
+        },
+        {
+            "UserLoginName": "admin",
+            "RoleCode": "RoleC"
+        }
+    ]
+}

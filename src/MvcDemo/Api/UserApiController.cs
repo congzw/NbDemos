@@ -16,6 +16,11 @@ namespace MvcDemo.Api
             return _userAppService.GetUserDynamic(id);
         }
 
+        public DictionaryVo GetUserDic(int id)
+        {
+            return _userAppService.GetUserDic(id);
+        }
+
 
         //// GET api/values
         //public IEnumerable<string> Get()

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using MvcDemo.Api.Libs;
 using MvcDemo.Api.Libs.Rbac;
 using MvcDemo.Api.Libs.Users;
@@ -9,6 +10,7 @@ namespace MvcDemo.Api.AppServices
     {
         dynamic GetUserDynamic(int userId);
         UserVo GetUser(int userId);
+        DictionaryVo GetUserDic(int userId);
     }
 
     public class UserVo
@@ -19,6 +21,10 @@ namespace MvcDemo.Api.AppServices
         }
         public UserDto User { get; set; }
         public IList<UserRole> UserRoles { get; set; }
+    }
+
+    public class DictionaryVo : Dictionary<string, object>
+    {
     }
 
     public class UserAppService : IUserAppService
@@ -70,6 +76,16 @@ namespace MvcDemo.Api.AppServices
             var userDto = _userService.GetUser(userId);
             var userRoles = _userRoleService.GetUserRoles(userDto.LoginName);
             return new UserVo(){User = userDto, UserRoles = userRoles};
+        }
+
+        public DictionaryVo GetUserDic(int userId)
+        {
+            var userDto = _userService.GetUser(userId);
+            var userRoles = _userRoleService.GetUserRoles(userDto.LoginName);
+            var dictionaryVo = new DictionaryVo();
+            dictionaryVo["User"] = userDto;
+            dictionaryVo["UserRoles"] = userRoles;
+            return dictionaryVo;
         }
     }
 

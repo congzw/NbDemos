@@ -151,6 +151,8 @@
     <Content Include="Views\Shared\_SweetAlert.cshtml" />
     <Content Include="Views\Shared\_SweetAlert2.cshtml" />
     <Content Include="Views\Home\Demo.cshtml" />
+    <Content Include="Api\UserDic.json" />
+    <Content Include="Api\User.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
