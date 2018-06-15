@@ -80,8 +80,8 @@
 
             $scope.GetUser = function () {
                 //userAppService.GetUser()
-                //userAppService.GetUserDic()
-                userAppService.GetUserDicHash()
+                userAppService.GetUserDic()
+                //userAppService.GetUserDicHash()
                     .success(function (data) {
                         console.log(data);
                         userVo.UserJson = angular.toJson(data);
@@ -94,8 +94,8 @@
                 console.log(userVo.UserJson);
                 var user = angular.fromJson(userVo.UserJson);
                 //userAppService.SaveUser(user)
-                //userAppService.SaveUserDic(user)
-                userAppService.SaveUserDicHash(user)
+                userAppService.SaveUserDic(user)
+                //userAppService.SaveUserDicHash(user)
                     .success(function (data) {
                         saveCount++;
                         userVo.UserSaveResult = 'SaveSuccess: ' + saveCount + ' => ' + data;
