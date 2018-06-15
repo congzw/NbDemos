@@ -9,10 +9,15 @@ namespace MvcDemo.Controllers
         {
             return View();
         }
-        
+
         public ActionResult Demo()
         {
-            return RedirectToAction("Index").WithError("Hello World!");
+            return View().WithInfo("Hello World From Server!");
+        }
+
+        public ActionResult Demo2()
+        {
+            return RedirectToAction("Index").WithError("Hello World From Server!");
         }
 	}
 }

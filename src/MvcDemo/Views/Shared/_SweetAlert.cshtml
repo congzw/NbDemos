@@ -1,13 +1,15 @@
 ﻿@using MvcDemo.Infrastructure.SweetAlerts
 @using Newtonsoft.Json
 @{
-    //var theAlert = TempData.GetAlert();
-    //if (theAlert == null)
-    //{
-    //    return;
-    //}
+    var theAlert = TempData.GetAlert();
+    if (theAlert == null)
+    {
+        return;
+    }
     
-    var theAlert =  new SweetAlert("success", "HelloWorld!");
+    ////mock a message
+    //var theAlert = new SweetAlert("success", "HelloWorld!");
+    
     var swJson = Html.Raw(JsonConvert.SerializeObject(new
     {
         type = theAlert.AlertType,

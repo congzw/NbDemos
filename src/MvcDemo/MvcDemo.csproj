@@ -150,6 +150,7 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\_SweetAlert.cshtml" />
     <Content Include="Views\Shared\_SweetAlert2.cshtml" />
+    <Content Include="Views\Home\Demo.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
