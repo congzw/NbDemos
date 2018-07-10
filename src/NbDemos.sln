@@ -38,6 +38,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcDemo", "MvcDemo\MvcDemo.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageDemo", "ImageDemo\ImageDemo.csproj", "{69BA7276-7D05-4E80-ADFD-F74ECFC29012}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoMapperDemo", "AutoMapperDemo\AutoMapperDemo.csproj", "{4E1274D2-C85A-46E0-9F19-8B1A29A17FC7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -92,6 +94,10 @@ Global
 		{69BA7276-7D05-4E80-ADFD-F74ECFC29012}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{69BA7276-7D05-4E80-ADFD-F74ECFC29012}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{69BA7276-7D05-4E80-ADFD-F74ECFC29012}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E1274D2-C85A-46E0-9F19-8B1A29A17FC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E1274D2-C85A-46E0-9F19-8B1A29A17FC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E1274D2-C85A-46E0-9F19-8B1A29A17FC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E1274D2-C85A-46E0-9F19-8B1A29A17FC7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
