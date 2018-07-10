@@ -20,10 +20,10 @@
 
         var preInit = function () {
             vm.autoAppendEmpty = true;
+            vm.orgTypes = [];
             vm.orgs = [];
             vm.phases = [];
             vm.subjects = [];
-            vm.grades = [];
             vm.grades = [];
             vm.initCodes = { OrgCode: '', PhaseCode: '', SubjectCode: '', GradeCode: '' };
         };
