@@ -1,6 +1,7 @@
 ﻿using System;
 using HibernatingRhinos.Profiler.Appender.NHibernate;
 using NhibernateDemo.Relations.SimpleTrees;
+using NhibernateDemo.Relations.SingleRelationTrees;
 using ZQNB.Common.Db;
 using ZQNB.Common.NHExtensions;
 using ZQNB.Common.Serialize;
@@ -12,9 +13,10 @@ namespace NhibernateDemo
         static void Main(string[] args)
         {
             var utHelper = SqlUtHelper.Instance;
-            InitDbScheme(utHelper, true);
+            InitDbScheme(utHelper, false);
 
-            SimpleTreeDemo.Run(utHelper);
+            //SimpleTreeDemo.Run(utHelper);
+            SingleRelationOrgDemo.Run(utHelper);
 
             ShowSplit("Demo Done");
             Console.Read();

@@ -61,6 +61,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Relations\SimpleTrees\SimpleOrg.cs" />
     <Compile Include="Relations\SimpleTrees\SimpleTreeDemo.cs" />
+    <Compile Include="Relations\SingleRelationTrees\SingleRelationOrg.cs" />
+    <Compile Include="Relations\SingleRelationTrees\SingleRelationOrgDemo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
