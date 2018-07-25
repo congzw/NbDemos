@@ -90,6 +90,7 @@
     <Content Include="Content\features\account\images\verifyimg.png" />
     <Content Include="Content\features\account\login.css" />
     <Content Include="Content\features\account\login.js" />
+    <Content Include="Content\libs\bootstrap\bootstrap.css" />
     <Content Include="Content\libs\jquery\jparticle.jquery.js" />
     <Content Include="Content\libs\jquery\jquery-1.10.2.js" />
     <Content Include="Content\libs\layui-demos\admin\css\adminstyle.css" />
@@ -241,6 +242,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Lib\OrgDto.cs" />
+    <Compile Include="Lib\OrgTreeHtmlTableRender.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -268,6 +271,8 @@
     <Content Include="Content\features\account\font\adminthemes-webfont.woff" />
     <Content Include="Content\features\account\font\adminthemes-webfont.woff2" />
     <Content Include="Content\features\account\font\adminThemes.ttf" />
+    <Content Include="Views\Home\TreeTable.cshtml" />
+    <Content Include="Views\Home\Clock.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -279,6 +284,12 @@
     <Folder Include="App_Data\" />
     <Folder Include="Content\features\shared\nav\" />
     <Folder Include="Content\scripts\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ZQNB.Common\ZQNB.Common.csproj">
+      <Project>{97216dd3-ae9d-4ec7-8de7-8760d4de9f20}</Project>
+      <Name>ZQNB.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

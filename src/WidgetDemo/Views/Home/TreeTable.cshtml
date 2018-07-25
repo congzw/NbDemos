@@ -1,0 +1,44 @@
+﻿@using WidgetDemo.Lib
+@using ZQNB.Common
+@{
+    var orgTreeHtmlTableRender = OrgTreeHtmlTableRender.Instance;
+
+    var ids = GuidHelper.CreateMockGuidQueue(100);
+    var orgDtos = new List<OrgDto>();
+    var orgRoot = new OrgDto() { Id = ids.Dequeue(), Name = "1.", RelationCode = "1." };
+    orgDtos.Add(orgRoot);
+
+    for (int i = 1; i <= 2; i++)
+    {
+        var append = i + ".";
+        var orgI = new OrgDto() { Id = ids.Dequeue(), Name = orgRoot.Name + append, RelationCode = orgRoot.RelationCode + append };
+        orgDtos.Add(orgI);
+        for (int j = 1; j <= 2; j++)
+        {
+            var appendJ = j + ".";
+            var orgJ = new OrgDto() { Id = ids.Dequeue(), Name = orgI.Name + appendJ, RelationCode = orgI.RelationCode + appendJ };
+            orgDtos.Add(orgJ);
+            //for (int k = 1; k <= 2; k++)
+            //{
+            //    var appendK = k + ".";
+            //    var orgK = new OrgDto() { Id = ids.Dequeue(), Name = orgJ.Name + appendK, RelationCode = orgJ.RelationCode + appendK };
+            //    orgDtos.Add(orgK);
+            //}
+        }
+    }
+    var makeTableHtmlString = orgTreeHtmlTableRender.MakeTableHtmlString(orgDtos);
+}
+
+@section styles
+{
+    <link href="~/Content/libs/bootstrap/bootstrap.css" rel="stylesheet" />
+}
+
+<div class="container">
+    <h2>
+        TreeTable
+    </h2>
+    <hr />
+    @Html.Raw(makeTableHtmlString)
+    <hr />
+</div>

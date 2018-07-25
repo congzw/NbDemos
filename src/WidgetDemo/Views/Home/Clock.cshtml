@@ -1,10 +1,14 @@
-﻿@model DateTime?
-@{
-    var serverNow = Model ?? MyDateHelper.Resolve().Now();
+﻿@{
+    //var serverNow = MyDateHelper.Resolve().Now();
+    var serverNow = new DateTime(2010, 1, 1);
 }
-@using (Html.Delayed())
+
+@section styles
 {
-    <span id="serverClock"></span>
+    <link href="~/Content/libs/bootstrap/bootstrap.css" rel="stylesheet" />
+}
+@section scripts
+{    
     <script src="~/Content/libs/MyClock/MyClock.js"></script>
     <script type="text/javascript">
         (function () {
@@ -16,3 +20,15 @@
         }());
     </script>
 }
+
+<div class="container">
+    <h2>
+        Clock
+    </h2>
+    <hr />
+    <div class="row">
+        <div class="col-xs-12">
+            <span id="serverClock"></span>
+        </div>
+    </div>
+</div>
