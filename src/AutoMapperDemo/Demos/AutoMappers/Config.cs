@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-
-namespace AutoMapperDemo.Demos
+﻿namespace AutoMapperDemo.Demos.AutoMappers
 {
     public class Config
     {
@@ -10,8 +8,7 @@ namespace AutoMapperDemo.Demos
             //Mapper.Initialize(cfg => cfg.CreateMap<Order, OrderDto>());
             ////or
             //var config = new MapperConfiguration(cfg => cfg.CreateMap<Order, OrderDto>());
-
-
+            
             //Mapper.Initialize(cfg => cfg.CreateMap<FooEntity, FooDto>());
             //Mapper.Initialize(cfg => cfg.CreateMap<FooDto, FooEntity>());
             

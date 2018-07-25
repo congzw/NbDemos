@@ -53,10 +53,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Demos\Config.cs" />
+    <Compile Include="Demos\AutoMappers\Config.cs" />
     <Compile Include="Demos\Demos.cs" />
     <Compile Include="Demos\Exts.cs" />
     <Compile Include="Demos\Models.cs" />
+    <Compile Include="Demos\SimpleProjects\ProjectionExpression.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -64,6 +65,7 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\lib\AutoMapper.3.3.1\tools\AutoMapper.targets" Condition="Exists('..\..\lib\AutoMapper.3.3.1\tools\AutoMapper.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

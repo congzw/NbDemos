@@ -29,5 +29,7 @@ namespace AutoMapperDemo.Demos
         public Guid Id { get; set; }
         public string Name { get; set; }
         public Guid? ParentId { get; set; }
+
+        public string DtoAdded { get; set; }
     }
 }
