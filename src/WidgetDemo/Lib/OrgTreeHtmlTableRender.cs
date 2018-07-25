@@ -14,11 +14,14 @@ namespace WidgetDemo.Lib
         /// 把带有RelationCode的组织列表，转化成HtmlTable可展示的string
         /// </summary>
         /// <param name="sortedOrgs"></param>
+        /// <param name="withLastColumn"></param>
         /// <param name="tableCssClass"></param>
+        /// <param name="withAppendColumn"></param>
         /// <returns></returns>
-        public string MakeTableHtmlString(IList<OrgDto> sortedOrgs, string tableCssClass = "table table-bordered table-hover")
+        public string MakeTableHtmlString(IList<OrgDto> sortedOrgs, bool withAppendColumn = false, bool withLastColumn = false, string tableCssClass = "table table-bordered table-hover")
         {
-            int maxDeep = sortedOrgs.Max(x => x.RelationCode.Split('.').Length);
+            int maxDeep = sortedOrgs.GetMaxDeep();
+            //int maxDeep = sortedOrgs.Max(x => x.RelationCode.Split('.').Length);
 
             StringWriter stringWriter = new StringWriter();
             using (HtmlTextWriter writer = new HtmlTextWriter(stringWriter))
@@ -27,8 +30,8 @@ namespace WidgetDemo.Lib
                 writer.AddAttribute(HtmlTextWriterAttribute.Class, tableCssClass);
                 writer.RenderBeginTag(HtmlTextWriterTag.Table); // Begin Table
 
-                WriteThead(writer, maxDeep);
-                WriteTbody(writer, maxDeep, sortedOrgs);
+                WriteThead(writer, maxDeep, withAppendColumn, withLastColumn);
+                WriteTbody(writer, maxDeep, sortedOrgs, withAppendColumn, withLastColumn);
 
                 writer.RenderEndTag(); // Begin Table
                 //---------table end--------
@@ -38,7 +41,7 @@ namespace WidgetDemo.Lib
             return result;
         }
 
-        private static void WriteThead(HtmlTextWriter writer, int maxDeep)
+        private static void WriteThead(HtmlTextWriter writer, int maxDeep, bool withAppendColumn = false, bool withLastColumn = false)
         {
             //---------thead start--------
             //    <thead>
@@ -54,21 +57,24 @@ namespace WidgetDemo.Lib
             writer.RenderBeginTag(HtmlTextWriterTag.Thead); // Begin Thead
             writer.RenderBeginTag(HtmlTextWriterTag.Tr); // Begin Tr
 
-            writer.AddAttribute(HtmlTextWriterAttribute.Class, "text-right");
-            writer.RenderBeginTag(HtmlTextWriterTag.Th); // Begin 0 Th
-            writer.Write("#关系编号");
-            writer.RenderEndTag(); // End  0 Th
+            if (withAppendColumn)
+            {
+                writer.AddAttribute(HtmlTextWriterAttribute.Class, "text-right");
+                writer.RenderBeginTag(HtmlTextWriterTag.Th); // Begin 0 Th
+                writer.Write("#关系编号");
+                writer.RenderEndTag(); // End  0 Th
+            }
 
             for (int i = 0; i < maxDeep; i++)
             {
                 writer.RenderBeginTag(HtmlTextWriterTag.Th); // Begin i Th
                 if (i == 0)
                 {
-                    writer.WriteEncodedText(string.Format("根组织（{0}级）", i + 1));
+                    writer.WriteEncodedText(string.Format("{0}级", i + 1));
                 }
                 else
                 {
-                    writer.WriteEncodedText(string.Format("组织（{0}级）", i + 1));
+                    writer.WriteEncodedText(string.Format("{0}级", i + 1));
                 }
                 writer.RenderEndTag(); // End  i Th
             }
@@ -77,18 +83,20 @@ namespace WidgetDemo.Lib
             //int theColSpan = 12 / (maxDeep + 1 + 1);
             //writer.AddAttribute(HtmlTextWriterAttribute.Class, "text-center col-xs-" + (theColSpan < 3 ? 3 : theColSpan));
 
-            //<th class="text-center">操作</th>
-            writer.AddAttribute(HtmlTextWriterAttribute.Class, "text-center");
-            writer.RenderBeginTag(HtmlTextWriterTag.Th); // Begin i Th
-            writer.WriteEncodedText("操作");
-            writer.RenderEndTag(); // End  i Th
-
+            if (withLastColumn)
+            {
+                //<th class="text-center">操作</th>
+                writer.AddAttribute(HtmlTextWriterAttribute.Class, "text-center");
+                writer.RenderBeginTag(HtmlTextWriterTag.Th); // Begin i Th
+                writer.WriteEncodedText("操作");
+                writer.RenderEndTag(); // End  i Th             
+            }
             writer.RenderEndTag(); // End Tr
             writer.RenderEndTag(); // End Thead
             //---------thead end--------
         }
 
-        private static void WriteTbody(HtmlTextWriter writer, int maxDeep, IList<OrgDto> sortedOrgs)
+        private static void WriteTbody(HtmlTextWriter writer, int maxDeep, IList<OrgDto> sortedOrgs, bool withAppendColumn = false, bool withLastColumn = false)
         {
             var rowCount = sortedOrgs.Count;
 
@@ -121,54 +129,34 @@ namespace WidgetDemo.Lib
             for (int rowIndex = 0; rowIndex < rowCount; rowIndex++)
             {
                 var theOrgDto = sortedOrgs[rowIndex];
-                int relationCodeIndex = theOrgDto.RelationCode.Split('.').Length - 1;
+                //int relationCodeIndex = theOrgDto.RelationCode.Split('.').Length - 1;
+                var relationCodeIndex = theOrgDto.GetCurrentDeep();
 
                 writer.RenderBeginTag(HtmlTextWriterTag.Tr); // Begin Tr
 
-                for (int colIndex = 0; colIndex < maxDeep + 1; colIndex++)
+
+                if (withAppendColumn)
                 {
-                    if (colIndex == 0)
-                    {
-                        writer.AddAttribute(HtmlTextWriterAttribute.Class, "text-right");
-                        writer.RenderBeginTag(HtmlTextWriterTag.Td); // Begin Td
-                        writer.WriteEncodedText(theOrgDto.RelationCode);
-                        writer.RenderEndTag(); // End Td
-                    }
-
-                    //if (colIndex < relationCodeIndex)
-                    //{
-                    //    writer.RenderBeginTag(HtmlTextWriterTag.Td); // Begin Td
-                    //    writer.RenderEndTag(); // End Td
-                    //}
-
-
-                    if (colIndex == relationCodeIndex - 1)
-                    {
-                        var theRelationCodeDeep = theOrgDto.RelationCode.Split('.').Length - 1;
-                        if (theRelationCodeDeep != 1)
-                        {
-                            writer.AddAttribute("colspan", theRelationCodeDeep.ToString());
-                        }
-                        writer.RenderBeginTag(HtmlTextWriterTag.Td); // Begin Td
-                        writer.RenderEndTag(); // End Td
-                    }
-
-                    if (colIndex == relationCodeIndex)
-                    {
-                        int rolSpan = maxDeep - colIndex;
-                        if (rolSpan != 1)
-                        {
-                            writer.AddAttribute("colspan", rolSpan.ToString());
-                        }
-
-                        writer.AddAttribute(HtmlTextWriterAttribute.Class, "active");
-                        writer.RenderBeginTag(HtmlTextWriterTag.Td); // Begin Td
-                        writer.WriteEncodedText(theOrgDto.Name);
-                        writer.RenderEndTag(); // End Td
-                    }
+                    //显示关系编号
+                    writer.AddAttribute(HtmlTextWriterAttribute.Class, "text-right");
+                    writer.RenderBeginTag(HtmlTextWriterTag.Td); // Begin Td
+                    writer.WriteEncodedText(theOrgDto.RelationCode);
+                    writer.RenderEndTag(); // End Td
                 }
 
-                WriteOpTds(writer, theOrgDto);
+                for (int colIndex = 1; colIndex <= maxDeep; colIndex++)
+                {
+                    var current = colIndex == relationCodeIndex;
+                    writer.AddAttribute(HtmlTextWriterAttribute.Class, current ? "active" : "");
+                    writer.RenderBeginTag(HtmlTextWriterTag.Td); // Begin Td
+                    writer.WriteEncodedText(current ? theOrgDto.Name : "");
+                    writer.RenderEndTag(); // End Td
+                }
+                
+                if (withLastColumn)
+                {
+                    WriteOpTds(writer, theOrgDto);
+                }
 
                 writer.RenderEndTag(); // End Tr
             }
@@ -209,133 +197,6 @@ namespace WidgetDemo.Lib
 
             writer.WriteEncodedText(buttonText);
             writer.RenderEndTag();
-        }
-
-        private static void WriteTbody3(HtmlTextWriter writer, int maxDeep, IList<OrgDto> sortedOrgs)
-        {
-            var rowCount = sortedOrgs.Count;
-
-            //---------tbody start--------
-            //    <tbody>
-            //        <tr>
-            //            <td class="right">1</td>
-            //            <td>山东省教育厅</td>
-            //            <td></td>
-            //            <td></td>
-            //            <td></td>
-            //        </tr>
-            //        <tr>
-            //            <td></td>
-            //            <td class="right">1.1</td>
-            //            <td>威海市教育局</td>
-            //            <td></td>
-            //            <td></td>
-            //        </tr>
-            //        <tr>
-            //            <td></td>
-            //            <td></td>
-            //            <td class="right">1.1.1</td>
-            //            <td>环翠区</td>
-            //            <td></td>
-            //        </tr>
-            //    </tbody>
-            writer.RenderBeginTag(HtmlTextWriterTag.Tbody); // Begin Thead
-
-            for (int rowIndex = 0; rowIndex < rowCount; rowIndex++)
-            {
-                var theOrgDto = sortedOrgs[rowIndex];
-                int relationCodeIndex = theOrgDto.RelationCode.Split('.').Length - 1;
-
-                writer.RenderBeginTag(HtmlTextWriterTag.Tr); // Begin Tr
-
-                for (int colIndex = 0; colIndex < maxDeep + 1; colIndex++)
-                {
-                    if (colIndex == 0)
-                    {
-                        writer.AddAttribute(HtmlTextWriterAttribute.Class, "text-right");
-                    }
-
-                    writer.RenderBeginTag(HtmlTextWriterTag.Td); // Begin Td
-
-                    if (colIndex == 0)
-                    {
-                        writer.WriteEncodedText(theOrgDto.RelationCode);
-                    }
-
-                    if (colIndex == relationCodeIndex + 1)
-                    {
-                        writer.WriteEncodedText(theOrgDto.Name);
-                    }
-
-                    writer.RenderEndTag(); // End Td
-                }
-                writer.RenderEndTag(); // End Tr
-            }
-            writer.RenderEndTag(); // End tbody
-            //---------tbody end--------
-        }
-        private static void WriteTbody2(HtmlTextWriter writer, int maxDeep, IList<OrgDto> sortedOrgs)
-        {
-            var rowCount = sortedOrgs.Count;
-
-            //---------tbody start--------
-            //    <tbody>
-            //        <tr>
-            //            <td class="right">1</td>
-            //            <td>山东省教育厅</td>
-            //            <td></td>
-            //            <td></td>
-            //            <td></td>
-            //        </tr>
-            //        <tr>
-            //            <td></td>
-            //            <td class="right">1.1</td>
-            //            <td>威海市教育局</td>
-            //            <td></td>
-            //            <td></td>
-            //        </tr>
-            //        <tr>
-            //            <td></td>
-            //            <td></td>
-            //            <td class="right">1.1.1</td>
-            //            <td>环翠区</td>
-            //            <td></td>
-            //        </tr>
-            //    </tbody>
-            writer.RenderBeginTag(HtmlTextWriterTag.Tbody); // Begin Thead
-
-            for (int rowIndex = 0; rowIndex < rowCount; rowIndex++)
-            {
-                var theOrgDto = sortedOrgs[rowIndex];
-                int relationCodeIndex = theOrgDto.RelationCode.Split('.').Length - 1;
-
-                writer.RenderBeginTag(HtmlTextWriterTag.Tr); // Begin Tr
-
-                for (int colIndex = 0; colIndex < maxDeep + 1; colIndex++)
-                {
-                    if (colIndex == relationCodeIndex)
-                    {
-                        writer.AddAttribute(HtmlTextWriterAttribute.Class, "text-right");
-                    }
-
-                    writer.RenderBeginTag(HtmlTextWriterTag.Td); // Begin Td
-
-                    if (colIndex == relationCodeIndex)
-                    {
-                        writer.WriteEncodedText(theOrgDto.RelationCode);
-                    }
-
-                    if (colIndex == relationCodeIndex + 1)
-                    {
-                        writer.WriteEncodedText(theOrgDto.Name);
-                    }
-
-                    writer.RenderEndTag(); // End Td
-                }
-                writer.RenderEndTag(); // End Tr
-            }
-            writer.RenderEndTag(); // End tbody
-            //---------tbody end--------
         }
 
         static OrgTreeHtmlTableRender()

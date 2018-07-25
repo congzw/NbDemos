@@ -18,15 +18,18 @@
             var appendJ = j + ".";
             var orgJ = new OrgDto() { Id = ids.Dequeue(), Name = orgI.Name + appendJ, RelationCode = orgI.RelationCode + appendJ };
             orgDtos.Add(orgJ);
-            //for (int k = 1; k <= 2; k++)
-            //{
-            //    var appendK = k + ".";
-            //    var orgK = new OrgDto() { Id = ids.Dequeue(), Name = orgJ.Name + appendK, RelationCode = orgJ.RelationCode + appendK };
-            //    orgDtos.Add(orgK);
-            //}
+            for (int k = 1; k <= 2; k++)
+            {
+                var appendK = k + ".";
+                var orgK = new OrgDto() { Id = ids.Dequeue(), Name = orgJ.Name + appendK, RelationCode = orgJ.RelationCode + appendK };
+                orgDtos.Add(orgK);
+            }
         }
     }
-    var makeTableHtmlString = orgTreeHtmlTableRender.MakeTableHtmlString(orgDtos);
+    int maxDeep = orgDtos.GetMaxDeep();
+    var makeTableHtmlString = orgTreeHtmlTableRender.MakeTableHtmlString(orgDtos, false, true);
+    //var makeTableHtmlString = orgTreeHtmlTableRender.MakeTableHtmlString(orgDtos, true, false);
+    //var makeTableHtmlString = orgTreeHtmlTableRender.MakeTableHtmlString(orgDtos, true, true);
 }
 
 @section styles
@@ -36,7 +39,7 @@
 
 <div class="container">
     <h2>
-        TreeTable
+        TreeTable(@maxDeep)
     </h2>
     <hr />
     @Html.Raw(makeTableHtmlString)

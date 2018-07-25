@@ -7,7 +7,7 @@ namespace WidgetDemo.Lib
     /// <summary>
     /// 展示用的组织模型
     /// </summary>
-    public class OrgDto
+    public class OrgDto : IHaveRelationCode
     {
         /// <summary>
         /// 父节点Id
