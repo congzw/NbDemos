@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>dynamic table tree</title>
+    <link href="../libs/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <script src="../libs/jquery/jquery.js"></script>
+    <script src="../libs/bootstrap/js/bootstrap.js"></script>
+    <script src="../libs/angular/angular.js"></script>
+    <script type="text/javascript">
+        (function () {
+            "use strict";
+            //todo
+            var mainApp = angular.module('mainApp', []);
+            mainApp.controller('demoController', ['$scope', function ($scope) {
+
+                var treeScheme = { maxDeep: 2, headers: ['一级', '二级'] };
+                var items = [];
+
+                for (var i = 0; i < 3; i++) {
+                    var code = (i + 1) + '.';
+                    var current = { Name: code, Children: [] }
+                    for (var j = 0; j < 2; j++) {
+                        var codeChild = code + (j + 1) + '.';
+                        var child = { Name: codeChild, Children: [] }
+                        current.Children.push(child);
+                    }
+                    items.push(current);
+                }
+
+                $scope.treeScheme = treeScheme;
+                $scope.items = items;
+
+                //$scope.headers = [
+                //    { "order": 1, "width": 0, "label": "ID", "data": "id", "type": "string", "visible": false },
+                //    { "order": 2, "width": 120, "label": "Last Name", "data": "lastName", "type": "string", "visible": true },
+                //    { "order": 3, "width": 129, "label": "First Name", "data": "firstName", "type": "string", "visible": true },
+                //    { "order": 4, "width": 200, "label": "Email Address", "data": "email", "type": "string", "visible": true },
+                //    { "order": 5, "width": 120, "label": "Phone Number", "data": "phoneNumber", "type": "string", "visible": true },
+                //    { "order": 6, "width": 80, "label": "Username", "data": "username", "type": "string", "visible": true },
+                //    { "order": 7, "width": 100, "label": "Last Login", "data": "lastLoginDate", "type": "date", "visible": true }
+                //];
+
+                //$scope.headerOrder = "order";
+
+                //$scope.headerFilter = function (header) {
+                //    return header.visible;
+                //};
+
+
+            }]);
+        }());
+
+
+    </script>
+</head>
+<body ng-app="mainApp">
+
+    <div ng-controller="demoController">
+        <h1>{{1 + 1}}</h1>
+        <hr/>
+
+        <p>{{tree | json}}</p>
+        <hr/>
+        <div>
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th ng-repeat="header in treeScheme.headers">{{header}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in items">
+                        <td>{{item.Name}}</td>
+
+                        <td ng-if="item.Children && item.Children.length > 0">{{item.Name}}</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                </tfoot>
+            </table>
+
+        </div>
+
+
+    </div>
+</body>
+</html>
