@@ -80,6 +80,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\libs\Angular\angular-animate.js" />
+    <Content Include="Content\libs\Angular\angular-route.js" />
+    <Content Include="Content\libs\Angular\angular-touch.js" />
+    <Content Include="Content\libs\Angular\angular.js" />
+    <Content Include="Content\libs\Angular\ui-bootstrap\readme.txt" />
+    <Content Include="Content\libs\Angular\ui-bootstrap\ui-bootstrap-tpls-0.10.0.min.js" />
+    <Content Include="Content\libs\Angular\ui-bootstrap\ui-bootstrap-tpls-0.10rating.js" />
+    <Content Include="Content\libs\Angular\ui-bootstrap\ui-bootstrap-tpls-0.11.0.min.js" />
+    <Content Include="Content\libs\Angular\ui-bootstrap\ui-bootstrap-tpls-0.12.0.js" />
+    <Content Include="Content\libs\bootstrap\css\bootstrap.css" />
+    <Content Include="Content\libs\bootstrap\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\libs\bootstrap\js\bootstrap.js" />
+    <Content Include="Content\libs\bootstrap\js\bootstrap.min.js" />
+    <Content Include="Content\libs\bootstrap\js\npm.js" />
     <Content Include="Content\libs\FlipClock\assets\custom.css" />
     <Content Include="Content\libs\FlipClock\assets\customMiddle.css" />
     <Content Include="Content\libs\FlipClock\assets\flipclock.css" />
@@ -87,6 +101,22 @@
     <Content Include="Content\libs\FlipClock\assets\flipclock.min.js" />
     <Content Include="Content\libs\FlipClock\base.html" />
     <Content Include="Content\libs\JQuery\jquery-1.10.2.js" />
+    <Content Include="Content\libs\JsTree\demos\basic\index.html" />
+    <Content Include="Content\libs\JsTree\dist\jstree.js" />
+    <Content Include="Content\libs\JsTree\dist\jstree.min.js" />
+    <Content Include="Content\libs\JsTree\dist\themes\default-dark\32px.png" />
+    <Content Include="Content\libs\JsTree\dist\themes\default-dark\40px.png" />
+    <Content Include="Content\libs\JsTree\dist\themes\default-dark\style.css" />
+    <Content Include="Content\libs\JsTree\dist\themes\default-dark\style.min.css" />
+    <Content Include="Content\libs\JsTree\dist\themes\default-dark\throbber.gif" />
+    <Content Include="Content\libs\JsTree\dist\themes\default\32px.png" />
+    <Content Include="Content\libs\JsTree\dist\themes\default\40px.png" />
+    <Content Include="Content\libs\JsTree\dist\themes\default\style.css" />
+    <Content Include="Content\libs\JsTree\dist\themes\default\style.min.css" />
+    <Content Include="Content\libs\JsTree\dist\themes\default\throbber.gif" />
+    <Content Include="Content\libs\JsTree\ngJsTree\index - 复制.html" />
+    <Content Include="Content\libs\JsTree\ngJsTree\index.html" />
+    <Content Include="Content\libs\JsTree\ngJsTree\ngJsTree.min.js" />
     <Content Include="Content\libs\layui\css\layui.css" />
     <Content Include="Content\libs\layui\css\layui.mobile.css" />
     <Content Include="Content\libs\layui\css\modules\code.css" />
@@ -211,6 +241,11 @@
     <Content Include="Content\libs\layui\font\iconfont.eot" />
     <Content Include="Content\libs\layui\font\iconfont.ttf" />
     <Content Include="Content\libs\layui\font\iconfont.woff" />
+    <Content Include="Content\libs\JsTree\demos\basic\root.json" />
+    <Content Include="Content\libs\bootstrap\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\libs\bootstrap\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Content\libs\bootstrap\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Content\libs\bootstrap\fonts\glyphicons-halflings-regular.woff2" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
