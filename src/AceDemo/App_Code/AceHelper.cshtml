@@ -3,7 +3,7 @@
     public static string GetAcePath()
     {
         //todo switch with cdn
-        var ace = "/Content/Ace";
+        var ace = "/Content/libs/ace";
         return ace;
     }
 }
@@ -45,6 +45,13 @@
       <link rel="stylesheet" href="@ace/assets/css/ace-ie.css" />
     <![endif]-->
 }
+
+@helper Js_Global_Libs()
+{
+    var ace = GetAcePath();
+    <script src="@ace/components/jquery.1x/dist/jquery.js"></script>
+}
+
 @helper Js_Global_Fix()
 {
     var ace = GetAcePath();

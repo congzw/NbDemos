@@ -80,6 +80,57 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\libs\ace\assets\avatars\avatar.png" />
+    <Content Include="Content\libs\ace\assets\avatars\avatar1.png" />
+    <Content Include="Content\libs\ace\assets\avatars\avatar2.png" />
+    <Content Include="Content\libs\ace\assets\avatars\avatar3.png" />
+    <Content Include="Content\libs\ace\assets\avatars\avatar4.png" />
+    <Content Include="Content\libs\ace\assets\avatars\avatar5.png" />
+    <Content Include="Content\libs\ace\assets\avatars\profile-pic.jpg" />
+    <Content Include="Content\libs\ace\assets\avatars\user.jpg" />
+    <Content Include="Content\libs\ace\assets\css\ace-fonts.css" />
+    <Content Include="Content\libs\ace\assets\css\ace-ie.css" />
+    <Content Include="Content\libs\ace\assets\css\ace-part2.css" />
+    <Content Include="Content\libs\ace\assets\css\ace-rtl.css" />
+    <Content Include="Content\libs\ace\assets\css\ace-skins.css" />
+    <Content Include="Content\libs\ace\assets\css\ace.css" />
+    <Content Include="Content\libs\ace\assets\css\ace.onpage-help.css" />
+    <Content Include="Content\libs\ace\assets\css\bootstrap.css" />
+    <Content Include="Content\libs\ace\assets\css\images\loading.gif" />
+    <Content Include="Content\libs\ace\assets\css\images\meteorshower.jpg" />
+    <Content Include="Content\libs\ace\assets\css\images\meteorshower2.jpg" />
+    <Content Include="Content\libs\ace\assets\css\images\pattern.jpg" />
+    <Content Include="Content\libs\ace\assets\css\images\pattern.png" />
+    <Content Include="Content\libs\ace\assets\css\pace.css" />
+    <Content Include="Content\libs\ace\assets\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\libs\ace\assets\images\email1.png" />
+    <Content Include="Content\libs\ace\assets\images\email2.png" />
+    <Content Include="Content\libs\ace\assets\images\email3.png" />
+    <Content Include="Content\libs\ace\assets\images\email4.png" />
+    <Content Include="Content\libs\ace\assets\images\gallery\image-1.jpg" />
+    <Content Include="Content\libs\ace\assets\images\gallery\image-2.jpg" />
+    <Content Include="Content\libs\ace\assets\images\gallery\image-3.jpg" />
+    <Content Include="Content\libs\ace\assets\images\gallery\image-4.jpg" />
+    <Content Include="Content\libs\ace\assets\images\gallery\image-5.jpg" />
+    <Content Include="Content\libs\ace\assets\images\gallery\image-6.jpg" />
+    <Content Include="Content\libs\ace\assets\images\gallery\thumb-1.jpg" />
+    <Content Include="Content\libs\ace\assets\images\gallery\thumb-2.jpg" />
+    <Content Include="Content\libs\ace\assets\images\gallery\thumb-3.jpg" />
+    <Content Include="Content\libs\ace\assets\images\gallery\thumb-4.jpg" />
+    <Content Include="Content\libs\ace\assets\images\gallery\thumb-5.jpg" />
+    <Content Include="Content\libs\ace\assets\images\gallery\thumb-6.jpg" />
+    <Content Include="Content\libs\ace\assets\js\ace-elements.js" />
+    <Content Include="Content\libs\ace\assets\js\ace-extra.js" />
+    <Content Include="Content\libs\ace\assets\js\ace-require.js" />
+    <Content Include="Content\libs\ace\assets\js\ace-small.js" />
+    <Content Include="Content\libs\ace\assets\js\ace.js" />
+    <Content Include="Content\libs\ace\components\font-awesome\css\font-awesome.css" />
+    <Content Include="Content\libs\ace\components\font-awesome\css\font-awesome.min.css" />
+    <Content Include="Content\libs\ace\components\font-awesome\fonts\fontawesome-webfont.svg" />
+    <Content Include="Content\libs\ace\components\jquery.1x\dist\jquery.js" />
+    <Content Include="Content\libs\ace\components\jquery.1x\dist\jquery.min.js" />
+    <Content Include="Content\libs\ace\components\jquery.1x\dist\jquery.slim.js" />
+    <Content Include="Content\libs\ace\components\jquery.1x\dist\jquery.slim.min.js" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Views\Shared\blank.html" />
@@ -93,6 +144,8 @@
     </Compile>
     <Compile Include="Helpers\HtmlHelperExtensions.cs" />
     <Compile Include="Helpers\HtmlRenderExtensions.cs" />
+    <Compile Include="Helpers\Settings.cs" />
+    <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -101,6 +154,18 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="App_Code\AceHelper.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Content\libs\ace\components\font-awesome\fonts\fontawesome-webfont.eot" />
+    <Content Include="Content\libs\ace\components\font-awesome\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Content\libs\ace\components\font-awesome\fonts\fontawesome-webfont.woff" />
+    <Content Include="Content\libs\ace\components\font-awesome\fonts\fontawesome-webfont.woff2" />
+    <Content Include="Content\libs\ace\assets\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\libs\ace\assets\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Content\libs\ace\assets\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Content\libs\ace\assets\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Content\libs\ace\assets\fonts\OpenSans-300.woff" />
+    <Content Include="Content\libs\ace\assets\fonts\OpenSans-400.woff" />
+    <Content Include="Content\libs\ace\assets\fonts\readme" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

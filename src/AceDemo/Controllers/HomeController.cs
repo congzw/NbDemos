@@ -6,6 +6,10 @@ namespace AceDemo.Controllers
     {
         public ActionResult Index(string view)
         {
+            if (string.IsNullOrWhiteSpace(view))
+            {
+                return View();
+            }
             return View(view);
         }
     }
