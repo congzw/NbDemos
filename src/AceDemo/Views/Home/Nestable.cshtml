@@ -24,7 +24,7 @@
 @{
     //var simpleTrees = SimpleTree.Create();
     //var simpleTrees = SimpleTree.Create(2, 8);
-    var simpleTrees = SimpleTree.Create(2, 8);
+    var simpleTrees = SimpleTree.Create(2, 2);
     var firstLevelItems = simpleTrees.Where(x => x.RelationCode.GetDotCount() == 1).ToList();
     <h2>@string.Format("共计{0}条", simpleTrees.Count)</h2>
     <hr />
@@ -47,10 +47,13 @@
 {
     var hasChild = tree.Children.Count > 0;
     <ol class="dd-list">
-        <li class="dd-item">
-            @* Drag: dd-handle *@
+        <li class="dd-item item-orange">
+            @* 拖拽: dd-handle；样式: dd-item item-orange *@
             @*<div class="dd-handle">@string.Format("{0}", tree.RelationCode)</div>*@
+            @*<div class="dd2-content">@string.Format("{0}", tree.RelationCode)</div>*@
+
             <div class="dd2-content">@string.Format("{0}", tree.RelationCode)</div>
+
             @if (hasChild)
             {
                 foreach (var child in tree.Children)
