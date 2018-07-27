@@ -131,6 +131,8 @@
     <Content Include="Content\libs\ace\components\jquery.1x\dist\jquery.min.js" />
     <Content Include="Content\libs\ace\components\jquery.1x\dist\jquery.slim.js" />
     <Content Include="Content\libs\ace\components\jquery.1x\dist\jquery.slim.min.js" />
+    <Content Include="Content\libs\ace\components\_mod\jquery.nestable\jquery.nestable.js" />
+    <Content Include="Content\libs\ace\components\_mod\jquery.nestable\jquery.nestable.min.js" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Views\Shared\blank.html" />
@@ -146,6 +148,7 @@
     <Compile Include="Helpers\HtmlRenderExtensions.cs" />
     <Compile Include="Helpers\Settings.cs" />
     <Compile Include="Helpers\StringExtensions.cs" />
+    <Compile Include="Models\SimpleTree.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -166,6 +169,7 @@
     <Content Include="Content\libs\ace\assets\fonts\OpenSans-300.woff" />
     <Content Include="Content\libs\ace\assets\fonts\OpenSans-400.woff" />
     <Content Include="Content\libs\ace\assets\fonts\readme" />
+    <Content Include="Views\Home\Nestable.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -175,7 +179,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

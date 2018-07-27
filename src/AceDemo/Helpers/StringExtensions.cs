@@ -1,3 +1,5 @@
+using System.Linq;
+
 namespace AceDemo.Helpers
 {
     /// <summary>
@@ -38,6 +40,17 @@ namespace AceDemo.Helpers
         public static bool IsNullOrWhiteSpace(this string value)
         {
             return string.IsNullOrWhiteSpace(value);
+        }
+
+        private static char _deepChar = '.';
+        /// <summary>
+        /// 获取当前关系码代表的关系层次数量（以.分隔）
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static int GetDotCount(this string value)
+        {
+            return value.ToCharArray().Count(c => c == _deepChar);
         }
     }
 }

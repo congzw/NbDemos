@@ -1,0 +1,62 @@
+﻿@using AceDemo.Models
+@model dynamic
+@{
+}
+
+
+@using (Html.Delayed())
+{
+    <script src="~/Content/libs/ace/components/_mod/jquery.nestable/jquery.nestable.js"></script>
+    <script type="text/javascript">
+        jQuery(function ($) {
+
+            $('.dd').nestable();
+            $('.dd-handle a').on('mousedown', function (e) {
+                e.stopPropagation();
+            });
+        });
+    </script>
+
+}
+<h2>Nestable List</h2>
+<hr />
+@{
+    //var simpleTrees = SimpleTree.Create();
+    //var simpleTrees = SimpleTree.Create(2, 8);
+    var simpleTrees = SimpleTree.Create(3, 2);
+    var firstLevelItems = simpleTrees.Where(x => x.RelationCode.GetDotCount() == 1).ToList();
+    <h2>@string.Format("共计{0}条", simpleTrees.Count)</h2>
+    <hr />
+    @ShowTree(firstLevelItems)
+}
+
+@helper ShowTree(IList<SimpleTree> items)
+{
+    <div class="col-sm-6">
+        <div class="dd" id="nestable">
+            @foreach (var tree in items)
+            {
+                @RenderCatetoryTree(tree)
+            }
+        </div>
+    </div>
+}
+
+@helper RenderCatetoryTree(SimpleTree tree)
+{
+    var hasChild = tree.Children.Count > 0;
+    <ol class="dd-list">
+        <li class="dd-item">
+            @* Drag: dd-handle *@
+            @*<div class="dd-handle">@string.Format("{0}", tree.RelationCode)</div>*@
+            <div class="dd2-content">@string.Format("{0}", tree.RelationCode)</div>
+            @if (hasChild)
+            {
+                foreach (var child in tree.Children)
+                {
+                    @RenderCatetoryTree(child)
+                }
+            }
+        </li>
+    </ol>
+}
