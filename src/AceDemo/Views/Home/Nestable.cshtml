@@ -19,11 +19,12 @@
 
 }
 <h2>Nestable List</h2>
+<p>以树的方式展示的示例</p>
 <hr />
 @{
     //var simpleTrees = SimpleTree.Create();
     //var simpleTrees = SimpleTree.Create(2, 8);
-    var simpleTrees = SimpleTree.Create(3, 2);
+    var simpleTrees = SimpleTree.Create(2, 8);
     var firstLevelItems = simpleTrees.Where(x => x.RelationCode.GetDotCount() == 1).ToList();
     <h2>@string.Format("共计{0}条", simpleTrees.Count)</h2>
     <hr />
