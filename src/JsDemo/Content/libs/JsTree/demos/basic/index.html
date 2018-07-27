@@ -4,10 +4,30 @@
     <meta charset="UTF-8">
     <title>jstree basic demos</title>
     <style>
-    html { margin:0; padding:0; font-size:62.5%; }
-    body { max-width:800px; min-width:300px; margin:0 auto; padding:20px 10px; font-size:14px; font-size:1.4em; }
-    h1 { font-size:1.8em; }
-    .demo { overflow:auto; border:1px solid silver; min-height:100px; }
+        html {
+            margin: 0;
+            padding: 0;
+            font-size: 62.5%;
+        }
+
+        body {
+            max-width: 800px;
+            min-width: 300px;
+            margin: 0 auto;
+            padding: 20px 10px;
+            font-size: 14px;
+            font-size: 1.4em;
+        }
+
+        h1 {
+            font-size: 1.8em;
+        }
+
+        .demo {
+            overflow: auto;
+            border: 1px solid silver;
+            min-height: 100px;
+        }
     </style>
     <link href="../../dist/themes/default/style.css" rel="stylesheet" />
 </head>
@@ -15,7 +35,8 @@
     <h1>HTML demo</h1>
     <div id="html" class="demo">
         <ul>
-            <li data-jstree='{ "opened" : true }'>Root node
+            <li data-jstree='{ "opened" : true }'>
+                Root node
                 <ul>
                     <li data-jstree='{ "selected" : true }'>Child node 1</li>
                     <li>Child node 2</li>
@@ -45,104 +66,148 @@
 
     <script src="../../../JQuery/jquery-1.10.2.js"></script>
     <script src="../../dist/jstree.js"></script>
-    
+
     <script>
-    // html demo
-    $('#html').jstree();
 
-    // inline data demo
-    $('#data').jstree({
-        'core' : {
-            'data' : [
-                { "text" : "Root node", "children" : [
-                        { "text" : "Child node 1" },
-                        { "text" : "Child node 2" }
-                ]}
-            ]
-        }
-    });
+        ////全局
+        //$.jstree.defaults.core.themes.variant = "large";
+        //$.jstree.defaults.core.animation = 1000;
+        //$.jstree.defaults.core.multiple = false;
+        //$.jstree.defaults.core.themes.dots = false;
+        //$.jstree.defaults.core.themes.icons = false;
+        //$.jstree.defaults.core.themes.ellipsis = true;
+        //$.jstree.defaults.core.themes.stripes = true;
+        $.jstree.defaults.core.expand_selected_onload = true;
 
-    // data format demo
-    $('#frmt').jstree({
-        'core' : {
-            'data' : [
-                {
-                    "text" : "Root node",
-                    "state" : { "opened" : true },
-                    "children" : [
-                        {
-                            "text" : "Child node 1",
-                            "state" : { "selected" : true },
-                            "icon" : "jstree-file"
-                        },
-                        { "text" : "Child node 2", "state" : { "disabled" : true } }
-                    ]
-                }
-            ]
-        }
-    });
-
-    // ajax demo
-    $('#ajax').jstree({
-        'core' : {
-            'data' : {
-                "url" : "./root.json",
-                "dataType" : "json" // needed only if you do not supply JSON headers
-            }
-        }
-    });
-
-    // lazy demo
-    $('#lazy').jstree({
-        'core' : {
-            'data' : {
-                //"url": "badUrl/?lazy",
-                "url": "./root.json",
-                "data" : function (node) {
-                    return { "id" : node.id };
+        // html demo
+        $('#html').jstree({
+            "core": {
+                "themes": {
+                    "variant": "large"
                 }
             }
-        }
-    });
+            //,"plugins": ["wholerow"]
+        });
 
-    // data from callback
-    $('#clbk').jstree({
-        'core' : {
-            'data' : function (node, cb) {
-                if(node.id === "#") {
-                    cb([{"text" : "Root", "id" : "1", "children" : true}]);
-                }
-                else {
-                    cb(["Child"]);
-                }
-            }
-        }
-    });
-
-    // interaction and events
-    $('#evts_button').on("click", function () {
-        var instance = $('#evts').jstree(true);
-        instance.deselect_all();
-        instance.select_node('1');
-    });
-
-    $('#evts')
-        .on("changed.jstree", function (e, data) {
-            if(data.selected.length) {
-                alert('The selected node is: ' + data.instance.get_node(data.selected[0]).text);
-            }
-        })
-        .jstree({
-            'core' : {
-                'multiple' : false,
-                'data' : [
-                    { "text" : "Root node", "children" : [
-                            { "text" : "Child node 1", "id" : 1 },
-                            { "text" : "Child node 2" }
-                    ]}
+        // inline data demo
+        $('#data').jstree({
+            'core': {
+                'data': [
+                    {
+                        "text": "Root node", "children": [
+                          { "text": "Child node 1" },
+                          { "text": "Child node 2" }
+                        ]
+                    }
                 ]
             }
         });
+
+        // data format demo
+        $('#frmt').jstree({
+            'core': {
+                'data': [
+                    {
+                        "text": "Root node",
+                        "state": { "opened": true },
+                        "children": [
+                            {
+                                "text": "Child node 1",
+                                "state": { "selected": true },
+                                "icon": "jstree-file"
+                            },
+                            { "text": "Child node 2", "state": { "disabled": true } }
+                        ]
+                    }
+                ]
+            }
+        });
+
+        //// ajax demo
+        //$('#ajax').jstree({
+        //    'core': {
+        //        'data': {
+        //            "url": "./root.json",
+        //            "dataType": "json" // needed only if you do not supply JSON headers
+        //        }
+        //    }
+        //});
+
+        // ajax demo
+        $('#ajax').jstree({
+            'core': {
+                'strings': {
+                    'Loading ...': '正在加载 ...'
+                },
+                'data': {
+                    "url": "./root.json",
+                    "data": function (node) {
+                        console.log('ajax demo');
+                        console.log(node);
+                        return { "id": 1 }; //?
+                    }
+                },
+                'check_callback': function (operation, node, node_parent, node_position, more) {
+                    // operation can be 'create_node', 'rename_node', 'delete_node', 'move_node', 'copy_node' or 'edit'
+                    // in case of 'rename_node' node_position is filled with the new node name
+                    return operation === 'rename_node' ? true : false;
+                }
+            }
+        });
+
+        // lazy demo
+        $('#lazy').jstree({
+            'core': {
+                'data': {
+                    //"url": "badUrl/?lazy",
+                    "url": "./root.json",
+                    "data": function (node) {
+                        return { "id": node.id }; //?
+                    }
+                }
+            }
+        });
+
+        // data from callback
+        $('#clbk').jstree({
+            'core': {
+                'data': function (node, cb) {
+                    if (node.id === "#") {
+                        cb([{ "text": "Root", "id": "1", "children": true }]);
+                    }
+                    else {
+                        cb(["Child"]);
+                    }
+                }
+            }
+        });
+
+        // interaction and events
+        $('#evts_button').on("click", function () {
+            var instance = $('#evts').jstree(true);
+            instance.deselect_all();
+            instance.select_node('1');
+        });
+
+        $('#evts')
+            .on("changed.jstree", function (e, data) {
+                if (data.selected.length) {
+                    alert('The selected node is: ' + data.instance.get_node(data.selected[0]).text);
+                }
+            })
+            .jstree({
+                'core': {
+                    'multiple': false,
+                    'data': [
+                        {
+                            "text": "Root node", "children": [
+                              { "text": "Child node 1", "id": 1 },
+                              { "text": "Child node 2" }
+                            ]
+                        }
+                    ]
+                }
+            });
     </script>
 </body>
 </html>
