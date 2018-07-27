@@ -197,6 +197,7 @@
     <Content Include="Content\libs\jquery\jquery-ui.min.css" />
     <Content Include="Content\libs\jquery\jquery-ui.min.js" />
     <Content Include="Content\libs\jquery\jquery.js" />
+    <Content Include="Content\tables\demo1.html" />
     <Content Include="MyAngularDemos\Content\demos\foo.html" />
     <Content Include="MyAngularDemos\Content\demos\tabs.html" />
     <Content Include="MyAngularDemos\Content\demos\unify-tabs.html" />
