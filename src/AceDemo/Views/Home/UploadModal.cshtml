@@ -1,0 +1,57 @@
+﻿<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">×</button>
+            <h4 class="blue">修改图像</h4>
+        </div>
+        <form class="no-margin" action="#" method="POST" enctype="multipart/form-data">
+            <div class="modal-body">
+                <div class="space-4"></div>
+                <div style="width: 75%; margin-left: 12%;">
+                    <label class="ace-file-input ace-file-multiple">
+                        <input type="file" name="file-input" id="my-file-input">
+                        @*<span class="ace-file-container" data-title="选择或者拖拽文件放进去">
+                            <span class="ace-file-name" data-title="No File ...">
+                                <i class=" ace-icon ace-icon fa fa-picture-o"></i>
+                            </span>
+                        </span>
+                        <a class="remove" href="#">
+                            <i class=" ace-icon fa fa-times"></i>
+                        </a>*@
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer center">
+                <button type="submit" class="btn btn-sm btn-success"><i class="ace-icon fa fa-check"></i>提交</button>
+                <button type="button" class="btn btn-sm" data-dismiss="modal"><i class="ace-icon fa fa-times"></i>取消</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@using (Html.Delayed())
+{
+    <script type="text/javascript">
+        jQuery(function ($) {
+
+            $('#my-file-input').ace_file_input();
+
+            //$('#my-file-input').ace_file_input({
+            //    style: 'well',
+            //    no_file: 'Click to choose or drag & drop',
+            //    droppable: true, //html5 browsers only
+            //    thumbnail: 'small', //html5 browsers only
+
+            //    maxSize: 100000, //~100 KB
+            //    allowExt: ['jpg', 'jpeg', 'png', 'gif', 'tif', 'tiff', 'bmp'],
+            //    allowMime: ['image/jpg', 'image/jpeg', 'image/png', 'image/gif', 'image/tif', 'image/tiff', 'image/bmp'] //html5 browsers only
+            //});
+
+            //$('#my-file-input2').ace_file_input({
+            //    denyExt: ['exe', 'php']
+            //});
+
+        });
+    </script>
+
+}

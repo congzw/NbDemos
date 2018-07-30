@@ -124,6 +124,16 @@
     <Content Include="Content\libs\ace\assets\js\ace-require.js" />
     <Content Include="Content\libs\ace\assets\js\ace-small.js" />
     <Content Include="Content\libs\ace\assets\js\ace.js" />
+    <Content Include="Content\libs\ace\components\dropzone\dist\basic.css" />
+    <Content Include="Content\libs\ace\components\dropzone\dist\dropzone-amd-module.js" />
+    <Content Include="Content\libs\ace\components\dropzone\dist\dropzone.css" />
+    <Content Include="Content\libs\ace\components\dropzone\dist\dropzone.js" />
+    <Content Include="Content\libs\ace\components\dropzone\dist\dropzone.min.css" />
+    <Content Include="Content\libs\ace\components\dropzone\dist\dropzone.min.js" />
+    <Content Include="Content\libs\ace\components\dropzone\dist\min\basic.min.css" />
+    <Content Include="Content\libs\ace\components\dropzone\dist\min\dropzone-amd-module.min.js" />
+    <Content Include="Content\libs\ace\components\dropzone\dist\min\dropzone.min.css" />
+    <Content Include="Content\libs\ace\components\dropzone\dist\min\dropzone.min.js" />
     <Content Include="Content\libs\ace\components\font-awesome\css\font-awesome.css" />
     <Content Include="Content\libs\ace\components\font-awesome\css\font-awesome.min.css" />
     <Content Include="Content\libs\ace\components\font-awesome\fonts\fontawesome-webfont.svg" />
@@ -170,6 +180,8 @@
     <Content Include="Content\libs\ace\assets\fonts\OpenSans-400.woff" />
     <Content Include="Content\libs\ace\assets\fonts\readme" />
     <Content Include="Views\Home\Nestable.cshtml" />
+    <Content Include="Views\Home\UploadModal.cshtml" />
+    <Content Include="Views\Home\Dropzone.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
