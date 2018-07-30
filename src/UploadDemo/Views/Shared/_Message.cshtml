@@ -1,0 +1,12 @@
+﻿@{
+    var tempMessage = TempData["TempMessage"];
+    var message = string.Empty;
+    if (tempMessage != null)
+    {
+        message = tempMessage.ToString();
+    }
+}
+<div>
+    <h3>@message</h3>
+</div>
+<hr />

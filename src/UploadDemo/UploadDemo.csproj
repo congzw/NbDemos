@@ -177,6 +177,8 @@
     <Content Include="Views\Upload\_Layout.cshtml" />
     <Content Include="Views\Upload\_ViewStart.cshtml" />
     <Content Include="Views\Shared\_Accordion.cshtml" />
+    <Content Include="Views\Upload\Raw.cshtml" />
+    <Content Include="Views\Shared\_Message.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
