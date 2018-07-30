@@ -1,0 +1,84 @@
+﻿<div ng-app="mainApp">
+    <h2>{{1 + 1}}</h2>
+    <hr/>
+    <div class="row">
+        <div class="col-sm-12">
+
+            <div class="form-group">
+                <div class="col-xs-12">
+                    <!-- #section:custom/file-input -->
+                    <input type="file" ace-fileinput ng-model="files1" options="fileInputOptions1" props="fileInputProps1" on-change="fileChanged" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-12">
+                    <input multiple type="file" ace-fileinput ng-model="files2" options="fileInputOptions2" />
+                </div>
+            </div>
+            <label>
+                <input type="checkbox" name="file-format" class="ace" ng-model="pictureOnly" />
+                <span class="lbl"> Allow only images</span>
+            </label>
+
+        </div>
+    </div>
+
+</div>
+
+
+@using (Html.Delayed())
+{
+    <script type="text/javascript">
+        jQuery(function($) {
+
+        });
+    </script>
+
+    <script src="~/Content/libs/angular/angular.js"></script>
+    <script type="text/javascript">
+        (function () {
+            "use strict";
+
+            var mainApp = angular.module('mainApp', []);
+            mainApp.controller('demoController', ['$scope', function ($scope) {
+                
+                
+                //update file input settings when we select 'picture only'
+                $scope.pictureOnly = false;
+                $scope.$watch('pictureOnly', function (newValue, oldValue) {
+                    if (newValue) {
+                        $scope.fileInputOptions2 = {
+                            'btn_choose': "Drop images here or click to choose",
+                            'no_icon': "ace-icon fa fa-picture-o",
+                            'allowExt': ["jpeg", "jpg", "png", "gif", "bmp"],
+                            'allowMime': ["image/jpg", "image/jpeg", "image/png", "image/gif", "image/bmp"]
+                        };
+                    }
+                    else {
+                        $scope.fileInputOptions2 = {
+                            'btn_choose': "Drop files here or click to choose",
+                            'no_icon': "ace-icon fa fa-cloud-upload",
+                            'whitelist_ext': null,
+                            'whitelist_mime': null
+                        };
+                    }
+                });
+
+            }]);
+        }());
+
+
+    </script>
+    <script>
+
+        //$scope.fileInputOptions1 = {
+        //    no_file: 'No File ...',
+        //    btn_choose: 'Choose',
+        //    btn_change: 'Change',
+        //    droppable: false,
+        //    onchange: null,
+        //    thumbnail: false
+        //};
+
+    </script>
+}

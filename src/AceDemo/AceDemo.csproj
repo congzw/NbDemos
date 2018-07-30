@@ -143,6 +143,7 @@
     <Content Include="Content\libs\ace\components\jquery.1x\dist\jquery.slim.min.js" />
     <Content Include="Content\libs\ace\components\_mod\jquery.nestable\jquery.nestable.js" />
     <Content Include="Content\libs\ace\components\_mod\jquery.nestable\jquery.nestable.min.js" />
+    <Content Include="Content\libs\angular\angular.js" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Views\Shared\blank.html" />
@@ -182,6 +183,7 @@
     <Content Include="Views\Home\Nestable.cshtml" />
     <Content Include="Views\Home\UploadModal.cshtml" />
     <Content Include="Views\Home\Dropzone.cshtml" />
+    <Content Include="Views\Home\AngularUpload.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
