@@ -127,6 +127,7 @@
     <Compile Include="Api\Libs\ModelHelper.cs" />
     <Compile Include="Api\Libs\Rbac\UserRoleService.cs" />
     <Compile Include="Api\Libs\Users\UserService.cs" />
+    <Compile Include="Api\FileApiController.cs" />
     <Compile Include="Api\UserApiController.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
@@ -154,6 +155,7 @@
     <Content Include="Api\UserDic.json" />
     <Content Include="Api\User.json" />
     <Content Include="Views\Home\AngularForm.cshtml" />
+    <Content Include="Content\uploads\1.xlsx" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -163,6 +165,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ZQNB.Common\ZQNB.Common.csproj">
+      <Project>{97216dd3-ae9d-4ec7-8de7-8760d4de9f20}</Project>
+      <Name>ZQNB.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

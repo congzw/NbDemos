@@ -164,5 +164,9 @@ namespace MvcDemo.Api.AppServices
         {
             return new UserAppService(new UserService(), new UserRoleService());
         }
+        public static IFileApiService CreateFileApiService()
+        {
+            return new FileApiService();
+        }
     }
 }
