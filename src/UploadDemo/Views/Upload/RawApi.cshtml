@@ -1,0 +1,11 @@
+﻿
+<form class="no-margin"
+      action="@Url.Content("~/Api/FileApi/Upload?VirtualFolder=~/Content/uploads")"
+      method="POST"
+      enctype="multipart/form-data">
+    
+    <input type="file" name="file-input">
+
+    <hr />
+    <button type="submit" class="btn btn-sm btn-success"><i class="ace-icon fa fa-check"></i>提交</button>
+</form>

@@ -161,8 +161,9 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Api\UploadApiController.cs" />
+    <Compile Include="Api\FileApiController.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\DemoController.cs" />
     <Compile Include="Controllers\UploadController.cs" />
     <Compile Include="Extensions\HtmlExtensions.cs" />
@@ -197,6 +198,7 @@
     <Content Include="Views\Shared\_Accordion.cshtml" />
     <Content Include="Views\Upload\Raw.cshtml" />
     <Content Include="Views\Shared\_Message.cshtml" />
+    <Content Include="Views\Upload\RawApi.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
