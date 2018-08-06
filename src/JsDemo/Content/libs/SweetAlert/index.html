@@ -1,0 +1,30 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+    <title>SweetAlert</title>
+    <link href="source/dist/sweetalert.css" rel="stylesheet" />
+</head>
+<body>
+<h1>Sweet Alert</h1>
+    <button class="demo01">swal</button>
+    <button class="demo02">swal2</button>
+    <script src="source/lib/jquery.min.js"></script>
+    <script src="source/dist/sweetalert-dev.js"></script>
+<script>
+    $(function () {
+
+        $('button.demo01').click(function () {
+            swal("Hello world!");
+        });
+
+        $('button.demo02').click(function () {
+            //swal("Hello world!");
+            swal("Oops...", "Something went wrong!", "error");
+        });
+
+    });
+</script>
+</body>
+</html>
