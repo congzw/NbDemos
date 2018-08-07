@@ -59,6 +59,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CrudDatas\ClassColumnInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CrudDatas\ICrudDataArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CrudDatas\ICrudDataViewModel.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Data\Model\NbEntity.cs" />
     <Compile Include="Db\DatabaseFixer.cs" />
     <Compile Include="Db\DbConfigHelper.cs" />
