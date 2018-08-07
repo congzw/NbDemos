@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace ZQNB.Common
 {
@@ -92,5 +93,118 @@ namespace ZQNB.Common
             public virtual IEnumerable<object> Items { get; set; }
         }
         public virtual new List<TemplateData> Data { get; set; }
+    }
+
+
+    /// <summary>
+    /// 批量操作的结果对象
+    /// </summary>
+    public class BatchMessageResult : MessageResult
+    {
+        public BatchMessageResult()
+        {
+            Data = new List<MessageResult>();
+        }
+        public new virtual IList<MessageResult> Data { get; set; }
+    }
+
+    public static class MessageResultExtensions
+    {
+        /// <summary>
+        /// 全都成功
+        /// </summary>
+        /// <param name="messageResults"></param>
+        /// <returns></returns>
+        public static bool AllSuccess(this IEnumerable<MessageResult> messageResults)
+        {
+            return messageResults.All(x => x.Success);
+        }
+
+        /// <summary>
+        /// 全都失败
+        /// </summary>
+        /// <param name="messageResults"></param>
+        /// <returns></returns>
+        public static bool AllFailed(this IEnumerable<MessageResult> messageResults)
+        {
+            return messageResults.All(x => !x.Success);
+        }
+
+        /// <summary>
+        /// 合并成一个结果，结果集合存于Data中
+        /// </summary>
+        /// <param name="messageResults"></param>
+        /// <returns></returns>
+        public static MessageResult ToSingleResult(this IEnumerable<MessageResult> messageResults)
+        {
+            var results = messageResults.ToList();
+            var validateResult = MessageResult.ValidateResult();
+            var countSuccess = results.Count(x => x.Success);
+            var countFail = results.Count(x => !x.Success);
+            var countAll = results.Count();
+
+            validateResult.Success = countAll == countSuccess;
+            validateResult.Data = results;
+            validateResult.Message = string.Format("成功：{0}, 失败：{1}， 共计:{2}", countSuccess, countFail, countAll);
+            return validateResult;
+        }
+
+        /// <summary>
+        /// 合并成一个结果，结果集合存于Data中
+        /// </summary>
+        /// <param name="messageResults"></param>
+        /// <returns></returns>
+        public static BatchMessageResult ToBatchMessageResult(this IEnumerable<MessageResult> messageResults)
+        {
+            var results = messageResults.ToList();
+            var batchMessageResult = new BatchMessageResult();
+            var countSuccess = results.Count(x => x.Success);
+            var countFail = results.Count(x => !x.Success);
+            var countAll = results.Count;
+
+            batchMessageResult.Success = countAll == countSuccess;
+            batchMessageResult.Data = results;
+            batchMessageResult.Message = string.Format("成功：{0}, 失败：{1}， 共计:{2}", countSuccess, countFail, countAll);
+            return batchMessageResult;
+        }
+        /// <summary>
+        /// 合并成一个结果，结果集合存于Data中
+        /// </summary>
+        /// <param name="messageResult"></param>
+        /// <returns></returns>
+        public static BatchMessageResult ToBatchMessageResult(this MessageResult messageResult)
+        {
+            var batchMessageResult = new BatchMessageResult();
+            batchMessageResult.Success = messageResult.Success;
+            batchMessageResult.Message = messageResult.Message;
+
+            var data = messageResult.Data as IEnumerable<MessageResult>;
+            if (data != null)
+            {
+                batchMessageResult.Data = data.ToList();
+            }
+            return batchMessageResult;
+        }
+
+        /// <summary>
+        /// 生成验证结果列表
+        /// </summary>
+        /// <param name="messageResult"></param>
+        /// <param name="countSuccess"></param>
+        /// <param name="countFail"></param>
+        /// <returns></returns>
+        public static IList<MessageResult> ToResults(this MessageResult messageResult, int countSuccess, int countFail)
+        {
+            var results = new List<MessageResult>();
+            for (int i = 0; i < countSuccess; i++)
+            {
+                results.Add(MessageResult.ValidateResult(true));
+            }
+            for (int i = 0; i < countFail; i++)
+            {
+                results.Add(MessageResult.ValidateResult(false));
+            }
+            return results;
+        }
     }
 }
