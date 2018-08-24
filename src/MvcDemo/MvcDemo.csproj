@@ -141,6 +141,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="MultiTenancy\Mocks.cs" />
+    <Compile Include="MultiTenancy\Simples.cs" />
     <Compile Include="Infrastructure\SweetAlerts\SweetAlert.cs" />
     <Compile Include="Infrastructure\SweetAlerts\SweetAlertDecoratorResult.cs" />
     <Compile Include="Infrastructure\SweetAlerts\SweetAlertExtensions.cs" />
@@ -161,6 +163,7 @@
     <Content Include="Api\User.json" />
     <Content Include="Views\Home\AngularForm.cshtml" />
     <Content Include="Content\uploads\1.xlsx" />
+    <Content Include="Views\Shared\_TenantInfo.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

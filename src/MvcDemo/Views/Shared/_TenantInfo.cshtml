@@ -1,0 +1,13 @@
+﻿@using MvcDemo.MultiTenancy
+@using Newtonsoft.Json
+@using ZQNB.Common.Ioc
+@{
+    ViewBag.Title = "Demo";
+    var tenantContextService = CoreServiceProvider.LocateService<ITenantContextService>();
+    var tenant = tenantContextService.GetCurrentTenant();
+}
+
+<div>
+    <h3>tenant:</h3>
+    <p>@Html.Raw(JsonConvert.SerializeObject(tenant))</p>
+</div>

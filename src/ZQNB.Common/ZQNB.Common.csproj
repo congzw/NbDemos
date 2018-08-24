@@ -74,6 +74,10 @@
     <Compile Include="Db\ISqlQuery.cs" />
     <Compile Include="Db\MyDbHelper.cs" />
     <Compile Include="Db\MySqlConnectionTester.cs" />
+    <Compile Include="Ioc\ActivationException.cs" />
+    <Compile Include="Ioc\CoreServiceProvider.cs" />
+    <Compile Include="Ioc\IServiceLocator.cs" />
+    <Compile Include="Ioc\NullServiceLocator.cs" />
     <Compile Include="NbRegistry.cs" />
     <Compile Include="Db\SqlScriptHelper.cs" />
     <Compile Include="Extensions\AssemblyExtensions.cs" />

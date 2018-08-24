@@ -1,6 +1,7 @@
 ﻿using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Routing;
+using MvcDemo.MultiTenancy;
 
 namespace MvcDemo
 {
@@ -8,6 +9,8 @@ namespace MvcDemo
     {
         protected void Application_Start()
         {
+            MockHelper.SetupIoc();
+
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
             RouteConfig.RegisterRoutes(RouteTable.Routes);

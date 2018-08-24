@@ -15,6 +15,8 @@
         <hr />
         <footer>
             <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            <hr/>
+            @Html.Partial("_TenantInfo")
         </footer>
     </div>
     @RenderSection("scripts", required: false)
