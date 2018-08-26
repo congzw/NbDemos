@@ -1,0 +1,31 @@
+﻿@using SimpleMultiTenancy.Infrastructure
+@{
+    ViewBag.Title = "租户列表";
+
+    var tenantContext = ContextHelper.CreateTenantContext();
+    var tenants = tenantContext.Tenants.OrderBy(x => x.TenantCode).ToList();
+    var dbTenantConnectionStrings = tenantContext.DBTenantConnectionStrings.ToList();
+}
+
+<div class="jumbotron">
+    <h2>@string.Format("管理数据库: [{0}]", tenantContext.Database.Connection.Database)</h2>
+    <hr />
+    <h2>租户数量: @tenants.Count</h2>
+    <hr />
+    @foreach (var tenant in tenants)
+    {
+        <h3>
+            <a href="@Url.Action("Index", new { tenant = tenant.TenantCode })">租户 @tenant.TenantCode: @tenant.TenantName</a>
+        </h3>
+        <h3>Database Info: </h3>
+        var dbTenantConnectionString = dbTenantConnectionStrings.SingleOrDefault(x => x.TenantID == tenant.TenantID);
+        if (dbTenantConnectionString != null)
+        {
+            <p>@dbTenantConnectionString.ConnString</p>
+        }
+        else
+        {
+            <p>NoMatchDB!</p>
+        }
+    }
+</div>

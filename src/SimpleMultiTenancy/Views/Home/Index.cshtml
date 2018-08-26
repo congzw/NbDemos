@@ -1,0 +1,21 @@
+﻿@using SimpleMultiTenancy.Infrastructure
+@{
+    ViewBag.Title = "租户数据演示";
+    var tenantContext = ContextHelper.CreateDemoContext();
+    if (tenantContext == null)
+    {
+        <h2>FIND NO Tentant!</h2>
+        <hr />
+        return;
+    }
+    var foos = tenantContext.Foos.OrderBy(x => x.Name).ToList();
+}
+
+<div class="jumbotron">
+    <h2>@string.Format("租户的业务数据库: [{0}]", tenantContext.Database.Connection.Database)</h2>
+    <hr />
+    @foreach (var foo in foos)
+    {
+        <h3>@foo.Name</h3>
+    }
+</div>
