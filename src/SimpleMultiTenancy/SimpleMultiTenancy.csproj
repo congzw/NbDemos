@@ -39,11 +39,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EntityFramework">
-      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\..\lib\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="EntityFramework.SqlServer">
-      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\..\lib\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -94,10 +96,6 @@
     </Reference>
     <Reference Include="System.Net.Http.WebRequest">
     </Reference>
-    <Reference Include="Antlr3.Runtime">
-      <Private>True</Private>
-      <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -109,6 +107,7 @@
     <Compile Include="Data\MultiTenancy\Abstract\IDBTenantConnectionString.cs" />
     <Compile Include="Data\MultiTenancy\Abstract\IEntity.cs" />
     <Compile Include="Data\MultiTenancy\Abstract\ITenant.cs" />
+    <Compile Include="Data\MultiTenancy\Abstract\ITenantCodeResolver.cs" />
     <Compile Include="Data\MultiTenancy\Domain\DBTenantConnectionString.cs" />
     <Compile Include="Data\MultiTenancy\Domain\Entity.cs" />
     <Compile Include="Data\MultiTenancy\Domain\Tenant.cs" />
@@ -121,7 +120,8 @@
     </Compile>
     <Compile Include="Infrastructure\ContextHelper.cs" />
     <Compile Include="Infrastructure\DemoHelper.cs" />
-    <Compile Include="Infrastructure\ITenantResolver.cs" />
+    <Compile Include="Data\MultiTenancy\Abstract\ITenantResolver.cs" />
+    <Compile Include="Infrastructure\TenantCodeResolver.cs" />
     <Compile Include="Infrastructure\TenantResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

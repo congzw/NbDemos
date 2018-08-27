@@ -1,22 +1,21 @@
 ﻿using SimpleMultiTenancy.Data;
 using SimpleMultiTenancy.Data.Abstract;
 using System.Linq;
-using System.Web;
+using SimpleMultiTenancy.Data.MultiTenancy.Abstract;
 
 namespace SimpleMultiTenancy.Infrastructure
 {
     public class TenantResolver : ITenantResolver
     {
-        private readonly HttpContext httpContextBase;
-
+        private readonly ITenantCodeResolver _tenantCodeResolver;
         private readonly TenantContext tenantContext;
 
         public TenantResolver(
             ITenantContextFactory tenantContextFactory,
-            HttpContext httpContext)
+            ITenantCodeResolver tenantCodeResolver)
         {
+            _tenantCodeResolver = tenantCodeResolver;
             tenantContext = tenantContextFactory.Get();
-            this.httpContextBase = httpContext;
         }
 
         private ITenant tenantData = null;
@@ -27,7 +26,7 @@ namespace SimpleMultiTenancy.Infrastructure
             {
                 if (tenantData == null)
                 {
-                    var tenant = DemoHelper.TryGetTentantCode(httpContextBase);
+                    var tenant = _tenantCodeResolver.GetTenantCode();
                     tenantData = tenantContext.Tenants.FirstOrDefault(x => x.TenantCode == tenant);
                 }
                 return tenantData;
@@ -45,7 +44,6 @@ namespace SimpleMultiTenancy.Infrastructure
                 {
                     if (tenantConnectionString == null)
                     {
-                        //var dbTenantConnectionString = tenantContext.DBTenantConnectionStrings.SingleOrDefault(x => x.TenantID == tenant.TenantID);
                         tenantConnectionString = tenantContext.DBTenantConnectionStrings.FirstOrDefault(x => x.TenantID == tenant.TenantID);
                     }
                     return tenantConnectionString;

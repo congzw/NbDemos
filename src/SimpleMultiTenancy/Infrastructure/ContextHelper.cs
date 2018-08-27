@@ -17,7 +17,7 @@ namespace SimpleMultiTenancy.Infrastructure
         public static DemoContext CreateDemoContext()
         {
             var tenantDbFactory = new TenantContextFactory();
-            var tenantResolver = new TenantResolver(tenantDbFactory, HttpContext.Current);
+            var tenantResolver = new TenantResolver(tenantDbFactory, new TenantCodeResolver());
 
             var currentTenant = tenantResolver.GetCurrentTenant;
             if (currentTenant == null)
@@ -49,9 +49,11 @@ namespace SimpleMultiTenancy.Infrastructure
                     {
                         System.Data.Entity.Database.Delete(dbTenantConnectionString.ConnString);
                     }
-                    System.Data.Entity.Database.SetInitializer(new DemoContextInitializer(tenant.TenantCode));
+                    ////SetInitializers是单例模式，迟加载会导致初始化使用的上下文，永远是最后一个租户!
+                    //System.Data.Entity.Database.SetInitializer(new DemoContextInitializer(tenant.TenantCode));
                 }
             }
+            System.Data.Entity.Database.SetInitializer(new DemoContextInitializer());
         }
     }
 }

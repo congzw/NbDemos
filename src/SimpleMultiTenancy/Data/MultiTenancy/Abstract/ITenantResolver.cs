@@ -1,6 +1,6 @@
 ﻿using SimpleMultiTenancy.Data.Abstract;
 
-namespace SimpleMultiTenancy.Infrastructure
+namespace SimpleMultiTenancy.Data.MultiTenancy.Abstract
 {
     public interface ITenantResolver
     {
