@@ -7,7 +7,7 @@
             return [
                 {
                     key: "orgType",
-                    name: "组织类型"
+                    name: "类型"
                 },
                 {
                     key: "org",
