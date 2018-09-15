@@ -61,7 +61,7 @@
                     var key = category.key;
                     var name = category.name;
                     //<div class="term-box">
-                    //    <span class="term">组织类型(<span class="selectedDicCatalogItem">{{vm.selectResult.orgType.Name}}</span>)</span>
+                    //    <span class="term">类型(<span class="selectedDicCatalogItem">{{vm.selectResult.orgType.Name}}</span>)</span>
                     //    <ul class="nav nav-pills overflow-h">
                     //        <li ng-repeat="item in vm.orgTypes" ng-class="{active: isCurrentItem(item, 'orgType'), hidden: item.Hidden}">
                     //            <a href="javascript:void(0)" ng-click="selectItem(item, 'orgType')"> {{item.Name}} </a>
@@ -70,7 +70,8 @@
                     //</div>
                     return '' +
                         ' <div class="term-box" ng-if="isEmptyItems(\'' + key + '\')">  ' +
-                        '      <span class="term">' + name + '(<span class="selectedDicCatalogItem">{{vm.selectResult.' + key + '.Name}}</span>)</span>  ' +
+                        //'      <span class="term">' + name + '(<span class="selectedDicCatalogItem">{{vm.selectResult.' + key + '.Name}}</span>)</span>  ' +
+                        '      <span class="term">' + name + '</span>  ' +
                         '      <ul class="nav nav-pills overflow-h">  ' +
                         '          <li ng-repeat="item in vm.' + key + 's" ng-class="{active: isCurrentItem(item, \'' + key + '\'), hidden: item.Hidden}">  ' +
                         '              <a href="javascript:void(0)" ng-click="selectItem(item, \'' + key + '\')">  ' +
@@ -193,7 +194,29 @@
         (function (_) {
             'use strict';
             var oldConsoleLog = console.log;
-            var resetLog = function (enabled) {
+
+            var copyData = function (data) {
+
+                //// Shallow copy
+                //var newObject = jQuery.extend({}, oldObject);
+                //// Deep copy
+                //var newObject = jQuery.extend(true, {}, oldObject);
+
+                if (Array.isArray(data)) {
+                    var newArr = [];
+
+                    for (var i = 0; i < data.length; i++) {
+                        newArr.push(copyData(data[i]));
+                    }
+
+                    //sort by SortNum
+                    newArr.sort(function (a, b) { return a.SortNum - b.SortNum });
+                    return newArr;
+                }
+                var newData = jQuery.extend(true, {}, data);
+                return newData;
+            },
+            resetLog = function (enabled) {
                 if (enabled === true) {
                     console.log = oldConsoleLog;
                     return;
@@ -203,139 +226,206 @@
                     //oldConsoleLog('[Dic]=> ' + message);
                 };
             },
-            equalIgnoreCase = function (str, str2) {
-                if (str === null || str2 === null) {
-                    return true;
-                }
-                if (typeof str !== 'string' || typeof str2 !== 'string') {
-                    return false;
-                }
-                if (str === '' && str2 === '') {
-                    return true;
-                }
-                return (str2.toUpperCase() === str.toUpperCase());
-            },
-            sameCodeItem = function (item1, item2) {
-                return item1 === item2 || equalIgnoreCase(item1.Code, item2.Code);
-            },
-            containItem = function (items, itemToCheck) {
-                if (!items || !itemToCheck) {
-                    return false;
-                }
-                for (var i = 0; i < items.length; i++) {
-                    if (sameCodeItem(items[i], itemToCheck)) {
+                equalIgnoreCase = function (str, str2) {
+                    if (str === null || str2 === null) {
                         return true;
                     }
-                }
-                return false;
-            },
-            findItem = function (items, code) {
-                for (var i = 0; i < items.length; i++) {
-                    var current = items[i];
-                    var sameCode = equalIgnoreCase(current.Code, code);
-                    if (sameCode) {
-                        return current;
+                    if (typeof str !== 'string' || typeof str2 !== 'string') {
+                        return false;
                     }
-                }
-                return null;
-            },
-            createEmptyItem = function () {
-                return { Code: "", Name: "全部" };
-            },
-            createArrayCode = function (arr) {
-                if (arr.length === 0) {
-                    return '';
-                }
-                var code = arr.join(',');
-                return code;
-            },
-            createCodeItem = function () {
-                var arr = Array.from(arguments);
-                var code = createArrayCode(arr);
-                var codeItem = { Code: code };
-                return codeItem;
-            },
-            addCodeItemIfNotExist = function (codeItems, codeItem) {
-                if (!containItem(codeItems, codeItem)) {
-                    codeItems.push(codeItem);
-                }
-            },
-            createInitItems = function (items, emptyItem) {
-                if (!items || items.length === 0) {
+                    if (str === '' && str2 === '') {
+                        return true;
+                    }
+                    return (str2.toUpperCase() === str.toUpperCase());
+                },
+                sameCodeItem = function (item1, item2) {
+                    return item1 === item2 || equalIgnoreCase(item1.Code, item2.Code);
+                },
+                containItem = function (items, itemToCheck) {
+                    if (!items || !itemToCheck) {
+                        return false;
+                    }
+                    for (var i = 0; i < items.length; i++) {
+                        if (sameCodeItem(items[i], itemToCheck)) {
+                            return true;
+                        }
+                    }
+                    return false;
+                },
+                findItem = function (items, code) {
+                    for (var i = 0; i < items.length; i++) {
+                        var current = items[i];
+                        var sameCode = equalIgnoreCase(current.Code, code);
+                        if (sameCode) {
+                            return current;
+                        }
+                    }
                     return null;
-                }
-                var initItems = [];
-                if (emptyItem) {
-                    initItems.push(emptyItem);
-                }
-                for (var i = 0; i < items.length; i++) {
-                    var current = items[i];
-                    var copy = { Code: current.Code, Name: current.Name };
+                },
+                createEmptyItem = function () {
+                    return { Code: "", Name: "全部" };
+                },
+                createArrayCode = function (arr) {
+                    if (arr.length === 0) {
+                        return '';
+                    }
+                    var code = arr.join(',');
+                    return code;
+                },
+                createCodeItem = function () {
+                    var arr = Array.from(arguments);
+                    var code = createArrayCode(arr);
+                    var codeItem = { Code: code };
+                    return codeItem;
+                },
+                addCodeItemIfNotExist = function (codeItems, codeItem) {
+                    if (!containItem(codeItems, codeItem)) {
+                        codeItems.push(codeItem);
+                    }
+                },
+                createInitItems = function (items, emptyItem) {
+                    if (!items || items.length === 0) {
+                        return null;
+                    }
+                    var initItems = [];
+                    if (emptyItem) {
+                        initItems.push(emptyItem);
+                    }
+                    for (var i = 0; i < items.length; i++) {
+                        var current = items[i];
+                        var copy = { Code: current.Code, Name: current.Name };
 
-                    //hack for org
-                    if (current.ParentCode) {
-                        copy.ParentCode = current.ParentCode;
+                        //hack for org
+                        if (current.ParentCode) {
+                            copy.ParentCode = current.ParentCode;
+                        }
+                        if (current.OrgTypeCode) {
+                            copy.OrgTypeCode = current.OrgTypeCode;
+                        }
+                        initItems.push(copy);
                     }
-                    if (current.OrgTypeCode) {
-                        copy.OrgTypeCode = current.OrgTypeCode;
+                    return initItems;
+                },
+                categoriesDic = function () {
+                    return {
+                        orgType: {
+                            sort: 0,
+                            key: "orgType",
+                            name: "组织类型"
+                        },
+                        org: {
+                            sort: 1,
+                            key: "org",
+                            name: "组织"
+                        },
+                        phase: {
+                            sort: 2,
+                            key: "phase",
+                            name: "学段"
+                        },
+                        subject: {
+                            sort: 3,
+                            key: "subject",
+                            name: "学科"
+                        },
+                        grade: {
+                            sort: 4,
+                            key: "grade",
+                            name: "年级"
+                        }
+                    };
+                }(),
+                categories = function () {
+                    return [categoriesDic.orgType, categoriesDic.org, categoriesDic.phase, categoriesDic.subject, categoriesDic.grade];
+                }(),
+                getCategoryKey = function (category) {
+                    if (category === undefined || category === null) {
+                        console.log('getCategoryKey typeof' + typeof category);
+                        throw { name: 'bad category key' };
                     }
-                    initItems.push(copy);
-                }
-                return initItems;
-            },
-            categoriesDic = function () {
-                return {
-                    orgType: {
-                        sort: 0,
-                        key: "orgType",
-                        name: "组织类型"
-                    },
-                    org: {
-                        sort: 1,
-                        key: "org",
-                        name: "组织"
-                    },
-                    phase: {
-                        sort: 2,
-                        key: "phase",
-                        name: "学段"
-                    },
-                    subject: {
-                        sort: 3,
-                        key: "subject",
-                        name: "学科"
-                    },
-                    grade: {
-                        sort: 4,
-                        key: "grade",
-                        name: "年级"
+                    if (typeof category === "string") {
+                        return category;
                     }
+                    return category.key;
+                },
+                getCategoryItemsKey = function (category) {
+                    var key = getCategoryKey(category);
+                    return key + 's';
+
+                },
+                getCategoryEmptyItemKey = function (category) {
+                    var key = getCategoryKey(category);
+                    return key + 'Empty';
+                },
+                autoSetProperties = function (model, args) {
+                    if (!args) {
+                        return;
+                    }
+
+                    for (var prop in model) {
+                        if (model.hasOwnProperty(prop)) {
+                            if (args[prop] === undefined) {
+                                continue;
+                            }
+                            model[prop] = args[prop];
+                        }
+                    }
+                },
+                createDicTreeVm = function (initDicCatalog, initQueryCodes) {
+
+                    var itemMetas = function () {
+                        var metas = [];
+                        metas.push({ key: "orgType", name: "类型", dicCatalogItemsKey: 'OrgTypes' });
+                        metas.push({ key: "org", name: "组织", dicCatalogItemsKey: 'Orgs' });
+                        metas.push({ key: "phase", name: "学段", dicCatalogItemsKey: 'Phases' });
+                        metas.push({ key: "subject", name: "学科", dicCatalogItemsKey: 'Subjects' });
+                        metas.push({ key: "grade", name: "年级", dicCatalogItemsKey: 'Grades' });
+                        return metas;
+                    }();
+
+                    var vm = {};
+                    vm.reset = function () {
+                        vm._meta = {
+                            hidePropertyName: "Hidden",
+                            itemMetas: itemMetas
+                        };
+                        vm.autoAppendEmpty = true;
+                        //vm.xxxItems = [];
+                        for (var i = 0; i < itemMetas.length; i++) {
+                            var itemMeta = itemMetas[i];
+                            vm[itemMeta.key] = [];
+                        }
+
+                        vm.initCodes = { OrgTypeCode: '', OrgCode: '', PhaseCode: '', SubjectCode: '', GradeCode: '' };
+                    };
+                    vm.reset();
+
+                    vm.setQueryCodes = function (queryCodes) {
+                        autoSetProperties(vm.initCodes, queryCodes);
+                    }
+                    vm.setQueryCodes(initQueryCodes);
+
+                    vm.setDicCatalog = function (dicCatalog) {
+                        var meta = vm._meta;
+                        for (var i = 0; i < meta.itemMetas.length; i++) {
+                            var itemMeta = meta.itemMetas[i];
+                            var catalogProperty = dicCatalog[itemMeta.dicCatalogItemsKey];
+                            if (catalogProperty) {
+                                //vm.xxxItems = catalogProperty.XxxItems;
+                                vm[itemMeta.key] = copyData(catalogProperty);
+                            }
+        
+                            for (var itemIndex = 0; itemIndex < vm[itemMeta.key].length; itemIndex++) {
+                                var item = vm[itemMeta.key][itemIndex];
+                                // add ui trace visiable property: Hidden
+                                item[vm.HidePropertyName] = false;
+                            }
+                        }
+                    };
+                    vm.setDicCatalog(initDicCatalog);
+                    return vm;
                 };
-            }(),
-            categories = function () {
-                return [categoriesDic.orgType, categoriesDic.org, categoriesDic.phase, categoriesDic.subject, categoriesDic.grade];
-            }(),
-            getCategoryKey = function (category) {
-                if (category === undefined) {
-                    console.log('getCategoryKey typeof');
-                    console.log(typeof category);
-                    throw { name: 'bad' };
-                }
-                if (typeof category === "string") {
-                    return category;
-                }
-                return category.key;
-            },
-            getCategoryItemsKey = function (category) {
-                var key = getCategoryKey(category);
-                return key + 's';
 
-            },
-            getCategoryEmptyItemKey = function (category) {
-                var key = getCategoryKey(category);
-                return key + 'Empty';
-            };
-            
             var dicHelper = function () {
                 return {
                     equalIgnoreCase: equalIgnoreCase,
@@ -347,7 +437,8 @@
                     createCodeItem: createCodeItem,
                     createInitItems: createInitItems,
                     categories: categories,
-                    resetLog: resetLog
+                    resetLog: resetLog,
+                    createDicTreeVm: createDicTreeVm
                 };
             }();
             _.createDicHelper = function () {
@@ -686,10 +777,16 @@
     <script>
         (function () {
             'use strict';
-            var mainApp = zqnb.mainApp;
-
             var dicHelper = zqnb.createDicHelper();
             //dicHelper.resetLog(true);
+
+            //console.log(dicHelper.createDicTreeVm());
+            //console.log(dicHelper.createDicTreeVm(null));
+            //console.log(dicHelper.createDicTreeVm(null, { OrgTypeCode: 'ABC' }));
+            //var initQueryCodes = { OrgCode: 'whyz', PhaseCode: 'Phase2', SubjectCode: 'GS001', GradeCode: 'GO003' };
+            //console.log(dicHelper.createDicTreeVm(null, initQueryCodes));
+
+            var mainApp = zqnb.mainApp;
             mainApp.factory('dicCatalogMockService', ['$http', function ($http) {
 
                 var getDicCatalogsUrl = '/Content/scripts/GetDicCatalogs.js';
@@ -700,6 +797,12 @@
                 var getDicOrgTypesUrl = '/Content/scripts/GetDicOrgTypes.js';
                 var getDicOrgTypes = function () {
                     return $http.get(getDicOrgTypesUrl);
+                };
+
+
+                var getDicCatalogV2Url = '/Content/scripts/GetDicCatalogs20180915.js';
+                var getDicCatalogV2 = function () {
+                    return $http.get(getDicCatalogV2Url);
                 };
 
                 var vm = {};
@@ -713,6 +816,8 @@
                     vm.grades = [];
                     vm.initCodes = { OrgCode: '', PhaseCode: '', SubjectCode: '', GradeCode: '' };
                 };
+
+
                 var initDicSettings = function (dicSettings) {
 
                     vm.dicSettings = dicSettings;
@@ -790,13 +895,25 @@
                         initDicSettings(dicSettings);
 
                         getDicOrgTypes()
-                        .success(function (orgTypes) {
-                            initOrgTypes(orgTypes);
-                            callback(vm);
-                        });
+                            .success(function (orgTypes) {
+                                initOrgTypes(orgTypes);
+                                callback(vm);
+                            });
                     });
                 };
-                return { initAsync: initAsync };
+
+
+                var initAsync2 = function (callback) {
+                    getDicCatalogV2().success(function (dicCatalog) {
+                        var dicTreeVm = dicHelper.createDicTreeVm(dicCatalog, null);
+                        callback(dicTreeVm);
+                    });
+                };
+
+                return {
+                    initAsync: initAsync ,
+                    initAsync2: initAsync2 
+                };
             }
             ]);
         }());
@@ -826,6 +943,14 @@
                     //console.log(dicCatalogVm);
                 });
 
+            });
+
+            mainApp.controller('demoCtrl2', function ($scope, dicCatalogMockService) {
+                console.log('demoCtrl2');
+                dicCatalogMockService.initAsync2(function (vm) {
+                    console.log(vm);
+                    $scope.vm = vm;
+                });
             });
         }());
     </script>
@@ -882,6 +1007,18 @@
 
                 </div>
 
+
+                <hr/>
+                <div ng-controller="demoCtrl2">
+                    <div class="row">
+                        <h2>DEMO FOR VM</h2>
+                        <hr />
+                        <div class="search-block" ng-if="vm">
+                            <p>{{vm}}</p>
+                        </div>
+                    </div>
+
+                </div>
             </div>
 
 

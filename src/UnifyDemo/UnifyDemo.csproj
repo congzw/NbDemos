@@ -88,6 +88,10 @@
     <Content Include="Content\libs\angular1.2\ui-bootstrap\ui-bootstrap-tpls-0.10rating.js" />
     <Content Include="Content\libs\angular1.2\ui-bootstrap\ui-bootstrap-tpls-0.11.0.min.js" />
     <Content Include="Content\libs\angular1.2\ui-bootstrap\ui-bootstrap-tpls-0.12.0.js" />
+    <Content Include="Content\Unify\20180915\DicCatalog.html" />
+    <Content Include="Content\Unify\20180915\zqnb.dicCatalogDirectives.js" />
+    <Content Include="Content\Unify\20180915\zqnb.dicCatalogVm.js" />
+    <Content Include="Content\Unify\20180915\zqnb.dicHelper.js" />
     <Content Include="Content\scripts\dicCatalogDirectives6.js" />
     <Content Include="Content\scripts\dicCatalogDirectives5.js" />
     <Content Include="Content\scripts\dicCatalogDirectives3.js" />
@@ -97,6 +101,7 @@
     <Content Include="Content\scripts\dicCatalogDirectives.js" />
     <Content Include="Content\scripts\dicCatalogMockService.js" />
     <Content Include="Content\scripts\dicCatalogSearch.js" />
+    <Content Include="Content\scripts\GetDicCatalogs20180915.js" />
     <Content Include="Content\scripts\_nbDicCatalog.js" />
     <Content Include="Content\scripts\GetDicOrgTypes.js" />
     <Content Include="Content\scripts\zqnb.dicCatalogVm.js" />
