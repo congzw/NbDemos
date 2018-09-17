@@ -177,16 +177,14 @@
         (function () {
             'use strict';
             var mainApp = zqnb.mainApp;
+            var dicHelper = zqnb.createDicHelper();
 
             mainApp.controller('demoCtrl', function ($scope, dicCatalogMockService) {
 
                 console.log('demoCtrl');
                 var initScope = function(dicCatalog) {
 
-                    var dicCatalogVm = zqnb.createDicCatalogVm();
-                    dicCatalogVm.initItems(dicCatalog);
-                    dicCatalogVm.initRelations(dicCatalog);
-                    //console.log(dicCatalogVm);
+                    var dicCatalogVm = dicHelper.createDicCatalogVm(dicCatalog);
 
                     $scope.dicCatalogVm = dicCatalogVm;
 

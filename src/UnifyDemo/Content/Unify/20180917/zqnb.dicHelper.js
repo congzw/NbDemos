@@ -146,11 +146,11 @@
                 var categories = function () {
                     //todo refactor name : dicItemMetas
                     var items = [];
-                    items.push({ key: "orgType", name: "类型", ItemsKey: 'orgTypes' });
-                    items.push({ key: "org", name: "组织", ItemsKey: 'orgs' });
-                    items.push({ key: "phase", name: "学段", ItemsKey: 'phases' });
-                    items.push({ key: "subject", name: "学科", ItemsKey: 'subjects' });
-                    items.push({ key: "grade", name: "年级", ItemsKey: 'grades' });
+                    items.push({ key: "orgType", name: "类型", itemsKey: 'orgTypes' });
+                    items.push({ key: "org", name: "组织", itemsKey: 'orgs' });
+                    items.push({ key: "phase", name: "学段", itemsKey: 'phases' });
+                    items.push({ key: "subject", name: "学科", itemsKey: 'subjects' });
+                    items.push({ key: "grade", name: "年级", itemsKey: 'grades' });
                     return items;
                 }(),
                     getCategoryKey = function (category) {
@@ -171,7 +171,7 @@
                         if (typeof category === "string") {
                             return category + 's';
                         }
-                        return category.ItemsKey;
+                        return category.itemsKey;
 
                     },
                     getCategoryEmptyItemKey = function (category) {
@@ -278,25 +278,6 @@
             return vm;
         };
 
-    var dicHelper = function () {
-        return {
-            equalIgnoreCase: equalIgnoreCase,
-            sameCodeItem: sameCodeItem,
-            containItem: containItem,
-            findItem: findItem,
-            createEmptyItem: createEmptyItem,
-            createArrayCode: createArrayCode,
-            createCodeItem: createCodeItem,
-            createInitItems: createInitItems,
-            categories: categories,
-            resetLog: resetLog,
-            createDicTreeVm: createDicTreeVm,
-            createCatalogMeta: createCatalogMeta
-        };
-    }();
-    _.createDicHelper = function () {
-        return dicHelper;
-    };
 
     var createDicCatalogVm = function (dicCatalog, initQueryCodes) {
 
@@ -463,16 +444,19 @@
             return items;
         }
 
+
+
         //初始化字典项
-        vm.initItems = function (config) {
-            if (!config) {
+        var initItems = function (theDicCatalog) {
+            console.log(theDicCatalog);
+            if (!theDicCatalog) {
                 return;
             }
             for (var i = 0; i < categories.length; i++) {
                 var category = categories[i];
                 var categoryItemsKey = getCategoryItemsKey(category);
                 var categoryEmptyItemKey = getCategoryEmptyItemKey(category);
-                var items = config[categoryItemsKey];
+                var items = theDicCatalog[categoryItemsKey];
                 if (items) {
                     //hack for orgs
                     if (categoryItemsKey === "orgs") {
@@ -483,9 +467,10 @@
                 }
             }
         };
+        initItems(dicCatalog);
 
         //初始化字典项的关系
-        vm.initRelations = function (config) {
+        var initRelations = function (config) {
 
             //dic relations
 
@@ -549,6 +534,7 @@
             //console.log('initRelation');
             //console.log(dicVm);
         };
+        initRelations(dicCatalog);
 
         //是否是空的集合（或只有【全部】按钮）
         vm.isEmptyItems = function (category) {
@@ -563,12 +549,10 @@
             }
             return true;
         };
-        
+
         vm.updateView = function () {
 
             console.log('updateView');
-            //console.log(getSelectCodes());
-            //console.log(vm.org);
 
             hiddenByRelation(vm, vm.orgs, shouldShowOrgTypeOrg);
             //console.log('shouldShowOrgTypeOrg');
@@ -636,6 +620,26 @@
         return vm;
     };
 
+    var dicHelper = function () {
+        return {
+            equalIgnoreCase: equalIgnoreCase,
+            sameCodeItem: sameCodeItem,
+            containItem: containItem,
+            findItem: findItem,
+            createEmptyItem: createEmptyItem,
+            createArrayCode: createArrayCode,
+            createCodeItem: createCodeItem,
+            createInitItems: createInitItems,
+            categories: categories,
+            resetLog: resetLog,
+            createDicTreeVm: createDicTreeVm,
+            createCatalogMeta: createCatalogMeta,
+            createDicCatalogVm: createDicCatalogVm
+        };
+    }();
+    _.createDicHelper = function () {
+        return dicHelper;
+    };
     var createDicCatalogVmOld = function (dicCatalog, initQueryCodes) {
 
         //private methods
@@ -964,6 +968,6 @@
         return vm;
     };
     _.createDicCatalogVm = function () {
-        return createDicCatalogVm();
+        return createDicCatalogVmOld();
     };
 })(zqnb || {});

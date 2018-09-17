@@ -38,7 +38,7 @@
                 if (nbDicCatalogMeta.categories) {
                     categories = nbDicCatalogMeta.categories;
                     //console.log('use customize meta: ');
-                    //console.log(categories);
+                    console.log(categories);
                 }
                 if (nbDicCatalogMeta.hidePropertyName) {
                     hiddenPropertyName = nbDicCatalogMeta.hidePropertyName;
@@ -49,6 +49,7 @@
         var createCategoryTemplate1 = function (category) {
             var key = category.key;
             var name = category.name;
+            var itemsKey = category.itemsKey;
             //<div class="term-box">
             //    <span class="term">类型(<span class="selectedDicCatalogItem">{{vm.selectResult.orgType.Name}}</span>)</span>
             //    <ul class="nav nav-pills overflow-h">
@@ -62,7 +63,7 @@
                 //'      <span class="term">' + name + '(<span class="selectedDicCatalogItem">{{vm.selectResult.' + key + '.Name}}</span>)</span>  ' +
                 '      <span class="term">' + name + '</span>  ' +
                 '      <ul class="nav nav-pills overflow-h">  ' +
-                '          <li ng-repeat="item in vm.' + key + 's" ng-class="{active: isCurrentItem(item, \'' + key + '\'), hidden: item.' + hiddenPropertyName + '}">  ' +
+                '          <li ng-repeat="item in vm.' + itemsKey + '" ng-class="{active: isCurrentItem(item, \'' + key + '\'), hidden: item.' + hiddenPropertyName + '}">  ' +
                 '              <a href="javascript:void(0)" ng-click="selectItem(item, \'' + key + '\')">  ' +
                 '                  {{item.Name}}  ' +
                 '              </a>  ' +
@@ -73,13 +74,14 @@
         var createCategoryTemplate2 = function (category) {
             var key = category.key;
             var name = category.name;
+            var itemsKey = category.itemsKey;
             return '' +
                 '      <li class="dropdown" ng-if="isEmptyItems(\'' + key + '\')">  ' +
                 '          <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">  ' +
                 '              ' + name + '(<span class="selectedDicCatalogItem">{{vm.selectResult.' + key + '.Name}}</span>)  ' +
                 '          </a>  ' +
                 '          <ul class="dropdown-menu">  ' +
-                '               <li ng-repeat="item in vm.' + key + 's" ng-class="{active: isCurrentItem(item, \'' + key + '\'), hidden: item.' + hiddenPropertyName + '}">  ' +
+                '               <li ng-repeat="item in vm.' + itemsKey + 's" ng-class="{active: isCurrentItem(item, \'' + key + '\'), hidden: item.' + hiddenPropertyName + '}">  ' +
                 '                  <a href="javascript:void(0)" ng-click="selectItem(item, \'' + key + '\')">  ' +
                 '                  {{item.Name}}  ' +
                 '                  </a>  ' +
