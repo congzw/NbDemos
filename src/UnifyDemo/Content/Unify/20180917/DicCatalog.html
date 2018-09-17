@@ -181,11 +181,11 @@
             mainApp.controller('demoCtrl', function ($scope, dicCatalogMockService) {
 
                 console.log('demoCtrl');
-                var initScope = function(initData) {
+                var initScope = function(dicCatalog) {
 
                     var dicCatalogVm = zqnb.createDicCatalogVm();
-                    dicCatalogVm.initItems(initData);
-                    dicCatalogVm.initRelations(initData);
+                    dicCatalogVm.initItems(dicCatalog);
+                    dicCatalogVm.initRelations(dicCatalog);
                     //console.log(dicCatalogVm);
 
                     $scope.dicCatalogVm = dicCatalogVm;
