@@ -81,7 +81,7 @@
                 '              ' + name + '(<span class="selectedDicCatalogItem">{{vm.selectResult.' + key + '.Name}}</span>)  ' +
                 '          </a>  ' +
                 '          <ul class="dropdown-menu">  ' +
-                '               <li ng-repeat="item in vm.' + itemsKey + 's" ng-class="{active: isCurrentItem(item, \'' + key + '\'), hidden: item.' + hiddenPropertyName + '}">  ' +
+                '               <li ng-repeat="item in vm.' + itemsKey + '" ng-class="{active: isCurrentItem(item, \'' + key + '\'), hidden: item.' + hiddenPropertyName + '}">  ' +
                 '                  <a href="javascript:void(0)" ng-click="selectItem(item, \'' + key + '\')">  ' +
                 '                  {{item.Name}}  ' +
                 '                  </a>  ' +
@@ -149,7 +149,7 @@
             controller: function ($scope, $element, $attrs, $transclude) {
                 var vm = $scope.vm;
                 console.log('nbDicCatalog Ctrl');
-                console.log(vm);
+                //console.log(vm);
 
                 //是否是空的集合（或只有【全部】按钮）
                 $scope.isEmptyItems = function (category) {
