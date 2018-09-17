@@ -1,0 +1,263 @@
+﻿<!DOCTYPE html>
+<!--[if IE 8]>
+<html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9]>
+<html lang="en" class="ie9"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+<head>
+    <title>angular-dics</title>
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link href="../assets/plugins/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link href="../assets/css/style.css" rel="stylesheet" />
+    <link href="../assets/plugins/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="../assets/css/theme-colors/blue.css" rel="stylesheet" />
+    <link href="../assets/plugins/sky-forms-pro/skyforms/css/sky-forms.css" rel="stylesheet" />
+    <link href="/Content/css/layout_template.css" rel="stylesheet">
+    <link href="../../css/dics.css" rel="stylesheet" />
+    <!-- JS Global Compulsory -->
+    <script src="../assets/plugins/jquery/jquery.js"></script>
+    <script src="../assets/plugins/bootstrap/js/bootstrap.js"></script>
+    <script src="../../libs/angular1.2/angular.js"></script>
+    <script src="../../scripts/zqnb.js"></script>
+    <script src="../../scripts/zqnb.mainApp.js"></script>
+    <script src="../../scripts/zqnb.mainApp.unify.js"></script>
+
+    <script src="zqnb.nbDicCatalog.js"></script>
+    <script src="zqnb.dicHelper.js"></script>
+    <script>
+        (function () {
+            'use strict';
+            var dicHelper = zqnb.createDicHelper();
+
+            //dicHelper.resetLog(true);
+
+            //console.log(dicHelper.createDicTreeVm());
+            //console.log(dicHelper.createDicTreeVm(null));
+            //console.log(dicHelper.createDicTreeVm(null, { OrgTypeCode: 'ABC' }));
+            //var initQueryCodes = { OrgCode: 'whyz', PhaseCode: 'Phase2', SubjectCode: 'GS001', GradeCode: 'GO003' };
+            //console.log(dicHelper.createDicTreeVm(null, initQueryCodes));
+
+            var mainApp = zqnb.mainApp;
+            mainApp.service('nbDicCatalogMeta', function () {
+                console.log('service => nbDicCatalogMeta');
+                var meta = dicHelper.createCatalogMeta();
+                //customize meta => if necessary!
+                return meta;
+            });
+            mainApp.factory('dicCatalogMockService', ['$http', function ($http) {
+
+                var getDicCatalogsUrl = '/Content/scripts/GetDicCatalogs.js';
+                var getDicCatalogs = function () {
+                    return $http.get(getDicCatalogsUrl);
+                };
+
+                var getDicOrgTypesUrl = '/Content/scripts/GetDicOrgTypes.js';
+                var getDicOrgTypes = function () {
+                    return $http.get(getDicOrgTypesUrl);
+                };
+
+
+                var getDicCatalogV2Url = '/Content/scripts/GetDicCatalogs20180915.js';
+                var getDicCatalogV2 = function () {
+                    return $http.get(getDicCatalogV2Url);
+                };
+
+                var vm = {};
+
+                var preInit = function () {
+                    vm.autoAppendEmpty = true;
+                    vm.orgTypes = [];
+                    vm.orgs = [];
+                    vm.phases = [];
+                    vm.subjects = [];
+                    vm.grades = [];
+                    vm.initCodes = { OrgCode: '', PhaseCode: '', SubjectCode: '', GradeCode: '' };
+                };
+
+
+                var initDicSettings = function (dicSettings) {
+
+                    vm.dicSettings = dicSettings;
+                    //initCodes
+                    vm.initCodes = { OrgCode: 'whyz', PhaseCode: 'Phase2', SubjectCode: 'GS001', GradeCode: 'GO003' };
+
+                    var phases = [];
+                    var subjects = [];
+                    var grades = [];
+
+                    angular.forEach(dicSettings, function (phase) {
+                        if (!phase.InUse) {
+                            return;
+                        }
+                        phases.push({ Code: phase.Code, Name: phase.Name, Hidden: false });
+                        //subjects
+                        angular.forEach(phase.Subjects, function (subject) {
+                            if (!subject.InUse) {
+                                return;
+                            }
+                            if (!dicHelper.containItem(subjects, subject)) {
+                                subjects.push({ Code: subject.Code, Name: subject.Name, Hidden: false });
+                            }
+                        });
+                        //grades
+                        angular.forEach(phase.Grades, function (grade) {
+                            if (!grade.InUse) {
+                                return;
+                            }
+                            if (!dicHelper.containItem(grades, grade)) {
+                                grades.push({ Code: grade.Code, Name: grade.Name, Hidden: false });
+                            }
+                        });
+                    });
+
+                    vm.phases = phases;
+                    vm.subjects = subjects;
+                    vm.grades = grades;
+
+                    return vm;
+                };
+                var initOrgTypes = function (returnOrgTypes) {
+                    var orgTypes = [];
+                    var orgTypePhases = [];
+                    for (var i = 0; i < returnOrgTypes.length; i++) {
+                        var orgType = returnOrgTypes[i];
+                        orgTypes.push({ Code: orgType.Code, Name: orgType.Name });
+                        for (var j = 0; j < orgType.Phases.length; j++) {
+                            orgTypePhases.push({ OrgTypeCode: orgType.Code, PhaseCode: orgType.Phases[j].Code });
+                        }
+                    }
+                    vm.orgTypes = orgTypes;
+                    vm.orgTypePhases = orgTypePhases;
+                };
+                var initOrgs = function () {
+                    var orgs = [];
+                    //mock orgs
+                    orgs.push({ Id: "whhc", Name: "威海环翠", OrgTypeCode: "JiaoYuJu", ParentId: "" });
+                    orgs.push({ Id: "jyz", Name: "教研组", OrgTypeCode: "JiGou-KeShi", ParentId: "whhc" });
+                    orgs.push({ Id: "ywjyz", Name: "语文教研组", OrgTypeCode: "JiGou-KeShi", ParentId: "jyz" });
+                    orgs.push({ Id: "sxjyz", Name: "数学教研组", OrgTypeCode: "JiGou-KeShi", ParentId: "jyz" });
+                    orgs.push({ Id: "whsyxx", Name: "威海试验小学", OrgTypeCode: "XueXiao-211", ParentId: "whhc" });
+                    orgs.push({ Id: "whyz", Name: "威海一中（完中）", OrgTypeCode: "XueXiao-341", ParentId: "whhc" });
+                    orgs.push({ Id: "whez", Name: "威海二中（高中）", OrgTypeCode: "XueXiao-342", ParentId: "whhc" });
+                    orgs.push({ Id: "whsz", Name: "威海三中（高中）", OrgTypeCode: "XueXiao-342", ParentId: "whhc" });
+
+                    vm.orgs = orgs;
+                };
+
+                var initAsync = function (callback) {
+                    preInit();
+                    initOrgs();
+                    getDicCatalogs().success(function (dicSettings) {
+
+                        initDicSettings(dicSettings);
+
+                        getDicOrgTypes()
+                            .success(function (orgTypes) {
+                                initOrgTypes(orgTypes);
+                                callback(vm);
+                            });
+                    });
+                };
+
+                return {
+                    initAsync: initAsync
+                };
+            }
+            ]);
+        }());
+    </script>
+    <script>
+        (function () {
+            'use strict';
+            var mainApp = zqnb.mainApp;
+
+            mainApp.controller('demoCtrl', function ($scope, dicCatalogMockService) {
+
+                console.log('demoCtrl');
+                var initScope = function(initData) {
+
+                    var dicCatalogVm = zqnb.createDicCatalogVm();
+                    dicCatalogVm.initItems(initData);
+                    dicCatalogVm.initRelations(initData);
+                    //console.log(dicCatalogVm);
+
+                    $scope.dicCatalogVm = dicCatalogVm;
+
+                    //var testOrgTypeCode = "";
+                    var testOrgTypeCode = "XueXiao-342";
+                    $scope.currentOrgTypeCodePhases = dicCatalogVm.createCurrentOrgTypeCodePhases(testOrgTypeCode);
+                };
+
+                dicCatalogMockService.initAsync(initScope);
+
+            });
+        }());
+    </script>
+
+
+    <!--[if lt IE 9]>
+            <script src="../assets/plugins/respond.js"></script>
+            <script src="../assets/plugins/html5shiv.js"></script>
+            <script src="../assets/plugins/placeholder-IE-fixes.js"></script>
+        <![endif]-->
+</head>
+<body>
+    <div class="wrapper">
+        <div ng-app="mainApp">
+            <div class="container">
+
+                <div ng-controller="demoCtrl">
+
+                    <div class="row">
+                        <h2>{{dicCatalogVm.selectResult.display()}}</h2>
+                        <hr />
+                        <div class="form-search margin-bottom-25" ng-if="dicCatalogVm">
+                            <form action="" class="sky-form">
+                                <!-- 搜索input-->
+                                <section class="input-group col col-4">
+                                    <input type="text" class="form-control" placeholder="按标题搜索">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-u" type="button">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </span>
+                                </section>
+                                <div ng-if="dicCatalogVm" nb-dic-catalog vm="dicCatalogVm" view-mode="2"></div>
+
+                                <br class="clear-both">
+                            </form>
+                            <span class="search-result">
+                                共找到
+                                <span class="color-orange">125</span>
+                                个视频
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr />
+                <div ng-controller="demoCtrl">
+                    <div class="row">
+                        <h2>{{dicCatalogVm.selectResult.display()}}</h2>
+                        <hr />
+                        <div class="search-block" ng-if="dicCatalogVm">
+                            <div nb-dic-catalog vm="dicCatalogVm" view-mode="1" api-service='ServiceName'></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</body>
+</html>

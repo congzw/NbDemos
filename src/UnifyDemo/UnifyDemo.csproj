@@ -110,6 +110,9 @@
     <Content Include="Content\scripts\zqnb.mainApp.js" />
     <Content Include="Content\scripts\zqnb.mainApp.unify.js" />
     <Content Include="Content\scripts\_temp.js" />
+    <Content Include="Content\Unify\20180917\DicCatalog.html" />
+    <Content Include="Content\Unify\20180917\zqnb.dicHelper.js" />
+    <Content Include="Content\Unify\20180917\zqnb.nbDicCatalog.js" />
     <Content Include="Content\Unify\DicCatalog_20180915.html" />
     <Content Include="Content\Unify\_dicCatalogs.html" />
     <Content Include="Content\Unify\angular-dics-directives6.html" />
