@@ -6,46 +6,35 @@
 
         var nbDicCatalogMetaKey = "nbDicCatalogMeta";
         //use customize meta, if find one!
-        var categories = function () {
-            return [
-                {
-                    key: "orgType",
-                    name: "类型"
-                },
-                {
-                    key: "org",
-                    name: "组织"
-                },
-                {
-                    key: "phase",
-                    name: "学段"
-                },
-                {
-                    key: "subject",
-                    name: "学科"
-                },
-                {
-                    key: "grade",
-                    name: "年级"
-                }]
-            ;
+        var categories = function() {
+            //todo refactor name : dicItemMetas
+            var items = [];
+            items.push({ key: "orgType", name: "类型", itemsKey: 'orgTypes', code: "orgTypeCode", disabled: false });
+            items.push({ key: "org", name: "组织", itemsKey: 'orgs', code: "orgCode", disabled: false });
+            items.push({ key: "phase", name: "学段", itemsKey: 'phases', code: "phaseCode", disabled: false });
+            items.push({ key: "subject", name: "学科", itemsKey: 'subjects', code: "subjectCode", disabled: false });
+            items.push({ key: "grade", name: "年级", itemsKey: 'grades', code: "gradeCode", disabled: false });
+            return items;
         }();
         var hiddenPropertyName = 'Hidden';
         if ($injector.has(nbDicCatalogMetaKey)) {
             var nbDicCatalogMeta = $injector.get(nbDicCatalogMetaKey);
             //console.log(nbDicCatalogMeta);
             if (nbDicCatalogMeta) {
+                //console.log('----------nbDicCatalogMeta');
+                //console.log(nbDicCatalogMeta);
                 if (nbDicCatalogMeta.categories) {
                     categories = nbDicCatalogMeta.categories;
                     //console.log('use customize meta: ');
-                    console.log(categories);
+                    //console.log(categories);
                 }
                 if (nbDicCatalogMeta.hidePropertyName) {
                     hiddenPropertyName = nbDicCatalogMeta.hidePropertyName;
                 }
             }
         }
-        
+
+
         var createCategoryTemplate1 = function (category) {
             var key = category.key;
             var name = category.name;
@@ -59,7 +48,7 @@
             //    </ul>
             //</div>
             return '' +
-                ' <div class="term-box" ng-if="isEmptyItems(\'' + key + '\')">  ' +
+                ' <div class="term-box" ng-if="!isEmptyItems(\'' + key + '\')">  ' +
                 //'      <span class="term">' + name + '(<span class="selectedDicCatalogItem">{{vm.selectResult.' + key + '.Name}}</span>)</span>  ' +
                 '      <span class="term">' + name + '</span>  ' +
                 '      <ul class="nav nav-pills overflow-h">  ' +
@@ -76,7 +65,7 @@
             var name = category.name;
             var itemsKey = category.itemsKey;
             return '' +
-                '      <li class="dropdown" ng-if="isEmptyItems(\'' + key + '\')">  ' +
+                '      <li class="dropdown" ng-if="!isEmptyItems(\'' + key + '\')">  ' +
                 '          <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">  ' +
                 '              ' + name + '(<span class="selectedDicCatalogItem">{{vm.selectResult.' + key + '.Name}}</span>)  ' +
                 '          </a>  ' +
@@ -151,7 +140,7 @@
                 console.log('nbDicCatalog Ctrl');
                 //console.log(vm);
 
-                //是否是空的集合（或只有【全部】按钮）
+                //是否是空的集合（或只有【全部】按钮），或者被禁用
                 $scope.isEmptyItems = function (category) {
                     return vm.isEmptyItems(category);
                 }

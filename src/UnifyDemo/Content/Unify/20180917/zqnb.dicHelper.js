@@ -114,112 +114,54 @@
             }
             return initItems;
         },
-        categoriesMeta = function () {
-            return {
-                orgType: {
-                    key: "orgType",
-                    name: "组织类型"
-                },
-                org: {
-                    key: "org",
-                    name: "组织"
-                },
-                phase: {
-                    key: "phase",
-                    name: "学段"
-                },
-                subject: {
-                    key: "subject",
-                    name: "学科"
-                },
-                grade: {
-                    key: "grade",
-                    name: "年级"
-                }
-            };
-        }(),
-        categories = function () {
-            return [categoriesMeta.orgType, categoriesMeta.org, categoriesMeta.phase, categoriesMeta.subject, categoriesMeta.grade];
+        categories = function() {
+            var items = [];
+            items.push({ key: "orgType", name: "类型", itemsKey: 'orgTypes', emptyItemKey: "orgTypeEmpty", code: "orgTypeCode", disabled: false });
+            items.push({ key: "org", name: "组织", itemsKey: 'orgs', emptyItemKey: "orgEmpty", code: "orgCode", disabled: false });
+            items.push({ key: "phase", name: "学段", itemsKey: 'phases', emptyItemKey: "phaseEmpty", code: "phaseCode", disabled: false });
+            items.push({ key: "subject", name: "学科", itemsKey: 'subjects', emptyItemKey: "subjectEmpty", code: "subjectCode", disabled: false });
+            items.push({ key: "grade", name: "年级", itemsKey: 'grades', emptyItemKey: "gradeEmpty", code: "gradeCode", disabled: false });
+            return items;
         }(),
         createCatalogMeta = function () {
-            var meta = function () {
-                var categories = function () {
-                    //todo refactor name : dicItemMetas
-                    var items = [];
-                    items.push({ key: "orgType", name: "类型", itemsKey: 'orgTypes', code:"orgTypeCode" });
-                    items.push({ key: "org", name: "组织", itemsKey: 'orgs' , code:"orgCode"});
-                    items.push({ key: "phase", name: "学段", itemsKey: 'phases' , code:"phaseCode"});
-                    items.push({ key: "subject", name: "学科", itemsKey: 'subjects' , code:"subjectCode"});
-                    items.push({ key: "grade", name: "年级", itemsKey: 'grades' , code:"gradeCode"});
-                    return items;
-                }(),
-                    getCategoryKey = function (category) {
-                        if (!category) {
-                            console.log('getCategoryKey typeof' + typeof category);
-                            throw { name: 'bad category key' };
-                        }
-                        if (typeof category === "string") {
+            return {
+                hidePropertyName: "Hidden",
+                autoAppendEmpty: true, //是否自动补齐全部
+                categories: categories,
+                getCategory: function (name) {
+                    if (name === undefined || name === null) {
+                        console.log('getCategoryKey typeof' + typeof name);
+                        throw { name: 'bad category name' };
+                    }
+                    for (var i = 0; i < categories.length; i++) {
+                        var category = categories[i];
+                        if (category && category.key === name) {
                             return category;
                         }
-                        return category.key;
-                    },
-                    getCategoryItemsKey = function (category) {
-                        if (!category) {
-                            console.log('getCategoryItemsKey typeof' + typeof category);
-                            throw { name: 'bad category key' };
-                        }
-                        if (typeof category === "string") {
-                            return category + 's';
-                        }
-                        return category.itemsKey;
-
-                    },
-                    getCategoryCode = function (category) {
-                        if (!category) {
-                            console.log('getCategoryCode typeof' + typeof category);
-                            throw { name: 'bad category key' };
-                        }
-                        if (typeof category === "string") {
-                            return category + 'Code';
-                        }
-                        return category.code;
-                    },
-                    getCategoryEmptyItemKey = function (category) {
-                        var key = getCategoryKey(category);
-                        return key + 'Empty';
-                    };
-
-                return {
-                    hidePropertyName: "Hidden",
-                    EmptyItemTemplate: { Code: "", Name: "全部" },
-                    categories: categories,
-                    getCategoryKey: getCategoryKey,
-                    getCategoryItemsKey: getCategoryItemsKey,
-                    getCategoryCode: getCategoryCode,
-                    getCategoryEmptyItemKey: getCategoryEmptyItemKey
-                };
-            }();
-            return meta;
-        },
-        getCategoryKey = function (category) {
-            if (category === undefined || category === null) {
-                console.log('getCategoryKey typeof' + typeof category);
-                throw { name: 'bad category key' };
+                    }
+                    throw { name: 'bad category name' + name };
+                }
             }
-            if (typeof category === "string") {
-                return category;
-            }
-            return category.key;
         },
-        getCategoryItemsKey = function (category) {
-            var key = getCategoryKey(category);
-            return key + 's';
+        //getCategoryKey = function (category) {
+        //    if (category === undefined || category === null) {
+        //        console.log('getCategoryKey typeof' + typeof category);
+        //        throw { name: 'bad category key' };
+        //    }
+        //    if (typeof category === "string") {
+        //        return category;
+        //    }
+        //    return category.key;
+        //},
+        //getCategoryItemsKey = function (category) {
+        //    var key = getCategoryKey(category);
+        //    return key + 's';
 
-        },
-        getCategoryEmptyItemKey = function (category) {
-            var key = getCategoryKey(category);
-            return key + 'Empty';
-        },
+        //},
+        //getCategoryEmptyItemKey = function (category) {
+        //    var key = getCategoryKey(category);
+        //    return key + 'Empty';
+        //},
         autoSetProperties = function (model, args) {
             if (!args) {
                 return;
@@ -361,22 +303,18 @@
         var vm = {
             //选择结果
             selectResult: {},
-            _metas :{
-                hidePropertyName: "Hidden",
-                autoAppendEmpty: true, //是否自动补齐全部
-                categories: categoriesMeta
-            }
+            _metas : createCatalogMeta()
         };
 
         var setupCategories = function() {
             //setup properties with categories
+            var categories = vm._metas.categories;
             for (var i = 0; i < categories.length; i++) {
                 var emptyItem = createEmptyItem();
                 var category = categories[i];
-
-                var categoryKey = getCategoryKey(category);
-                var categoryItemsKey = getCategoryItemsKey(category);
-                var categoryEmptyItemKey = getCategoryEmptyItemKey(category);
+                var categoryKey = category.key;
+                var categoryItemsKey = category.itemsKey;
+                var categoryEmptyItemKey = category.emptyItemKey;
 
                 //items: null
                 //emptyItem: createEmptyItem()
@@ -395,22 +333,20 @@
             var items = [];
             for (var i = 0; i < categories.length; i++) {
                 var category = categories[i];
-                var categoryKey = getCategoryKey(category);
-                items.push(vm.selectResult[categoryKey].Name);
+                items.push(vm.selectResult[category.key].Name);
             }
             return items;
         }
 
         //初始化字典项
         var initItems = function (theDicCatalog) {
-            console.log(theDicCatalog);
             if (!theDicCatalog) {
                 return;
             }
             for (var i = 0; i < categories.length; i++) {
                 var category = categories[i];
-                var categoryItemsKey = getCategoryItemsKey(category);
-                var categoryEmptyItemKey = getCategoryEmptyItemKey(category);
+                var categoryItemsKey = category.itemsKey;
+                var categoryEmptyItemKey = category.emptyItemKey;
                 var items = theDicCatalog[categoryItemsKey];
                 if (items) {
                     //hack for orgs
@@ -491,11 +427,14 @@
         };
         initRelations(dicCatalog);
 
-        //是否是空的集合（或只有【全部】按钮）
+        //是否是空的集合（或只有【全部】按钮），或者被配置为禁用
         vm.isEmptyItems = function (category) {
+            var categoryItem = vm._metas.getCategory(category);
+            if (categoryItem) {
+                return categoryItem.disabled;
+            }
             //theVm.phases, theVm.orgs, ...
-            var categoryItemsKey = getCategoryItemsKey(category);
-            var currentItems = vm[categoryItemsKey];
+            var currentItems = vm[categoryItem.itemsKey];
             if (!currentItems) {
                 return false;
             }
@@ -564,11 +503,12 @@
             for (var prop in queryCodes) {
                 if (queryCodes.hasOwnProperty(prop)) {
                     var codeValue = queryCodes[prop];
-                    var categoryKey = getCategoryKey(prop);
-                    var categoryItemsKey = getCategoryItemsKey(prop);
+                    var category = vm._metas.getCategory(prop);
+                    var categoryKey = category.key;
+                    var categoryItemsKey = category.itemsKey;
                     var items = vm[categoryItemsKey];
                     var theItem = findItem(items, codeValue);
-                    var categoryEmptyItemKey = getCategoryEmptyItemKey(prop);
+                    var categoryEmptyItemKey = category.emptyItemKey;
                     var theEmptyItem = vm[categoryEmptyItemKey];
                     if (theItem !== null) {
                             vm.selectResult[categoryKey]= theItem;
@@ -583,8 +523,8 @@
                 vm.updateView();
             }
         };
+        console.log(vm);
         setSelectResultByQueryCodes(initQueryCodes);
-
         console.log(vm);
         return vm;
     };
@@ -599,7 +539,6 @@
             createArrayCode: createArrayCode,
             createCodeItem: createCodeItem,
             createInitItems: createInitItems,
-            categories: categories,
             resetLog: resetLog,
             createCatalogMeta: createCatalogMeta,
             createDicCatalogVm: createDicCatalogVm
