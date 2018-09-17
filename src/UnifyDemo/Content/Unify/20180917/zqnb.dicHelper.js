@@ -114,7 +114,7 @@
             }
             return initItems;
         },
-        categories = function() {
+        categories = function () {
             var items = [];
             items.push({ key: "orgType", name: "类型", itemsKey: 'orgTypes', emptyItemKey: "orgTypeEmpty", code: "orgTypeCode", disabled: false });
             items.push({ key: "org", name: "组织", itemsKey: 'orgs', emptyItemKey: "orgEmpty", code: "orgCode", disabled: false });
@@ -143,391 +143,349 @@
                 }
             }
         },
-        //getCategoryKey = function (category) {
-        //    if (category === undefined || category === null) {
-        //        console.log('getCategoryKey typeof' + typeof category);
-        //        throw { name: 'bad category key' };
-        //    }
-        //    if (typeof category === "string") {
-        //        return category;
-        //    }
-        //    return category.key;
-        //},
-        //getCategoryItemsKey = function (category) {
-        //    var key = getCategoryKey(category);
-        //    return key + 's';
-
-        //},
-        //getCategoryEmptyItemKey = function (category) {
-        //    var key = getCategoryKey(category);
-        //    return key + 'Empty';
-        //},
-        autoSetProperties = function (model, args) {
-            if (!args) {
-                return;
-            }
-
-            for (var prop in model) {
-                if (model.hasOwnProperty(prop)) {
-                    if (args[prop] === undefined) {
-                        continue;
-                    }
-                    model[prop] = args[prop];
-                }
-            }
-        },
         createDicCatalogVm = function (dicCatalog, initQueryCodes) {
 
-        //private methods
-        var fixOrgModels = function (orgs) {
-            var fixOrgs = [];
-            for (var i = 0; i < orgs.length; i++) {
-                var current = orgs[i];
-                fixOrgs.push({ Code: current.Id, Name: current.Name, OrgTypeCode: current.OrgTypeCode, ParentCode: current.ParentId });
-            }
-            return fixOrgs;
-        };
-        var isEmptyItem = function (item) {
-            //console.log(item);
-            return item.Code === '';
-        };
-        var hiddenByRelation = function (theVm, items, showShowFunc) {
-            //refresh hidden
-            angular.forEach(items, function (item) {
-                item.Hidden = true;
-                var shouldShow = showShowFunc(theVm, item);
-                if (shouldShow) {
-                    item.Hidden = false;
-                    }
-            });
-                    };
-        var shouldShowOrgTypeOrg = function (theVm, org) {
-            var currentOrgType = theVm.selectResult.orgType;
-            //当前上级类型为【全部】，或未知组织类型，所有【组织】永远显示
-            if (isEmptyItem(currentOrgType) || !org.OrgTypeCode) {
-                return true;
-            }
-            //【全部】按钮永远显示
-            if (isEmptyItem(org)) {
-                return true;
-            }
-            //按关系查找
-            var shouldShow = containItem(theVm.visiableOrgTypeOrgs, createCodeItem(currentOrgType.Code, org.Code));
-            //console.log('shouldShowThisOrg: ' + createCodeItem(currentOrgType.Code, org.Code).Code + "+" + org.OrgTypeCode + " = " + shouldShow);
-            return shouldShow;
-        };
-        var shouldShowOrgTypePhase = function (theVm, phase) {
-            var currentOrgType = theVm.selectResult.orgType;
-            //当前上级类型为【全部】，所有【学段】永远显示
-            if (isEmptyItem(currentOrgType) || currentOrgType.Code === "JiGou-KeShi") {
-                return true;
-            }
-            //【全部】按钮永远显示
-            if (isEmptyItem(phase)) {
-                return true;
-            }
-            //按关系查找
-            var shouldShow = containItem(theVm.visiableOrgTypePhases, createCodeItem(currentOrgType.Code, phase.Code));
-            return shouldShow;
-        };
-        var shouldShowPhaseSubject = function (theVm, subject) {
-            var currentPhase = theVm.selectResult.phase;
-            //当前上级类型为【全部】，所有【学段】永远显示
-            if (isEmptyItem(currentPhase) || !currentPhase.Code) {
-                return true;
-            }
-            //【学科（全部）】按钮永远显示
-            if (isEmptyItem(subject)) {
-                return true;
-            }
-            //按关系查找
-            var codeItem = createCodeItem(currentPhase.Code, subject.Code);
-            var shouldShow = containItem(theVm.visiablePhaseSubjects, codeItem);
-            if (shouldShow) {
-                //console.log("refresh phase subjects: " + currentPhase.Name + ',' + subject.Name + ' ' + shouldShow);
-            }
-            return shouldShow;
-        };
-        var shouldShowPhaseGrade = function (theVm, grade) {
-            var currentPhase = theVm.selectResult.phase;
-            //当前全部学段，或未知学段类型，所有【年级】永远显示
-            if (isEmptyItem(currentPhase) || !currentPhase.Code) {
-                return true;
-            }
-            //【年级（全部）】按钮永远显示
-            if (isEmptyItem(grade)) {
-                return true;
-            }
-
-            //按关系查找
-            var codeItem = createCodeItem(currentPhase.Code, grade.Code);
-            var shouldShow = containItem(theVm.visiablePhaseGrades, codeItem);
-            if (shouldShow) {
-                //console.log("refresh phase grades: " + currentPhase.Name + ',' + grade.Name + ' ' + shouldShow);
-            }
-            return shouldShow;
-        };
-        var shouldShowPhaseSubjectGrade = function (theVm, grade) {
-            var currentPhase = theVm.selectResult.phase;
-            var currentSubject = theVm.selectResult.subject;
-            //当前全部学段、学科，或未知学段、学科类型，所有【年级】永远显示
-            if (isEmptyItem(currentPhase) || !currentPhase.Code || isEmptyItem(currentSubject) || !currentSubject.Code) {
-                return true;
-            }
-            //【年级（全部）】按钮永远显示
-            if (isEmptyItem(grade)) {
-                return true;
-            }
-
-            //按关系查找
-            var codeItem = createCodeItem(currentPhase.Code, currentSubject.Code, grade.Code);
-            var shouldShow = containItem(theVm.visiablePhaseSubjectGrades, codeItem);
-            if (shouldShow) {
-                //console.log("refresh phase subject grades: " + currentPhase.Name + ',' + currentSubject.Name + ',' + grade.Name + ' ' + shouldShow);
-            }
-            return shouldShow;
-        };
-
-        //vm[categoryItemsKey] => item: X5;
-        //vm[categoryEmptyItemKey] => emptyItem: X5;
-        //vm.autoAppendEmpty => true;
-        //vm.selectResult[categoryKey] => item: X5 (default => emptyItem);
-        //vm._metas => 
-        //hidePropertyName: "Hidden",
-        //EmptyItemTemplate: { Code: "", Name: "全部" },
-        //categories: categories,
-        //getCategoryKey: getCategoryKey,
-        //getCategoryItemsKey: getCategoryItemsKey,
-        //getCategoryEmptyItemKey: getCategoryEmptyItemKey
-
-        var vm = {
-            //选择结果
-            selectResult: {},
-            _metas : createCatalogMeta()
-        };
-
-        var setupCategories = function() {
-            //setup properties with categories
-            var categories = vm._metas.categories;
-            for (var i = 0; i < categories.length; i++) {
-                var emptyItem = createEmptyItem();
-                var category = categories[i];
-                var categoryKey = category.key;
-                var categoryItemsKey = category.itemsKey;
-                var categoryEmptyItemKey = category.emptyItemKey;
-
-                //items: null
-                //emptyItem: createEmptyItem()
-                //selectResult.item = emptyItem;
-                vm[categoryItemsKey] = null;
-                vm[categoryEmptyItemKey] = emptyItem;
-                vm.selectResult[categoryKey] = emptyItem;
-            }
-        };
-            setupCategories();
-        //[this.orgType.Name, this.org.Name, this.phase.Name, this.subject.Name, this.grade.Name];
-        vm.selectResult.display = function () {
-            //console.log('display');
-            //console.log(dicCatalogVm.selectResult);
-            //return [this.orgType.Name, this.org.Name, this.phase.Name, this.subject.Name, this.grade.Name];
-            var items = [];
-            for (var i = 0; i < categories.length; i++) {
-                var category = categories[i];
-                items.push(vm.selectResult[category.key].Name);
-            }
-            return items;
-        }
-
-        //初始化字典项
-        var initItems = function (theDicCatalog) {
-            if (!theDicCatalog) {
-                return;
-            }
-            for (var i = 0; i < categories.length; i++) {
-                var category = categories[i];
-                var categoryItemsKey = category.itemsKey;
-                var categoryEmptyItemKey = category.emptyItemKey;
-                var items = theDicCatalog[categoryItemsKey];
-                if (items) {
-                    //hack for orgs
-                    if (categoryItemsKey === "orgs") {
-                        items = fixOrgModels(items);
-                    }
-                    var appendEmptyItem = vm._metas.autoAppendEmpty ? vm[categoryEmptyItemKey] : null;
-                    vm[categoryItemsKey] = createInitItems(items, appendEmptyItem);
+            //private methods
+            var fixOrgModels = function (orgs) {
+                var fixOrgs = [];
+                for (var i = 0; i < orgs.length; i++) {
+                    var current = orgs[i];
+                    fixOrgs.push({ Code: current.Id, Name: current.Name, OrgTypeCode: current.OrgTypeCode, ParentCode: current.ParentId });
                 }
-            }
-        };
-        initItems(dicCatalog);
-
-        //初始化字典项的关系
-        var initRelations = function (config) {
-
-            //dic relations
-
-            var visiableOrgTypeOrgs = [];
-            var orgTypes = config.orgTypes; //org.OrgTypeCode
-            var orgs = config.orgs; //org.OrgTypeCode
-            angular.forEach(orgTypes, function (orgType) {
-                angular.forEach(orgs, function (org) {
-                    if (org.OrgTypeCode === "" || equalIgnoreCase(org.OrgTypeCode, orgType.Code)) {
-                        //组织类型空，或者二者匹配
-                        addCodeItemIfNotExist(visiableOrgTypeOrgs, createCodeItem(orgType.Code, org.Id));
+                return fixOrgs;
+            };
+            var isEmptyItem = function (item) {
+                //console.log(item);
+                return item.Code === '';
+            };
+            var hiddenByRelation = function (theVm, items, showShowFunc) {
+                //refresh hidden
+                angular.forEach(items, function (item) {
+                    item.Hidden = true;
+                    var shouldShow = showShowFunc(theVm, item);
+                    if (shouldShow) {
+                        item.Hidden = false;
                     }
                 });
-            });
+            };
+            var shouldShowOrgTypeOrg = function (theVm, org) {
+                var currentOrgType = theVm.selectResult.orgType;
+                //当前上级类型为【全部】，或未知组织类型，所有【组织】永远显示
+                if (isEmptyItem(currentOrgType) || !org.OrgTypeCode) {
+                    return true;
+                }
+                //【全部】按钮永远显示
+                if (isEmptyItem(org)) {
+                    return true;
+                }
+                //按关系查找
+                var shouldShow = containItem(theVm.visiableOrgTypeOrgs, createCodeItem(currentOrgType.Code, org.Code));
+                //console.log('shouldShowThisOrg: ' + createCodeItem(currentOrgType.Code, org.Code).Code + "+" + org.OrgTypeCode + " = " + shouldShow);
+                return shouldShow;
+            };
+            var shouldShowOrgTypePhase = function (theVm, phase) {
+                var currentOrgType = theVm.selectResult.orgType;
+                //当前上级类型为【全部】，所有【学段】永远显示
+                if (isEmptyItem(currentOrgType) || currentOrgType.Code === "JiGou-KeShi" || currentOrgType.Code === "LogicOrg") {
+                    return true;
+                }
+                //【全部】按钮永远显示
+                if (isEmptyItem(phase)) {
+                    return true;
+                }
+                //按关系查找
+                var shouldShow = containItem(theVm.visiableOrgTypePhases, createCodeItem(currentOrgType.Code, phase.Code));
+                return shouldShow;
+            };
+            var shouldShowPhaseSubject = function (theVm, subject) {
+                var currentPhase = theVm.selectResult.phase;
+                //当前上级类型为【全部】，所有【学段】永远显示
+                if (isEmptyItem(currentPhase) || !currentPhase.Code) {
+                    return true;
+                }
+                //【学科（全部）】按钮永远显示
+                if (isEmptyItem(subject)) {
+                    return true;
+                }
+                //按关系查找
+                var codeItem = createCodeItem(currentPhase.Code, subject.Code);
+                var shouldShow = containItem(theVm.visiablePhaseSubjects, codeItem);
+                if (shouldShow) {
+                    //console.log("refresh phase subjects: " + currentPhase.Name + ',' + subject.Name + ' ' + shouldShow);
+                }
+                return shouldShow;
+            };
+            var shouldShowPhaseGrade = function (theVm, grade) {
+                var currentPhase = theVm.selectResult.phase;
+                //当前全部学段，或未知学段类型，所有【年级】永远显示
+                if (isEmptyItem(currentPhase) || !currentPhase.Code) {
+                    return true;
+                }
+                //【年级（全部）】按钮永远显示
+                if (isEmptyItem(grade)) {
+                    return true;
+                }
 
-            var visiableOrgTypePhases = [];
-            var orgTypePhases = config.orgTypePhases;
-            angular.forEach(orgTypePhases, function (orgTypePhase) {
-                //console.log(orgTypePhase);
-                addCodeItemIfNotExist(visiableOrgTypePhases, createCodeItem(orgTypePhase.OrgTypeCode, orgTypePhase.PhaseCode));
-            });
+                //按关系查找
+                var codeItem = createCodeItem(currentPhase.Code, grade.Code);
+                var shouldShow = containItem(theVm.visiablePhaseGrades, codeItem);
+                if (shouldShow) {
+                    //console.log("refresh phase grades: " + currentPhase.Name + ',' + grade.Name + ' ' + shouldShow);
+                }
+                return shouldShow;
+            };
+            var shouldShowPhaseSubjectGrade = function (theVm, grade) {
+                var currentPhase = theVm.selectResult.phase;
+                var currentSubject = theVm.selectResult.subject;
+                //当前全部学段、学科，或未知学段、学科类型，所有【年级】永远显示
+                if (isEmptyItem(currentPhase) || !currentPhase.Code || isEmptyItem(currentSubject) || !currentSubject.Code) {
+                    return true;
+                }
+                //【年级（全部）】按钮永远显示
+                if (isEmptyItem(grade)) {
+                    return true;
+                }
 
-            var visiablePhaseSubjects = [];
-            var visiablePhaseGrades = [];
-            var visiablePhaseSubjectGrades = [];
-            angular.forEach(config.dicSettings, function (phase) {
-                if (!phase.InUse) {
+                //按关系查找
+                var codeItem = createCodeItem(currentPhase.Code, currentSubject.Code, grade.Code);
+                var shouldShow = containItem(theVm.visiablePhaseSubjectGrades, codeItem);
+                if (shouldShow) {
+                    //console.log("refresh phase subject grades: " + currentPhase.Name + ',' + currentSubject.Name + ',' + grade.Name + ' ' + shouldShow);
+                }
+                return shouldShow;
+            };
+
+            //vm[categoryItemsKey] => item: X5;
+            //vm[categoryEmptyItemKey] => emptyItem: X5;
+            //vm.selectResult[categoryKey] => item: X5 (default => emptyItem);
+            //vm._metas => 
+            //hidePropertyName: "Hidden",
+            //autoAppendEmpty: true, //是否自动补齐全部
+            //categories: categories,
+            //getCategory: function(name){...}
+
+            var vm = {
+                _metas: createCatalogMeta(),
+                //选择结果
+                selectResult: {
+                    display : function () {
+                        //console.log('display');
+                        //console.log(dicCatalogVm.selectResult);
+                        //return [this.orgType.Name, this.org.Name, this.phase.Name, this.subject.Name, this.grade.Name];
+                        var items = [];
+                        var categories = vm._metas.categories;
+                        for (var i = 0; i < categories.length; i++) {
+                            var category = categories[i];
+                            items.push(vm.selectResult[category.key].Name);
+                        }
+                        return items;
+                    }
+                }
+            };
+
+            var setupCategories = function () {
+                //setup properties with categories
+                var categories = vm._metas.categories;
+                for (var i = 0; i < categories.length; i++) {
+                    var emptyItem = createEmptyItem();
+                    var category = categories[i];
+                    vm[category.itemsKey] = null;
+                    vm[category.emptyItemKey] = emptyItem;
+                    vm.selectResult[category.key] = emptyItem;
+                }
+            };
+            setupCategories();
+
+            //[this.orgType.Name, this.org.Name, this.phase.Name, this.subject.Name, this.grade.Name];
+
+            //初始化字典项
+            var initItems = function (theDicCatalog) {
+                if (!theDicCatalog) {
                     return;
                 }
-
-                angular.forEach(phase.Grades, function (grade) {
-                    if (!grade.InUse) {
-                        return;
+                for (var i = 0; i < categories.length; i++) {
+                    var category = categories[i];
+                    var categoryItemsKey = category.itemsKey;
+                    var categoryEmptyItemKey = category.emptyItemKey;
+                    var items = theDicCatalog[categoryItemsKey];
+                    if (items) {
+                        //hack for orgs
+                        if (categoryItemsKey === "orgs") {
+                            items = fixOrgModels(items);
+                        }
+                        var appendEmptyItem = vm._metas.autoAppendEmpty ? vm[categoryEmptyItemKey] : null;
+                        vm[categoryItemsKey] = createInitItems(items, appendEmptyItem);
                     }
-                    addCodeItemIfNotExist(visiablePhaseGrades, createCodeItem(phase.Code, grade.Code));
+                }
+            };
+            initItems(dicCatalog);
+
+            //初始化字典项的关系
+            var initRelations = function (config) {
+
+                //dic relations
+
+                var visiableOrgTypeOrgs = [];
+                var orgTypes = config.orgTypes; //org.OrgTypeCode
+                var orgs = config.orgs; //org.OrgTypeCode
+                angular.forEach(orgTypes, function (orgType) {
+                    angular.forEach(orgs, function (org) {
+                        if (org.OrgTypeCode === "" || equalIgnoreCase(org.OrgTypeCode, orgType.Code)) {
+                            //组织类型空，或者二者匹配
+                            addCodeItemIfNotExist(visiableOrgTypeOrgs, createCodeItem(orgType.Code, org.Id));
+                        }
+                    });
                 });
 
-                angular.forEach(phase.Subjects, function (subject) {
-                    if (!subject.InUse) {
+                var visiableOrgTypePhases = [];
+                var orgTypePhases = config.orgTypePhases;
+                angular.forEach(orgTypePhases, function (orgTypePhase) {
+                    //console.log(orgTypePhase);
+                    addCodeItemIfNotExist(visiableOrgTypePhases, createCodeItem(orgTypePhase.OrgTypeCode, orgTypePhase.PhaseCode));
+                });
+
+                var visiablePhaseSubjects = [];
+                var visiablePhaseGrades = [];
+                var visiablePhaseSubjectGrades = [];
+                angular.forEach(config.dicSettings, function (phase) {
+                    if (!phase.InUse) {
                         return;
                     }
-                    addCodeItemIfNotExist(visiablePhaseSubjects, createCodeItem(phase.Code, subject.Code));
 
-                    angular.forEach(subject.Grades, function (grade) {
+                    angular.forEach(phase.Grades, function (grade) {
                         if (!grade.InUse) {
                             return;
                         }
-                        addCodeItemIfNotExist(visiablePhaseSubjectGrades, createCodeItem(phase.Code, subject.Code, grade.Code));
+                        addCodeItemIfNotExist(visiablePhaseGrades, createCodeItem(phase.Code, grade.Code));
+                    });
+
+                    angular.forEach(phase.Subjects, function (subject) {
+                        if (!subject.InUse) {
+                            return;
+                        }
+                        addCodeItemIfNotExist(visiablePhaseSubjects, createCodeItem(phase.Code, subject.Code));
+
+                        angular.forEach(subject.Grades, function (grade) {
+                            if (!grade.InUse) {
+                                return;
+                            }
+                            addCodeItemIfNotExist(visiablePhaseSubjectGrades, createCodeItem(phase.Code, subject.Code, grade.Code));
+                        });
                     });
                 });
-            });
 
-            vm.visiableOrgTypeOrgs = visiableOrgTypeOrgs;
-            vm.visiableOrgTypePhases = visiableOrgTypePhases;
-            vm.visiablePhaseSubjects = visiablePhaseSubjects;
-            vm.visiablePhaseGrades = visiablePhaseGrades;
-            vm.visiablePhaseSubjectGrades = visiablePhaseSubjectGrades;
+                vm.visiableOrgTypeOrgs = visiableOrgTypeOrgs;
+                vm.visiableOrgTypePhases = visiableOrgTypePhases;
+                vm.visiablePhaseSubjects = visiablePhaseSubjects;
+                vm.visiablePhaseGrades = visiablePhaseGrades;
+                vm.visiablePhaseSubjectGrades = visiablePhaseSubjectGrades;
 
-            vm.dicSettings = config.dicSettings;
+                vm.dicSettings = config.dicSettings;
 
-            //console.log('initRelation');
-            //console.log(dicVm);
-        };
-        initRelations(dicCatalog);
+                //console.log('initRelation');
+                //console.log(dicVm);
+            };
+            initRelations(dicCatalog);
 
-        //是否是空的集合（或只有【全部】按钮），或者被配置为禁用
-        vm.isEmptyItems = function (category) {
-            var categoryItem = vm._metas.getCategory(category);
-            if (categoryItem) {
-                return categoryItem.disabled;
-            }
-            //theVm.phases, theVm.orgs, ...
-            var currentItems = vm[categoryItem.itemsKey];
-            if (!currentItems) {
-                return false;
-            }
-            if (currentItems.length === 0 || (currentItems.length === 1 && currentItems[0].Code === '')) {
-                return false;
-            }
-            return true;
-        };
-
-        vm.updateView = function () {
-
-            console.log('override this to updateView by customize logic');
-
-            hiddenByRelation(vm, vm.orgs, shouldShowOrgTypeOrg);
-            //console.log('shouldShowOrgTypeOrg');
-            hiddenByRelation(vm, vm.phases, shouldShowOrgTypePhase);
-            //console.log('shouldShowOrgTypePhase');
-            hiddenByRelation(vm, vm.subjects, shouldShowPhaseSubject);
-            //console.log('shouldShowPhaseSubject');
-            hiddenByRelation(vm, vm.grades, shouldShowPhaseGrade);
-            //console.log('shouldShowPhaseGrade');
-            hiddenByRelation(vm, vm.grades, shouldShowPhaseSubjectGrade); //二次筛选
-            //console.log('shouldShowPhaseSubjectGrade');
-        };
-
-        vm.resultChanged = function (category, newItem, oldItem) {
-            console.log('resultChanged notify => ' + category + ': ' + oldItem.Code + ' -> ' + newItem.Code);
-            if (!category) {
-                return;
-            }
-            vm.updateView();
-        };
-
-        //个人空间多选
-        var shouldShowPhase = function (theVm, orgTypeCode, phase) {
-            if (isEmptyItem(orgTypeCode) || orgTypeCode.Code === "JiGou-KeShi" || !orgTypeCode) {
+            //是否是空的集合（或只有【全部】按钮），或者被配置为禁用
+            vm.isEmptyItems = function (category) {
+                var categoryItem = vm._metas.getCategory(category);
+                if (categoryItem) {
+                    return categoryItem.disabled;
+                }
+                //theVm.phases, theVm.orgs, ...
+                var currentItems = vm[categoryItem.itemsKey];
+                if (!currentItems) {
+                    return false;
+                }
+                if (currentItems.length === 0 || (currentItems.length === 1 && currentItems[0].Code === '')) {
+                    return false;
+                }
                 return true;
-            }
-            if (isEmptyItem(phase)) {
-                return true;
-            }
-            //按关系查找
-            var shouldShow = containItem(theVm.visiableOrgTypePhases, createCodeItem(orgTypeCode, phase.Code));
-            return shouldShow;
-        };
-        //为多选场景准备的方法
-        vm.createCurrentOrgTypeCodePhases = function (orgTypeCode) {
-            var phases = vm.dicSettings;
-            var phasesCopy = [];
-            angular.forEach(phases, function (phase) {
-                var shouldShow = shouldShowPhase(vm, orgTypeCode, phase);
-                if (!shouldShow) {
+            };
+
+            vm.updateView = function () {
+
+                //console.log('override this to updateView by customize logic');
+
+                hiddenByRelation(vm, vm.orgs, shouldShowOrgTypeOrg);
+                //console.log('shouldShowOrgTypeOrg');
+                hiddenByRelation(vm, vm.phases, shouldShowOrgTypePhase);
+                //console.log('shouldShowOrgTypePhase');
+                hiddenByRelation(vm, vm.subjects, shouldShowPhaseSubject);
+                //console.log('shouldShowPhaseSubject');
+                hiddenByRelation(vm, vm.grades, shouldShowPhaseGrade);
+                //console.log('shouldShowPhaseGrade');
+                hiddenByRelation(vm, vm.grades, shouldShowPhaseSubjectGrade); //二次筛选
+                //console.log('shouldShowPhaseSubjectGrade');
+            };
+
+            vm.resultChanged = function (category, newItem, oldItem) {
+                console.log('resultChanged notify => ' + category + ': ' + oldItem.Code + ' -> ' + newItem.Code);
+                if (!category) {
                     return;
                 }
-                var phaseCopy = { Code: phase.Code, Name: phase.Name, Hidden: !shouldShow, Subjects: [] };
-                phasesCopy.push(phaseCopy);
-                angular.forEach(phase.Subjects, function (subject) {
-                    phaseCopy.Subjects.push({ Code: subject.Code, Name: subject.Name });
-                });
-            });
-            return phasesCopy;
-        };
-
-        var setSelectResultByQueryCodes = function (queryCodes) {
-            var needRefresh = false;
-            for (var prop in queryCodes) {
-                if (queryCodes.hasOwnProperty(prop)) {
-                    var codeValue = queryCodes[prop];
-                    var category = vm._metas.getCategory(prop);
-                    var categoryKey = category.key;
-                    var categoryItemsKey = category.itemsKey;
-                    var items = vm[categoryItemsKey];
-                    var theItem = findItem(items, codeValue);
-                    var categoryEmptyItemKey = category.emptyItemKey;
-                    var theEmptyItem = vm[categoryEmptyItemKey];
-                    if (theItem !== null) {
-                            vm.selectResult[categoryKey]= theItem;
-                    }else {
-                        vm.selectResult[categoryKey] = theEmptyItem;
-                    }
-                    //console.log('set query result: ' + categoryKey + vm.selectResult[categoryKey].Code + ',' + vm.selectResult[categoryKey].Name);
-                    needRefresh = true;
-                }
-            }
-            if (needRefresh) {
                 vm.updateView();
-            }
+            };
+
+            //个人空间多选
+            var shouldShowPhase = function (theVm, orgTypeCode, phase) {
+                if (isEmptyItem(orgTypeCode) || orgTypeCode.Code === "JiGou-KeShi" || orgTypeCode.Code === "LogicOrg" || !orgTypeCode) {
+                    return true;
+                }
+                if (isEmptyItem(phase)) {
+                    return true;
+                }
+                //按关系查找
+                var shouldShow = containItem(theVm.visiableOrgTypePhases, createCodeItem(orgTypeCode, phase.Code));
+                return shouldShow;
+            };
+            //为多选场景准备的方法
+            vm.createCurrentOrgTypeCodePhases = function (orgTypeCode) {
+                var phases = vm.dicSettings;
+                var phasesCopy = [];
+                angular.forEach(phases, function (phase) {
+                    var shouldShow = shouldShowPhase(vm, orgTypeCode, phase);
+                    if (!shouldShow) {
+                        return;
+                    }
+                    var phaseCopy = { Code: phase.Code, Name: phase.Name, Hidden: !shouldShow, Subjects: [] };
+                    phasesCopy.push(phaseCopy);
+                    angular.forEach(phase.Subjects, function (subject) {
+                        phaseCopy.Subjects.push({ Code: subject.Code, Name: subject.Name });
+                    });
+                });
+                return phasesCopy;
+            };
+
+            var setSelectResultByQueryCodes = function (queryCodes) {
+                var needRefresh = false;
+                for (var prop in queryCodes) {
+                    if (queryCodes.hasOwnProperty(prop)) {
+                        var codeValue = queryCodes[prop];
+                        var category = vm._metas.getCategory(prop);
+                        var categoryKey = category.key;
+                        var categoryItemsKey = category.itemsKey;
+                        var items = vm[categoryItemsKey];
+                        var theItem = findItem(items, codeValue);
+                        var categoryEmptyItemKey = category.emptyItemKey;
+                        var theEmptyItem = vm[categoryEmptyItemKey];
+                        if (theItem !== null) {
+                            vm.selectResult[categoryKey] = theItem;
+                        } else {
+                            vm.selectResult[categoryKey] = theEmptyItem;
+                        }
+                        //console.log('set query result: ' + categoryKey + vm.selectResult[categoryKey].Code + ',' + vm.selectResult[categoryKey].Name);
+                        needRefresh = true;
+                    }
+                }
+                if (needRefresh) {
+                    vm.updateView();
+                }
+            };
+            setSelectResultByQueryCodes(initQueryCodes);
+            return vm;
         };
-        console.log(vm);
-        setSelectResultByQueryCodes(initQueryCodes);
-        console.log(vm);
-        return vm;
-    };
 
     var dicHelper = function () {
         return {

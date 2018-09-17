@@ -45,15 +45,14 @@
             //console.log(dicHelper.createDicTreeVm(null, initQueryCodes));
 
             var mainApp = zqnb.mainApp;
-            mainApp.service('nbDicCatalogMeta', function () {
-                //console.log('service => nbDicCatalogMeta');
-                //customize meta => if necessary!
-                var meta = dicHelper.createCatalogMeta();
-                console.log('customize meta => if necessary!');
-                meta.categories[4].disabled = true; //隐藏年级的示例
-                console.log(meta);
-                return meta;
-            });
+            //mainApp.service('nbDicCatalogMeta', function () {
+            //    //console.log('service => nbDicCatalogMeta');
+            //    //customize meta => if necessary!
+            //    var meta = dicHelper.createCatalogMeta();
+            //    console.log('customize meta => if necessary!');
+            //    meta.categories[4].disabled = true; //隐藏年级的示例
+            //    return meta;
+            //});
             mainApp.factory('dicCatalogMockService', ['$http', function ($http) {
 
                 var getDicCatalogsUrl = '/Content/scripts/GetDicCatalogs.js';
@@ -187,11 +186,14 @@
                 console.log('demoCtrl');
                 var initScope = function (dicCatalog) {
 
-                    console.log('initScope');
+
                     var initQueryCodes = { orgType: "XueXiao-342", org:"whsz" };
                     var dicCatalogVm = dicHelper.createDicCatalogVm(dicCatalog, initQueryCodes);
 
                     $scope.dicCatalogVm = dicCatalogVm;
+                    console.log(dicCatalog);
+                    console.log('----------createDicCatalogVm');
+                    console.log(dicCatalogVm);
 
                     ////var testOrgTypeCode = "";
                     //var testOrgTypeCode = "XueXiao-342";
@@ -216,7 +218,7 @@
         <div ng-app="mainApp">
             <div class="container">
 
-                <div ng-controller="demoCtrl">
+                <div ng-controller="demoCtrl" ng-if="false">
 
                     <div class="row">
                         <h2>{{dicCatalogVm.selectResult.display()}}</h2>
