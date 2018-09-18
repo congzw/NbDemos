@@ -173,7 +173,7 @@
             var autoAppendEmpty = dicCatalogMeta.autoAppendEmpty;
             var getCategory = dicCatalogMeta.getCategory;
             var hidePropertyName = dicCatalogMeta.hidePropertyName;
-
+            
             //private methods
             var getDicCatalogItems = function (dicCatalog, categoryCode) {
                 var category = getCategory(categoryCode);
@@ -191,6 +191,44 @@
             var isEmptyItem = function (item) {
                 //console.log(item);
                 return item.Code === '';
+            };
+            var shouldShowSubjectFromPhase = function (theVm, currentPhase, currentSubject) {
+
+                //【学科（全部）】按钮永远显示
+                if (isEmptyItem(currentSubject)) {
+                    return true;
+                }
+                //按关系查找
+                var codeItem = createCodeItem(currentPhase.Code, currentSubject.Code);
+                var shouldShow = containItem(theVm.visiablePhaseSubjects, codeItem);
+                //if (shouldShow) {
+                //    console.log("refresh phase subjects: " + currentPhase.Name + ',' + subject.Name + ' ' + shouldShow);
+                //}
+                return shouldShow;
+            }
+            var shouldShowGradeFromPhase = function (theVm, currentPhase, currentGrade) {
+
+                //【年级（全部）】按钮永远显示
+                if (isEmptyItem(currentGrade)) {
+                    return true;
+                }
+                //按关系查找
+                var codeItem = createCodeItem(currentPhase.Code, currentGrade.Code);
+                var shouldShow = containItem(theVm.visiablePhaseGrades, codeItem);
+                //if (shouldShow) {
+                //    console.log("refresh phase grades: " + currentPhase.Name + ',' + grade.Name + ' ' + shouldShow);
+                //}
+                return shouldShow;
+            }
+            var getCurrentShowPhases = function (theVm) {
+                var phases = getDicCatalogItems(theVm, knownCategoryCodes.phase);
+                var results = [];
+                phases.forEach(function (phase) {
+                    if (!phase[hidePropertyName]) {
+                        results.push(phase);
+                    }
+                });
+                return results;
             };
             var hiddenByRelation = function (theVm, categoryCode, showShowFunc) {
                 var category = getCategory(categoryCode);
@@ -271,38 +309,40 @@
                 var currentPhase = theVm.selectResult.phase;
                 //当前上级类型为【全部】，所有【学段】永远显示
                 if (isEmptyItem(currentPhase) || !currentPhase.Code) {
-                    return true;
+                    var visiablePhases = getCurrentShowPhases(theVm);
+                    var phases = getDicCatalogItems(theVm, knownCategoryCodes.phase);
+                    if (phases.length === visiablePhases.length) {
+                        return true;
+                    }
+                    for (var i = 0; i < visiablePhases.length; i++) {
+                        var showThis = shouldShowSubjectFromPhase(theVm, visiablePhases[i], subject);
+                        if (showThis) {
+                            return true;
+                        }
+                    }
                 }
-                //【学科（全部）】按钮永远显示
-                if (isEmptyItem(subject)) {
-                    return true;
-                }
-                //按关系查找
-                var codeItem = createCodeItem(currentPhase.Code, subject.Code);
-                var shouldShow = containItem(theVm.visiablePhaseSubjects, codeItem);
-                if (shouldShow) {
-                    //console.log("refresh phase subjects: " + currentPhase.Name + ',' + subject.Name + ' ' + shouldShow);
-                }
-                return shouldShow;
+
+                return shouldShowSubjectFromPhase(theVm, currentPhase, subject);
             };
             var shouldShowPhaseGrade = function (theVm, grade) {
                 var currentPhase = theVm.selectResult.phase;
                 //当前全部学段，或未知学段类型，所有【年级】永远显示
                 if (isEmptyItem(currentPhase) || !currentPhase.Code) {
-                    return true;
-                }
-                //【年级（全部）】按钮永远显示
-                if (isEmptyItem(grade)) {
-                    return true;
+                    var visiablePhases = getCurrentShowPhases(theVm);
+                    var phases = getDicCatalogItems(theVm, knownCategoryCodes.phase);
+                    if (phases.length === visiablePhases.length) {
+                        return true;
+                    }
+                    for (var i = 0; i < visiablePhases.length; i++) {
+                        var showThis = shouldShowGradeFromPhase(theVm, visiablePhases[i], grade);
+                        if (showThis) {
+                            return true;
+                        }
+                    }
                 }
 
                 //按关系查找
-                var codeItem = createCodeItem(currentPhase.Code, grade.Code);
-                var shouldShow = containItem(theVm.visiablePhaseGrades, codeItem);
-                if (shouldShow) {
-                    //console.log("refresh phase grades: " + currentPhase.Name + ',' + grade.Name + ' ' + shouldShow);
-                }
-                return shouldShow;
+                return shouldShowGradeFromPhase(theVm, currentPhase, grade);
             };
             var shouldShowPhaseSubjectGrade = function (theVm, grade) {
                 var currentPhase = theVm.selectResult.phase;
@@ -324,16 +364,7 @@
                 }
                 return shouldShow;
             };
-
-            //vm[categoryItemsKey] => item: X5;
-            //vm[categoryEmptyItemKey] => emptyItem: X5;
-            //vm.selectResult[categoryCode] => item: X5 (default => emptyItem);
-            //vm._metas => 
-            //hidePropertyName: "Hidden",
-            //autoAppendEmpty: true, //是否自动补齐全部
-            //categories: categories,
-            //getCategory: function(name){...}
-
+            
             var vm = {
                 _metas: dicCatalogMeta,
                 //选择结果
@@ -388,11 +419,11 @@
             };
             initItems(dicCatalog);
 
+
             //初始化字典项的关系
             var initRelations = function (dicCatalog) {
 
                 //dic relations
-
                 var visiableOrgTypeOrgs = [];
                 var orgTypes = getDicCatalogItems(dicCatalog, knownCategoryCodes.orgType);
                 var orgs = getDicCatalogItems(dicCatalog, knownCategoryCodes.org);
@@ -448,7 +479,7 @@
                 vm.visiablePhaseGrades = visiablePhaseGrades;
                 vm.visiablePhaseSubjectGrades = visiablePhaseSubjectGrades;
 
-                vm.dicSettings = dicCatalog.dicSettings;
+                //vm.dicSettings = dicCatalog.dicSettings;
 
                 //console.log('initRelation');
                 //console.log(dicVm);
@@ -496,38 +527,7 @@
                 }
                 vm.updateView();
             };
-
-            //个人空间多选
-            var shouldShowPhase = function (theVm, orgTypeCode, phase) {
-                if (isEmptyItem(orgTypeCode) || orgTypeCode.Code === "JiGou-KeShi" || orgTypeCode.Code === "LogicOrg" || !orgTypeCode) {
-                    return true;
-                }
-                if (isEmptyItem(phase)) {
-                    return true;
-                }
-                //按关系查找
-                var shouldShow = containItem(theVm.visiableOrgTypePhases, createCodeItem(orgTypeCode, phase.Code));
-                return shouldShow;
-            };
-            //为多选场景准备的方法
-            vm.createCurrentOrgTypeCodePhases = function (orgTypeCode) {
-                var phases = vm.dicSettings;
-                var phasesCopy = [];
-                phases.forEach(function (phase) {
-                    var shouldShow = shouldShowPhase(vm, orgTypeCode, phase);
-                    if (!shouldShow) {
-                        return;
-                    }
-                    var phaseCopy = { Code: phase.Code, Name: phase.Name, Subjects: [] };
-                    phaseCopy[hidePropertyName] = false;
-                    phasesCopy.push(phaseCopy);
-                    phase.Subjects.forEach(function (subject) {
-                        phaseCopy.Subjects.push({ Code: subject.Code, Name: subject.Name });
-                    });
-                });
-                return phasesCopy;
-            };
-
+            
             var setSelectResultByQueryCodes = function (queryCodes) {
                 var needRefresh = false;
                 for (var prop in queryCodes) {
