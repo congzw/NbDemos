@@ -2,7 +2,7 @@
 (function (_) {
     'use strict';
     var oldConsoleLog = console.log;
-
+    //array.forEach(function(currentValue, index, arr), thisValue)
     var copyData = function (data) {
 
         //// Shallow copy
@@ -144,9 +144,18 @@
             }
         },
         createDicCatalogVm = function (config) {
-
+            if (!config) {
+                return null;
+            }
             var dicCatalog = config.dicCatalog;
             var initQueryCodes = config.initQueryCodes;
+            var dicCatalogMeta = config.dicCatalogMeta;
+            if (!dicCatalogMeta) {
+                dicCatalogMeta = createCatalogMeta();
+            }
+            var categories = dicCatalogMeta.categories;
+            var autoAppendEmpty = dicCatalogMeta.autoAppendEmpty;
+            var getCategory = dicCatalogMeta.getCategory;
 
             //private methods
             var fixOrgModels = function (orgs) {
@@ -163,7 +172,7 @@
             };
             var hiddenByRelation = function (theVm, items, showShowFunc) {
                 //refresh hidden
-                angular.forEach(items, function (item) {
+                items.forEach(function (item) {
                     item.Hidden = true;
                     var shouldShow = showShowFunc(theVm, item);
                     if (shouldShow) {
@@ -268,15 +277,14 @@
             //getCategory: function(name){...}
 
             var vm = {
-                _metas: createCatalogMeta(),
+                _metas: dicCatalogMeta,
                 //选择结果
                 selectResult: {
-                    display : function () {
+                    display: function () {
                         //console.log('display');
                         //console.log(dicCatalogVm.selectResult);
                         //return [this.orgType.Name, this.org.Name, this.phase.Name, this.subject.Name, this.grade.Name];
                         var items = [];
-                        var categories = vm._metas.categories;
                         for (var i = 0; i < categories.length; i++) {
                             var category = categories[i];
                             items.push(vm.selectResult[category.key].Name);
@@ -288,7 +296,6 @@
 
             var setupCategories = function () {
                 //setup properties with categories
-                var categories = vm._metas.categories;
                 for (var i = 0; i < categories.length; i++) {
                     var emptyItem = createEmptyItem();
                     var category = categories[i];
@@ -316,7 +323,7 @@
                         if (categoryItemsKey === "orgs") {
                             items = fixOrgModels(items);
                         }
-                        var appendEmptyItem = vm._metas.autoAppendEmpty ? vm[categoryEmptyItemKey] : null;
+                        var appendEmptyItem = autoAppendEmpty ? vm[categoryEmptyItemKey] : null;
                         vm[categoryItemsKey] = createInitItems(items, appendEmptyItem);
                     }
                 }
@@ -329,10 +336,10 @@
                 //dic relations
 
                 var visiableOrgTypeOrgs = [];
-                var orgTypes = config.orgTypes; //org.OrgTypeCode
-                var orgs = config.orgs; //org.OrgTypeCode
-                angular.forEach(orgTypes, function (orgType) {
-                    angular.forEach(orgs, function (org) {
+                var orgTypes = config.orgTypes;
+                var orgs = config.orgs;
+                orgTypes.forEach(function (orgType) {
+                    orgs.forEach(function (org) {
                         if (org.OrgTypeCode === "" || equalIgnoreCase(org.OrgTypeCode, orgType.Code)) {
                             //组织类型空，或者二者匹配
                             addCodeItemIfNotExist(visiableOrgTypeOrgs, createCodeItem(orgType.Code, org.Id));
@@ -342,7 +349,7 @@
 
                 var visiableOrgTypePhases = [];
                 var orgTypePhases = config.orgTypePhases;
-                angular.forEach(orgTypePhases, function (orgTypePhase) {
+                orgTypePhases.forEach(function (orgTypePhase) {
                     //console.log(orgTypePhase);
                     addCodeItemIfNotExist(visiableOrgTypePhases, createCodeItem(orgTypePhase.OrgTypeCode, orgTypePhase.PhaseCode));
                 });
@@ -350,25 +357,25 @@
                 var visiablePhaseSubjects = [];
                 var visiablePhaseGrades = [];
                 var visiablePhaseSubjectGrades = [];
-                angular.forEach(config.dicSettings, function (phase) {
+                config.dicSettings.forEach(function (phase) {
                     if (!phase.InUse) {
                         return;
                     }
 
-                    angular.forEach(phase.Grades, function (grade) {
+                    phase.Grades.forEach(function (grade) {
                         if (!grade.InUse) {
                             return;
                         }
                         addCodeItemIfNotExist(visiablePhaseGrades, createCodeItem(phase.Code, grade.Code));
                     });
 
-                    angular.forEach(phase.Subjects, function (subject) {
+                    phase.Subjects.forEach(function (subject) {
                         if (!subject.InUse) {
                             return;
                         }
                         addCodeItemIfNotExist(visiablePhaseSubjects, createCodeItem(phase.Code, subject.Code));
 
-                        angular.forEach(subject.Grades, function (grade) {
+                        subject.Grades.forEach(function (grade) {
                             if (!grade.InUse) {
                                 return;
                             }
@@ -392,7 +399,7 @@
 
             //是否是空的集合（或只有【全部】按钮），或者被配置为禁用
             vm.isEmptyItems = function (category) {
-                var categoryItem = vm._metas.getCategory(category);
+                var categoryItem = getCategory(category);
                 if (categoryItem) {
                     return categoryItem.disabled;
                 }
@@ -447,14 +454,14 @@
             vm.createCurrentOrgTypeCodePhases = function (orgTypeCode) {
                 var phases = vm.dicSettings;
                 var phasesCopy = [];
-                angular.forEach(phases, function (phase) {
+                phases.forEach(function (phase) {
                     var shouldShow = shouldShowPhase(vm, orgTypeCode, phase);
                     if (!shouldShow) {
                         return;
                     }
                     var phaseCopy = { Code: phase.Code, Name: phase.Name, Hidden: !shouldShow, Subjects: [] };
                     phasesCopy.push(phaseCopy);
-                    angular.forEach(phase.Subjects, function (subject) {
+                    phase.Subjects.forEach(function (subject) {
                         phaseCopy.Subjects.push({ Code: subject.Code, Name: subject.Name });
                     });
                 });
@@ -466,7 +473,7 @@
                 for (var prop in queryCodes) {
                     if (queryCodes.hasOwnProperty(prop)) {
                         var codeValue = queryCodes[prop];
-                        var category = vm._metas.getCategory(prop);
+                        var category = getCategory(prop);
                         var categoryKey = category.key;
                         var categoryItemsKey = category.itemsKey;
                         var items = vm[categoryItemsKey];
