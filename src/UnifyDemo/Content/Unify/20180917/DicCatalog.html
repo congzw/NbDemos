@@ -35,24 +35,22 @@
         (function () {
             'use strict';
             var dicHelper = zqnb.createDicHelper();
-
-            //dicHelper.resetLog(true);
-
-            //console.log(dicHelper.createDicTreeVm());
-            //console.log(dicHelper.createDicTreeVm(null));
-            //console.log(dicHelper.createDicTreeVm(null, { OrgTypeCode: 'ABC' }));
-            //var initQueryCodes = { OrgCode: 'whyz', PhaseCode: 'Phase2', SubjectCode: 'GS001', GradeCode: 'GO003' };
-            //console.log(dicHelper.createDicTreeVm(null, initQueryCodes));
-
+            
             var mainApp = zqnb.mainApp;
-            //mainApp.service('nbDicCatalogMeta', function () {
-            //    //console.log('service => nbDicCatalogMeta');
-            //    //customize meta => if necessary!
-            //    var meta = dicHelper.createCatalogMeta();
-            //    console.log('customize meta => if necessary!');
-            //    meta.categories[4].disabled = true; //隐藏年级的示例
-            //    return meta;
-            //});
+            mainApp.service('nbDicCatalogMeta', function () {
+                //console.log('service => nbDicCatalogMeta');
+                //customize meta => if necessary!
+                var meta = dicHelper.createCatalogMeta();
+                console.log('customize meta => if necessary!');
+                //var categories = [];
+                //categories.push({ key: "orgType", name: "类型", itemsKey: 'orgTypes', emptyItemKey: "orgTypeEmpty", code: "orgTypeCode", disabled: false });
+                //categories.push({ key: "org", name: "组织", itemsKey: 'orgs', emptyItemKey: "orgEmpty", code: "orgCode", disabled: false });
+                //categories.push({ key: "phase", name: "学段", itemsKey: 'phases', emptyItemKey: "phaseEmpty", code: "phaseCode", disabled: false });
+                //categories.push({ key: "subject", name: "学科", itemsKey: 'subjects', emptyItemKey: "subjectEmpty", code: "subjectCode", disabled: false });
+                //categories.push({ key: "grade", name: "年级", itemsKey: 'grades', emptyItemKey: "gradeEmpty", code: "gradeCode", disabled: false });
+                //meta.categories[4].disabled = true; //隐藏年级的示例
+                return meta;
+            });
             mainApp.factory('dicCatalogMockService', ['$http', function ($http) {
 
                 var getDicCatalogsUrl = '/Content/scripts/GetDicCatalogs.js';
@@ -69,6 +67,11 @@
                 var getDicCatalogV2Url = '/Content/scripts/GetDicCatalogs20180915.js';
                 var getDicCatalogV2 = function () {
                     return $http.get(getDicCatalogV2Url);
+                };
+                var initAsync2 = function (callback) {
+                    getDicCatalogV2().success(function (dicCatalog) {
+                        callback(dicCatalog);
+                    });
                 };
 
                 var vm = {};
@@ -169,7 +172,8 @@
                 };
 
                 return {
-                    initAsync: initAsync
+                    initAsync: initAsync,
+                    initAsync2: initAsync2
                 };
             }
             ]);
@@ -186,13 +190,18 @@
                 console.log('demoCtrl');
                 var initScope = function (dicCatalog) {
 
+                    var config = {
+                        //initQueryCodes: { orgType: "XueXiao-342", org: "whsz" },
+                        initQueryCodes: null,
+                        dicCatalogMeta: null,
+                        dicCatalog: dicCatalog
+                    };
 
-                    var initQueryCodes = { orgType: "XueXiao-342", org:"whsz" };
-                    var dicCatalogVm = dicHelper.createDicCatalogVm(dicCatalog, initQueryCodes);
-
+                    var dicCatalogVm = dicHelper.createDicCatalogVm(config);
                     $scope.dicCatalogVm = dicCatalogVm;
+                    console.log('----------dicCatalog');
                     console.log(dicCatalog);
-                    console.log('----------createDicCatalogVm');
+                    console.log('----------dicCatalogVm');
                     console.log(dicCatalogVm);
 
                     ////var testOrgTypeCode = "";

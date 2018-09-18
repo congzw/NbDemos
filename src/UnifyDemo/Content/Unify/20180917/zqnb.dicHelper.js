@@ -143,7 +143,10 @@
                 }
             }
         },
-        createDicCatalogVm = function (dicCatalog, initQueryCodes) {
+        createDicCatalogVm = function (config) {
+
+            var dicCatalog = config.dicCatalog;
+            var initQueryCodes = config.initQueryCodes;
 
             //private methods
             var fixOrgModels = function (orgs) {
