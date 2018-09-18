@@ -146,7 +146,7 @@
                 }
 
                 $scope.isCurrentItem = function (item, category) {
-                    var currentItem = vm.selectResult[category];
+                    var currentItem = vm.selectResult.getSelectItem(category);
                     if (currentItem) {
                         return currentItem === item;
                     }
@@ -154,13 +154,13 @@
                 };
 
                 $scope.selectItem = function (item, category) {
-                    var oldItem = vm.selectResult[category];
+                    var oldItem = vm.selectResult.getSelectItem(category);
                     if (oldItem) {
                         if (oldItem === item) {
                             //no change
                             return;
                         }
-                        vm.selectResult[category] = item;
+                        vm.selectResult.changeSelectItem(category, item);
                         if (vm.resultChanged) {
                             vm.resultChanged(category, item, oldItem);
                         }

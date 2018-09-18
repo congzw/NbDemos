@@ -114,7 +114,7 @@
             }
             return initItems;
         },
-        categories = function () {
+        createCategories = function () {
             var items = [];
             items.push({ key: "orgType", name: "类型", itemsKey: 'orgTypes', emptyItemKey: "orgTypeEmpty", code: "orgTypeCode", disabled: false });
             items.push({ key: "org", name: "组织", itemsKey: 'orgs', emptyItemKey: "orgEmpty", code: "orgCode", disabled: false });
@@ -122,8 +122,9 @@
             items.push({ key: "subject", name: "学科", itemsKey: 'subjects', emptyItemKey: "subjectEmpty", code: "subjectCode", disabled: false });
             items.push({ key: "grade", name: "年级", itemsKey: 'grades', emptyItemKey: "gradeEmpty", code: "gradeCode", disabled: false });
             return items;
-        }(),
+        },
         createCatalogMeta = function () {
+            var categories = createCategories();
             return {
                 hidePropertyName: "Hidden",
                 autoAppendEmpty: true, //是否自动补齐全部
@@ -147,6 +148,8 @@
             if (!config) {
                 return null;
             }
+
+            //private helper functions
             var dicCatalog = config.dicCatalog;
             var initQueryCodes = config.initQueryCodes;
             var dicCatalogMeta = config.dicCatalogMeta;
@@ -290,6 +293,14 @@
                             items.push(vm.selectResult[category.key].Name);
                         }
                         return items;
+                    },
+                    changeSelectItem: function (categoryName, currentItem) {
+                        var category = getCategory(categoryName);
+                        this[category.key] = currentItem;
+                    },
+                    getSelectItem : function(categoryName) {
+                        var category = getCategory(categoryName);
+                        return this[category.key];
                     }
                 }
             };
@@ -309,15 +320,15 @@
             //[this.orgType.Name, this.org.Name, this.phase.Name, this.subject.Name, this.grade.Name];
 
             //初始化字典项
-            var initItems = function (theDicCatalog) {
-                if (!theDicCatalog) {
+            var initItems = function (dicCatalog) {
+                if (!dicCatalog) {
                     return;
                 }
                 for (var i = 0; i < categories.length; i++) {
                     var category = categories[i];
                     var categoryItemsKey = category.itemsKey;
                     var categoryEmptyItemKey = category.emptyItemKey;
-                    var items = theDicCatalog[categoryItemsKey];
+                    var items = dicCatalog[categoryItemsKey];
                     if (items) {
                         //hack for orgs
                         if (categoryItemsKey === "orgs") {
@@ -331,13 +342,13 @@
             initItems(dicCatalog);
 
             //初始化字典项的关系
-            var initRelations = function (config) {
+            var initRelations = function (dicCatalog) {
 
                 //dic relations
 
                 var visiableOrgTypeOrgs = [];
-                var orgTypes = config.orgTypes;
-                var orgs = config.orgs;
+                var orgTypes = dicCatalog.orgTypes;
+                var orgs = dicCatalog.orgs;
                 orgTypes.forEach(function (orgType) {
                     orgs.forEach(function (org) {
                         if (org.OrgTypeCode === "" || equalIgnoreCase(org.OrgTypeCode, orgType.Code)) {
@@ -348,7 +359,7 @@
                 });
 
                 var visiableOrgTypePhases = [];
-                var orgTypePhases = config.orgTypePhases;
+                var orgTypePhases = dicCatalog.orgTypePhases;
                 orgTypePhases.forEach(function (orgTypePhase) {
                     //console.log(orgTypePhase);
                     addCodeItemIfNotExist(visiableOrgTypePhases, createCodeItem(orgTypePhase.OrgTypeCode, orgTypePhase.PhaseCode));
@@ -357,7 +368,7 @@
                 var visiablePhaseSubjects = [];
                 var visiablePhaseGrades = [];
                 var visiablePhaseSubjectGrades = [];
-                config.dicSettings.forEach(function (phase) {
+                dicCatalog.dicSettings.forEach(function (phase) {
                     if (!phase.InUse) {
                         return;
                     }
@@ -390,7 +401,7 @@
                 vm.visiablePhaseGrades = visiablePhaseGrades;
                 vm.visiablePhaseSubjectGrades = visiablePhaseSubjectGrades;
 
-                vm.dicSettings = config.dicSettings;
+                vm.dicSettings = dicCatalog.dicSettings;
 
                 //console.log('initRelation');
                 //console.log(dicVm);
