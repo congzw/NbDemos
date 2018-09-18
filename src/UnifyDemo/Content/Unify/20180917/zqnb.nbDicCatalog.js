@@ -36,7 +36,7 @@
 
 
         var createCategoryTemplate1 = function (category) {
-            var key = category.key;
+            var categoryCode = category.code;
             var name = category.name;
             var itemsKey = category.itemsKey;
             //<div class="term-box">
@@ -48,12 +48,12 @@
             //    </ul>
             //</div>
             return '' +
-                ' <div class="term-box" ng-if="!isEmptyItems(\'' + key + '\')">  ' +
+                ' <div class="term-box" ng-if="!isEmptyItems(\'' + categoryCode + '\')">  ' +
                 //'      <span class="term">' + name + '(<span class="selectedDicCatalogItem">{{vm.selectResult.' + key + '.Name}}</span>)</span>  ' +
                 '      <span class="term">' + name + '</span>  ' +
                 '      <ul class="nav nav-pills overflow-h">  ' +
-                '          <li ng-repeat="item in vm.' + itemsKey + '" ng-class="{active: isCurrentItem(item, \'' + key + '\'), hidden: item.' + hiddenPropertyName + '}">  ' +
-                '              <a href="javascript:void(0)" ng-click="selectItem(item, \'' + key + '\')">  ' +
+                '          <li ng-repeat="item in vm.' + itemsKey + '" ng-class="{active: isCurrentItem(item, \'' + categoryCode + '\'), hidden: item.' + hiddenPropertyName + '}">  ' +
+                '              <a href="javascript:void(0)" ng-click="selectItem(item, \'' + categoryCode + '\')">  ' +
                 '                  {{item.Name}}  ' +
                 '              </a>  ' +
                 '          </li>  ' +
@@ -61,17 +61,17 @@
                 '  </div>';
         };
         var createCategoryTemplate2 = function (category) {
-            var key = category.key;
+            var categoryCode = category.code;
             var name = category.name;
             var itemsKey = category.itemsKey;
             return '' +
-                '      <li class="dropdown" ng-if="!isEmptyItems(\'' + key + '\')">  ' +
+                '      <li class="dropdown" ng-if="!isEmptyItems(\'' + categoryCode + '\')">  ' +
                 '          <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">  ' +
-                '              ' + name + '(<span class="selectedDicCatalogItem">{{vm.selectResult.' + key + '.Name}}</span>)  ' +
+                '              ' + name + '(<span class="selectedDicCatalogItem">{{vm.selectResult.' + categoryCode + '.Name}}</span>)  ' +
                 '          </a>  ' +
                 '          <ul class="dropdown-menu">  ' +
-                '               <li ng-repeat="item in vm.' + itemsKey + '" ng-class="{active: isCurrentItem(item, \'' + key + '\'), hidden: item.' + hiddenPropertyName + '}">  ' +
-                '                  <a href="javascript:void(0)" ng-click="selectItem(item, \'' + key + '\')">  ' +
+                '               <li ng-repeat="item in vm.' + itemsKey + '" ng-class="{active: isCurrentItem(item, \'' + categoryCode + '\'), hidden: item.' + hiddenPropertyName + '}">  ' +
+                '                  <a href="javascript:void(0)" ng-click="selectItem(item, \'' + categoryCode + '\')">  ' +
                 '                  {{item.Name}}  ' +
                 '                  </a>  ' +
                 '              </li>  ' +
@@ -141,28 +141,29 @@
                 //console.log(vm);
 
                 //是否是空的集合（或只有【全部】按钮），或者被禁用
-                $scope.isEmptyItems = function (category) {
-                    return vm.isEmptyItems(category);
+                $scope.isEmptyItems = function (categoryCode) {
+                    return vm.isEmptyItems(categoryCode);
                 }
 
-                $scope.isCurrentItem = function (item, category) {
-                    var currentItem = vm.selectResult.getSelectItem(category);
+                $scope.isCurrentItem = function (item, categoryCode) {
+                    var currentItem = vm.selectResult[categoryCode];
                     if (currentItem) {
                         return currentItem === item;
                     }
                     return false;
                 };
 
-                $scope.selectItem = function (item, category) {
-                    var oldItem = vm.selectResult.getSelectItem(category);
+                $scope.selectItem = function (item, categoryCode) {
+                    var oldItem = vm.selectResult[categoryCode];
                     if (oldItem) {
                         if (oldItem === item) {
                             //no change
                             return;
                         }
-                        vm.selectResult.changeSelectItem(category, item);
+                        vm.selectResult[categoryCode] = item;
                         if (vm.onSelectResultChanged) {
-                            vm.onSelectResultChanged(category, item, oldItem);
+                            //console.log('before onSelectResultChanged event => ' + categoryCode + 'old: ' + oldItem.Code + ' -> new: ' + item.Code);
+                            vm.onSelectResultChanged(categoryCode, item, oldItem);
                         }
                     }
                 };

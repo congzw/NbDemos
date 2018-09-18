@@ -114,13 +114,24 @@
             }
             return initItems;
         },
+        knownCategoryCodes = function () {
+            var codes = {
+                orgType : 'orgType',
+                org : 'org',
+                phase : 'phase',
+                subject : 'subject',
+                grade: 'grade'
+            };
+            return codes;
+        }(),
         createCategories = function () {
             var items = [];
-            items.push({ key: "orgType", name: "类型", itemsKey: 'orgTypes', emptyItemKey: "orgTypeEmpty", code: "orgTypeCode", disabled: false });
-            items.push({ key: "org", name: "组织", itemsKey: 'orgs', emptyItemKey: "orgEmpty", code: "orgCode", disabled: false });
-            items.push({ key: "phase", name: "学段", itemsKey: 'phases', emptyItemKey: "phaseEmpty", code: "phaseCode", disabled: false });
-            items.push({ key: "subject", name: "学科", itemsKey: 'subjects', emptyItemKey: "subjectEmpty", code: "subjectCode", disabled: false });
-            items.push({ key: "grade", name: "年级", itemsKey: 'grades', emptyItemKey: "gradeEmpty", code: "gradeCode", disabled: false });
+            //code as registry, should never changed!
+            items.push({ code: knownCategoryCodes.orgType, itemKey: "orgType", name: "类型", itemsKey: 'orgTypes', emptyItemKey: "orgTypeEmpty", disabled: false });
+            items.push({ code: knownCategoryCodes.org, itemKey: "org", name: "组织", itemsKey: 'orgs', emptyItemKey: "orgEmpty", disabled: false });
+            items.push({ code: knownCategoryCodes.phase, itemKey: "phase", name: "学段", itemsKey: 'phases', emptyItemKey: "phaseEmpty", disabled: false });
+            items.push({ code: knownCategoryCodes.subject, itemKey: "subject", name: "学科", itemsKey: 'subjects', emptyItemKey: "subjectEmpty", disabled: false });
+            items.push({ code: knownCategoryCodes.grade, itemKey: "grade", name: "年级", itemsKey: 'grades', emptyItemKey: "gradeEmpty", disabled: false });
             return items;
         },
         createCatalogMeta = function () {
@@ -128,19 +139,21 @@
             return {
                 hidePropertyName: "Hidden",
                 autoAppendEmpty: true, //是否自动补齐全部
+                knownCategoryCodes: knownCategoryCodes,
                 categories: categories,
-                getCategory: function (name) {
-                    if (name === undefined || name === null) {
-                        console.log('getCategoryKey typeof' + typeof name);
-                        throw { name: 'bad category name' };
+                getCategory: function (categoryCode) {
+                    if (categoryCode === undefined || categoryCode === null) {
+                        console.log('getCategoryKey typeof ' + typeof categoryCode);
+                        throw { name: 'bad category code: ' };
                     }
                     for (var i = 0; i < categories.length; i++) {
                         var category = categories[i];
-                        if (category && category.key === name) {
+                        if (category && category.code === categoryCode) {
                             return category;
                         }
                     }
-                    throw { name: 'bad category name' + name };
+                    console.log('getCategoryKey typeof ' + typeof categoryCode);
+                    throw { name: 'bad category code: ' + categoryCode };
                 }
             }
         },
@@ -159,8 +172,14 @@
             var categories = dicCatalogMeta.categories;
             var autoAppendEmpty = dicCatalogMeta.autoAppendEmpty;
             var getCategory = dicCatalogMeta.getCategory;
+            var hidePropertyName = dicCatalogMeta.hidePropertyName;
 
             //private methods
+            var getDicCatalogItems = function (dicCatalog, categoryCode) {
+                var category = getCategory(categoryCode);
+                var items = dicCatalog[category.itemsKey];
+                return items;
+            };
             var fixOrgModels = function (orgs) {
                 var fixOrgs = [];
                 for (var i = 0; i < orgs.length; i++) {
@@ -173,15 +192,27 @@
                 //console.log(item);
                 return item.Code === '';
             };
-            var hiddenByRelation = function (theVm, items, showShowFunc) {
+            var hiddenByRelation = function (theVm, categoryCode, showShowFunc) {
+                var category = getCategory(categoryCode);
+                var items = theVm[category.itemsKey];
+
                 //refresh hidden
                 items.forEach(function (item) {
-                    item.Hidden = true;
+                    item[hidePropertyName] = true;
                     var shouldShow = showShowFunc(theVm, item);
                     if (shouldShow) {
-                        item.Hidden = false;
+                        item[hidePropertyName] = false;
                     }
                 });
+
+                //如果当前选中（非全部选项）被隐藏，则重置为全部
+                var currentItem = theVm.selectResult[categoryCode];
+                if (currentItem[hidePropertyName]) {
+                    console.log('当前选中（非全部选项）被隐藏 => 重置为全部' + categoryCode);
+                    var emptyItem = theVm[category.emptyItemKey];
+                    theVm.selectResult[categoryCode] = emptyItem;
+                }
+
             };
             var shouldShowOrgTypeOrg = function (theVm, org) {
                 var currentOrgType = theVm.selectResult.orgType;
@@ -272,7 +303,7 @@
 
             //vm[categoryItemsKey] => item: X5;
             //vm[categoryEmptyItemKey] => emptyItem: X5;
-            //vm.selectResult[categoryKey] => item: X5 (default => emptyItem);
+            //vm.selectResult[categoryCode] => item: X5 (default => emptyItem);
             //vm._metas => 
             //hidePropertyName: "Hidden",
             //autoAppendEmpty: true, //是否自动补齐全部
@@ -290,17 +321,9 @@
                         var items = [];
                         for (var i = 0; i < categories.length; i++) {
                             var category = categories[i];
-                            items.push(vm.selectResult[category.key].Name);
+                            items.push(vm.selectResult[category.code].Name);
                         }
                         return items;
-                    },
-                    changeSelectItem: function (categoryName, currentItem) {
-                        var category = getCategory(categoryName);
-                        this[category.key] = currentItem;
-                    },
-                    getSelectItem : function(categoryName) {
-                        var category = getCategory(categoryName);
-                        return this[category.key];
                     }
                 }
             };
@@ -312,7 +335,7 @@
                     var category = categories[i];
                     vm[category.itemsKey] = null;
                     vm[category.emptyItemKey] = emptyItem;
-                    vm.selectResult[category.key] = emptyItem;
+                    vm.selectResult[category.code] = emptyItem;
                 }
             };
             setupCategories();
@@ -331,7 +354,7 @@
                     var items = dicCatalog[categoryItemsKey];
                     if (items) {
                         //hack for orgs
-                        if (categoryItemsKey === "orgs") {
+                        if (equalIgnoreCase(categoryItemsKey,"orgs")) {
                             items = fixOrgModels(items);
                         }
                         var appendEmptyItem = autoAppendEmpty ? vm[categoryEmptyItemKey] : null;
@@ -347,8 +370,8 @@
                 //dic relations
 
                 var visiableOrgTypeOrgs = [];
-                var orgTypes = dicCatalog.orgTypes;
-                var orgs = dicCatalog.orgs;
+                var orgTypes = getDicCatalogItems(dicCatalog, knownCategoryCodes.orgType);
+                var orgs = getDicCatalogItems(dicCatalog, knownCategoryCodes.org);
                 orgTypes.forEach(function (orgType) {
                     orgs.forEach(function (org) {
                         if (org.OrgTypeCode === "" || equalIgnoreCase(org.OrgTypeCode, orgType.Code)) {
@@ -426,23 +449,24 @@
             };
 
             vm.updateView = function () {
-
+                //console.log('----- updateView start ');
                 //console.log('override this to updateView by customize logic');
 
-                hiddenByRelation(vm, vm.orgs, shouldShowOrgTypeOrg);
+                hiddenByRelation(vm, knownCategoryCodes.org, shouldShowOrgTypeOrg);
                 //console.log('shouldShowOrgTypeOrg');
-                hiddenByRelation(vm, vm.phases, shouldShowOrgTypePhase);
+                hiddenByRelation(vm, knownCategoryCodes.phase, shouldShowOrgTypePhase);
                 //console.log('shouldShowOrgTypePhase');
-                hiddenByRelation(vm, vm.subjects, shouldShowPhaseSubject);
+                hiddenByRelation(vm, knownCategoryCodes.subject, shouldShowPhaseSubject);
                 //console.log('shouldShowPhaseSubject');
-                hiddenByRelation(vm, vm.grades, shouldShowPhaseGrade);
+                hiddenByRelation(vm, knownCategoryCodes.grade, shouldShowPhaseGrade);
                 //console.log('shouldShowPhaseGrade');
-                hiddenByRelation(vm, vm.grades, shouldShowPhaseSubjectGrade); //二次筛选
+                hiddenByRelation(vm, knownCategoryCodes.grade, shouldShowPhaseSubjectGrade); //二次筛选
                 //console.log('shouldShowPhaseSubjectGrade');
+                //console.log('----- updateView end ');
             };
 
             vm.onSelectResultChanged = function (category, newItem, oldItem) {
-                console.log('onSelectResultChanged notify => ' + category + ': ' + oldItem.Code + ' -> ' + newItem.Code);
+                //console.log('use onSelectResultChanged event to notify ui, if needed => ' + category + 'old : ' + oldItem.Code + ' -> new: ' + newItem.Code);
                 if (!category) {
                     return;
                 }
@@ -470,7 +494,8 @@
                     if (!shouldShow) {
                         return;
                     }
-                    var phaseCopy = { Code: phase.Code, Name: phase.Name, Hidden: !shouldShow, Subjects: [] };
+                    var phaseCopy = { Code: phase.Code, Name: phase.Name, Subjects: [] };
+                    phaseCopy[hidePropertyName] = false;
                     phasesCopy.push(phaseCopy);
                     phase.Subjects.forEach(function (subject) {
                         phaseCopy.Subjects.push({ Code: subject.Code, Name: subject.Name });
@@ -485,18 +510,19 @@
                     if (queryCodes.hasOwnProperty(prop)) {
                         var codeValue = queryCodes[prop];
                         var category = getCategory(prop);
-                        var categoryKey = category.key;
+                        var categoryCode = category.code;
+                        var categoryKey = category.itemKey;
                         var categoryItemsKey = category.itemsKey;
                         var items = vm[categoryItemsKey];
                         var theItem = findItem(items, codeValue);
                         var categoryEmptyItemKey = category.emptyItemKey;
                         var theEmptyItem = vm[categoryEmptyItemKey];
                         if (theItem !== null) {
-                            vm.selectResult[categoryKey] = theItem;
+                            vm.selectResult[categoryCode] = theItem;
                         } else {
-                            vm.selectResult[categoryKey] = theEmptyItem;
+                            vm.selectResult[categoryCode] = theEmptyItem;
                         }
-                        //console.log('set query result: ' + categoryKey + vm.selectResult[categoryKey].Code + ',' + vm.selectResult[categoryKey].Name);
+                        //console.log('set query result: ' + categoryKey + vm.selectResult[categoryCode].Code + ',' + vm.selectResult[categoryCode].Name);
                         needRefresh = true;
                     }
                 }
