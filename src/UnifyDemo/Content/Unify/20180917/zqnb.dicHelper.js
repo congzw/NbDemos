@@ -116,10 +116,10 @@
         },
         knownCategoryCodes = function () {
             var codes = {
-                orgType : 'orgType',
-                org : 'org',
-                phase : 'phase',
-                subject : 'subject',
+                orgType: 'orgType',
+                org: 'org',
+                phase: 'phase',
+                subject: 'subject',
                 grade: 'grade'
             };
             return codes;
@@ -203,16 +203,40 @@
                     if (shouldShow) {
                         item[hidePropertyName] = false;
                     }
+                    //if (categoryCode === 'grade') {
+                    //    console.log('hiddenByRelation: ' + item.Name + '=> shouldShow:' + shouldShow);
+                    //}
                 });
 
                 //如果当前选中（非全部选项）被隐藏，则重置为全部
                 var currentItem = theVm.selectResult[categoryCode];
                 if (currentItem[hidePropertyName]) {
-                    console.log('当前选中（非全部选项）被隐藏 => 重置为全部' + categoryCode);
+                    //console.log('当前选中（非全部选项）被隐藏 => 重置为全部： ' + categoryCode);
                     var emptyItem = theVm[category.emptyItemKey];
                     theVm.selectResult[categoryCode] = emptyItem;
                 }
-
+            };
+            var hiddenGradeByRelationCustomize = function (theVm, showShowFunc) {
+                //refresh hidden              
+                var category = getCategory(knownCategoryCodes.grade);
+                var grades = theVm[category.itemsKey];
+                grades.forEach(function (grade) {
+                    if (grade[hidePropertyName]) {
+                        //本来就是隐藏的，忽略
+                        //console.log('return ! ' + grade.Name + ' => Hidden:' + grade[hidePropertyName]);
+                        return;
+                    }
+                    if (theVm.selectResult.phase.Code === "") {
+                        //全部学段，忽略
+                        //console.log('return ! ' + grade.Name + ' => Hidden:' + grade[hidePropertyName]);
+                        return;
+                    }
+                    var shouldShow = showShowFunc(theVm, grade);
+                    if (shouldShow) {
+                        //console.log('check with customize: ' + grade.Name + ' => ' + shouldShow);
+                        grades[hidePropertyName] = false;
+                    }
+                });
             };
             var shouldShowOrgTypeOrg = function (theVm, org) {
                 var currentOrgType = theVm.selectResult.orgType;
@@ -354,7 +378,7 @@
                     var items = dicCatalog[categoryItemsKey];
                     if (items) {
                         //hack for orgs
-                        if (equalIgnoreCase(categoryItemsKey,"orgs")) {
+                        if (equalIgnoreCase(categoryItemsKey, "orgs")) {
                             items = fixOrgModels(items);
                         }
                         var appendEmptyItem = autoAppendEmpty ? vm[categoryEmptyItemKey] : null;
@@ -460,7 +484,7 @@
                 //console.log('shouldShowPhaseSubject');
                 hiddenByRelation(vm, knownCategoryCodes.grade, shouldShowPhaseGrade);
                 //console.log('shouldShowPhaseGrade');
-                hiddenByRelation(vm, knownCategoryCodes.grade, shouldShowPhaseSubjectGrade); //二次筛选
+                hiddenGradeByRelationCustomize(vm, shouldShowPhaseSubjectGrade); //二次筛选
                 //console.log('shouldShowPhaseSubjectGrade');
                 //console.log('----- updateView end ');
             };
