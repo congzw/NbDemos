@@ -161,8 +161,8 @@
                             return;
                         }
                         vm.selectResult.changeSelectItem(category, item);
-                        if (vm.resultChanged) {
-                            vm.resultChanged(category, item, oldItem);
+                        if (vm.onSelectResultChanged) {
+                            vm.onSelectResultChanged(category, item, oldItem);
                         }
                     }
                 };

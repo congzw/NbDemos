@@ -441,8 +441,8 @@
                 //console.log('shouldShowPhaseSubjectGrade');
             };
 
-            vm.resultChanged = function (category, newItem, oldItem) {
-                console.log('resultChanged notify => ' + category + ': ' + oldItem.Code + ' -> ' + newItem.Code);
+            vm.onSelectResultChanged = function (category, newItem, oldItem) {
+                console.log('onSelectResultChanged notify => ' + category + ': ' + oldItem.Code + ' -> ' + newItem.Code);
                 if (!category) {
                     return;
                 }
