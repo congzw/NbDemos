@@ -1,0 +1,161 @@
+﻿<!DOCTYPE html>
+<!--[if IE 8]>
+<html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9]>
+<html lang="en" class="ie9"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+<head>
+    <title>angular-dics</title>
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link href="../assets/plugins/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link href="../assets/css/style.css" rel="stylesheet" />
+    <link href="../assets/plugins/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="../assets/css/theme-colors/blue.css" rel="stylesheet" />
+    <link href="../assets/plugins/sky-forms-pro/skyforms/css/sky-forms.css" rel="stylesheet" />
+    <link href="/Content/css/layout_template.css" rel="stylesheet">
+    <link href="../../css/dics.css" rel="stylesheet" />
+    <!-- JS Global Compulsory -->
+    <script src="../assets/plugins/jquery/jquery.js"></script>
+    <script src="../assets/plugins/bootstrap/js/bootstrap.js"></script>
+    <script src="../../libs/angular1.2/angular.js"></script>
+    <script src="../../scripts/zqnb.js"></script>
+    <script src="../../scripts/zqnb.mainApp.js"></script>
+    <script src="../../scripts/zqnb.mainApp.unify.js"></script>
+
+    <script src="zqnb.nbDicCatalog.js"></script>
+    <script src="zqnb.dicHelper.js"></script>
+    <script>
+        (function () {
+            'use strict';
+            var dicHelper = zqnb.createDicHelper();
+            
+            var mainApp = zqnb.mainApp;
+            //mainApp.service('nbDicCatalogMeta', function () {
+            //    //console.log('service => nbDicCatalogMeta');
+            //    //customize meta => if necessary!
+            //    var meta = dicHelper.createCatalogMeta();
+            //    console.log('customize meta => if necessary!');
+            //    //var categories = [];
+            //    //categories.push({ key: "orgType", name: "类型", itemsKey: 'orgTypes', emptyItemKey: "orgTypeEmpty", code: "orgTypeCode", disabled: false });
+            //    //categories.push({ key: "org", name: "组织", itemsKey: 'orgs', emptyItemKey: "orgEmpty", code: "orgCode", disabled: false });
+            //    //categories.push({ key: "phase", name: "学段", itemsKey: 'phases', emptyItemKey: "phaseEmpty", code: "phaseCode", disabled: false });
+            //    //categories.push({ key: "subject", name: "学科", itemsKey: 'subjects', emptyItemKey: "subjectEmpty", code: "subjectCode", disabled: false });
+            //    //categories.push({ key: "grade", name: "年级", itemsKey: 'grades', emptyItemKey: "gradeEmpty", code: "gradeCode", disabled: false });
+            //    //meta.categories[4].disabled = true; //隐藏年级的示例
+            //    return meta;
+            //});
+            mainApp.factory('dicCatalogMockService', ['$http', function ($http) {
+                
+                var getDicCatalogsUrl = 'dicCatalogsJson.js';
+                var getDicCatalogs = function () {
+                    return $http.get(getDicCatalogsUrl);
+                };
+                var initAsync = function (callback) {
+                    getDicCatalogs().success(function (dicCatalog) {
+                        callback(dicCatalog[0]);
+                    });
+                };
+                return {
+                    initAsync: initAsync
+                };
+            }
+            ]);
+        }());
+    </script>
+    <script>
+        (function () {
+            'use strict';
+            var mainApp = zqnb.mainApp;
+            var dicHelper = zqnb.createDicHelper();
+
+            mainApp.controller('demoCtrl', function ($scope, dicCatalogMockService) {
+
+                console.log('demoCtrl');
+                dicCatalogMockService.initAsync(function (dicCatalog) {
+                    console.log('----------dicCatalog');
+                    ////mock InUse
+                    //dicCatalog.Phases[0].InUse = false;
+                    console.log(dicCatalog);
+                    
+                    var config = {
+                        //initQueryCodes: { orgType: "XueXiao-342", org: "whsz" },
+                        initQueryCodes: null,
+                        dicCatalogMeta: null,
+                        dicCatalog: dicCatalog
+                    };
+
+                    var dicCatalogVm = dicHelper.createDicCatalogVm(config);
+                    $scope.dicCatalogVm = dicCatalogVm;
+                    console.log('----------dicCatalogVm');
+                    console.log(dicCatalogVm);
+                });
+            });
+        }());
+    </script>
+    
+    <!--[if lt IE 9]>
+            <script src="../assets/plugins/respond.js"></script>
+            <script src="../assets/plugins/html5shiv.js"></script>
+            <script src="../assets/plugins/placeholder-IE-fixes.js"></script>
+        <![endif]-->
+</head>
+<body>
+    <div class="wrapper">
+        <div ng-app="mainApp">
+            <div class="container">
+
+                <div ng-controller="demoCtrl" ng-if="false">
+
+                    <div class="row">
+                        <h2>{{dicCatalogVm.selectResult.display()}}</h2>
+                        <hr />
+                        <div class="form-search margin-bottom-25" ng-if="dicCatalogVm">
+                            <form action="" class="sky-form">
+                                <!-- 搜索input-->
+                                <section class="input-group col col-4">
+                                    <input type="text" class="form-control" placeholder="按标题搜索">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-u" type="button">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </span>
+                                </section>
+                                <div ng-if="dicCatalogVm" nb-dic-catalog vm="dicCatalogVm" view-mode="2"></div>
+
+                                <br class="clear-both">
+                            </form>
+                            <span class="search-result">
+                                共找到
+                                <span class="color-orange">125</span>
+                                个视频
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr />
+                <div ng-controller="demoCtrl">
+                    <div class="row">
+                        <h2>{{dicCatalogVm.selectResult.display()}}</h2>
+                        <hr />
+                        <div class="search-block" ng-if="dicCatalogVm">
+                            <div nb-dic-catalog vm="dicCatalogVm" view-mode="1"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</body>
+</html>
