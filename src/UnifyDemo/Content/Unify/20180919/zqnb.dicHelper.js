@@ -1,8 +1,7 @@
-﻿
-(function (_) {
+﻿(function (_) {
     'use strict';
-    var oldConsoleLog = console.log;
-    //array.forEach(function(currentValue, index, arr), thisValue)
+
+    //private
     var copyData = function (data) {
 
         //// Shallow copy
@@ -21,16 +20,6 @@
         var newData = jQuery.extend(true, {}, data);
         return newData;
     },
-    resetLog = function (enabled) {
-        if (enabled === true) {
-            console.log = oldConsoleLog;
-            return;
-        }
-        console.log = function (message) {
-            //oldConsoleLog('disabled!');
-            //oldConsoleLog('[Dic]=> ' + message);
-        };
-    },
         equalIgnoreCase = function (str, str2) {
             if (str === null || str2 === null) {
                 return true;
@@ -47,14 +36,21 @@
             if (!item || !code) {
                 return false;
             }
-
-            if (item.OrgTypeCode === undefined) {
-                //DicCatalogItem
-                return item.Code === code;
-            } else {
-                //DicCatalogOrg
-                return item.Id === code;
+            return equalIgnoreCase(item.Code, code);
+        },
+        sameCodeItem = function (item1, item2) {
+            return item1 === item2 || equalIgnoreCase(item1.Code, item2.Code);
+        },
+        containItem = function (items, itemToCheck) {
+            if (!items || !itemToCheck) {
+                return false;
             }
+            for (var i = 0; i < items.length; i++) {
+                if (sameCodeItem(items[i], itemToCheck)) {
+                    return true;
+                }
+            }
+            return false;
         },
         findItemByCode = function (items, code) {
             for (var i = 0; i < items.length; i++) {
@@ -78,30 +74,6 @@
                 }
             }
             return result;
-        },
-        sameCodeItem = function (item1, item2) {
-            return item1 === item2 || equalIgnoreCase(item1.Code, item2.Code);
-        },
-        containItem = function (items, itemToCheck) {
-            if (!items || !itemToCheck) {
-                return false;
-            }
-            for (var i = 0; i < items.length; i++) {
-                if (sameCodeItem(items[i], itemToCheck)) {
-                    return true;
-                }
-            }
-            return false;
-        },
-        findItem = function (items, code) {
-            for (var i = 0; i < items.length; i++) {
-                var current = items[i];
-                var sameCode = equalIgnoreCase(current.Code, code);
-                if (sameCode) {
-                    return current;
-                }
-            }
-            return null;
         },
         createEmptyItem = function () {
             return { Code: "", Name: "全部" };
@@ -715,7 +687,7 @@
                         var categoryCode = category.code;
                         var categoryItemsKey = category.itemsKey;
                         var items = getProperty(vm, categoryItemsKey);
-                        var theItem = findItem(items, codeValue);
+                        var theItem = findItemByCode(items, codeValue);
                         var categoryEmptyItemKey = category.emptyItemKey;
                         var theEmptyItem = vm[categoryEmptyItemKey];
                         if (theItem !== null) {
@@ -734,18 +706,17 @@
             setSelectResultByQueryCodes(initQueryCodes);
             return vm;
         };
-
+    
     var dicHelper = function () {
+        //public
         return {
             equalIgnoreCase: equalIgnoreCase,
             sameCodeItem: sameCodeItem,
             containItem: containItem,
-            findItem: findItem,
-            createEmptyItem: createEmptyItem,
+            findItemByCode: findItemByCode,
             createArrayCode: createArrayCode,
             createCodeItem: createCodeItem,
             createInitItems: createInitItems,
-            resetLog: resetLog,
             createCatalogMeta: createCatalogMeta,
             createDicCatalogVm: createDicCatalogVm
         };
