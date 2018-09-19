@@ -121,7 +121,6 @@
     <Content Include="Content\Unify\20180917\DicCatalog.html" />
     <Content Include="Content\Unify\20180917\zqnb.dicHelper.js" />
     <Content Include="Content\Unify\20180917\zqnb.nbDicCatalog.js" />
-    <Content Include="Content\Unify\DicCatalog_20180915.html" />
     <Content Include="Content\Unify\_dicCatalogs.html" />
     <Content Include="Content\Unify\angular-dics-directives6.html" />
     <Content Include="Content\Unify\angular-dics-directives5.html" />

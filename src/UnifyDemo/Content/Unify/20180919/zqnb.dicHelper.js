@@ -297,6 +297,15 @@
                     theVm.selectResult[categoryCode] = emptyItem;
                 }
             };
+            var getOrgTypeCodeForFilterPhases = function (theVm) {
+                var currentOrg = theVm.selectResult.org;
+                if (!isEmptyItem(currentOrg)) {
+                    //console.log('>>>>smart change OrgTypeCode: ' + currentOrg.OrgTypeCode);
+                    return currentOrg.OrgTypeCode;
+                }
+
+                return theVm.selectResult.orgType.Code;
+            };
             var hiddenGradeByRelationCustomize = function (theVm, showShowFunc) {
                 //refresh hidden              
                 var category = getCategory(knownCategoryCodes.grade);
@@ -335,17 +344,18 @@
                 return shouldShow;
             };
             var shouldShowOrgTypePhase = function (theVm, phase) {
-                var currentOrgType = theVm.selectResult.orgType;
-                //当前上级类型为【全部】，所有【学段】永远显示
-                if (isEmptyItem(currentOrgType) || currentOrgType.Code === "JiaoYuJu" || currentOrgType.Code === "JiGou-KeShi" || currentOrgType.Code === "LogicOrg") {
-                    return true;
-                }
+                
                 //【全部】按钮永远显示
                 if (isEmptyItem(phase)) {
                     return true;
                 }
+                var theOrgTypeCode = getOrgTypeCodeForFilterPhases(theVm);
+                //当前上级类型为【全部】，所有【学段】永远显示
+                if (theOrgTypeCode === "" || theOrgTypeCode === "JiaoYuJu" || theOrgTypeCode === "JiGou-KeShi" || theOrgTypeCode === "LogicOrg") {
+                    return true;
+                }
                 //按关系查找
-                var shouldShow = containItem(theVm.visiableOrgTypePhases, createCodeItem(currentOrgType.Code, phase.Code));
+                var shouldShow = containItem(theVm.visiableOrgTypePhases, createCodeItem(theOrgTypeCode, phase.Code));
                 return shouldShow;
             };
             var shouldShowPhaseSubject = function (theVm, subject) {
@@ -378,6 +388,8 @@
                     }
                     for (var i = 0; i < visiablePhases.length; i++) {
                         var showThis = shouldShowGradeFromPhase(theVm, visiablePhases[i], grade);
+                        //console.log('>>>>>> shouldShowGradeFromPhase => ', +showThis);
+                        //console.log(visiablePhases[i].Name, grade.Name);
                         if (showThis) {
                             return true;
                         }
@@ -438,8 +450,6 @@
             };
             setupCategories();
 
-            //[this.orgType.Name, this.org.Name, this.phase.Name, this.subject.Name, this.grade.Name];
-
             //初始化字典项
             var initItems = function (dicCatalog) {
                 if (!dicCatalog) {
@@ -461,7 +471,6 @@
                 }
             };
             initItems(dicCatalog);
-
 
             //初始化字典项的关系
             var initRelations = function (dicCatalog) {
@@ -519,7 +528,7 @@
                     });
                 };
 
-                var createHashTable = function(getItemKeyFunc, items) {
+                var createHashTable = function (getItemKeyFunc, items) {
                     var table = {};
                     for (var i = 0; i < items.length; i++) {
                         var item = items[i];
@@ -528,7 +537,7 @@
                     }
                     return table;
                 };
-                var hasCode = function(code, codes) {
+                var hasCode = function (code, codes) {
                     for (var i = 0; i < codes.length; i++) {
                         if (codes[i] === code) {
                             return true;
@@ -536,13 +545,13 @@
                     }
                     return false;
                 };
-                var setCustomziePhaseSubjects = function(phase, subjects, customizePhaseSubjects) {
+                var setCustomziePhaseSubjects = function (phase, subjects, customizePhaseSubjects) {
                     //set customizes if necessary
                     if (customizePhaseSubjects == null || customizePhaseSubjects.length === 0) {
                         return;
                     }
 
-                    var getCustomizePhaseSubjectKey = function(item) {
+                    var getCustomizePhaseSubjectKey = function (item) {
                         return item.PhaseCode + ',' + item.SubjectCode;
                     };
                     //for better preformance, convert to hashtable
@@ -567,7 +576,7 @@
                         }
                     }
                     //fix orders
-                    subjects.sort(function(a, b) { return a.SortNum - b.SortNum });
+                    subjects.sort(function (a, b) { return a.SortNum - b.SortNum });
                 };
                 var resetPhaseSubjectGrade = function (dicCatalog) {
                     //console.log('--------resetPhaseSubjectGrade----------');
@@ -597,7 +606,7 @@
                     initVisiableDics(thePhases);
                 };
                 resetPhaseSubjectGrade(dicCatalog);
-         
+
                 //dicCatalog.dicSettings.forEach(function (phase) {
                 //    if (!phase.InUse) {
                 //        return;
@@ -706,7 +715,7 @@
             setSelectResultByQueryCodes(initQueryCodes);
             return vm;
         };
-    
+
     var dicHelper = function () {
         //public
         return {
