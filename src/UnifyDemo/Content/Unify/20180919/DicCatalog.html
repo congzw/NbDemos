@@ -35,22 +35,16 @@
         (function () {
             'use strict';
             var dicHelper = zqnb.createDicHelper();
+            var meta = dicHelper.createCatalogMeta();
             
             var mainApp = zqnb.mainApp;
-            //mainApp.service('nbDicCatalogMeta', function () {
-            //    //console.log('service => nbDicCatalogMeta');
-            //    //customize meta => if necessary!
-            //    var meta = dicHelper.createCatalogMeta();
-            //    console.log('customize meta => if necessary!');
-            //    //var categories = [];
-            //    //categories.push({ key: "orgType", name: "类型", itemsKey: 'orgTypes', emptyItemKey: "orgTypeEmpty", code: "orgTypeCode", disabled: false });
-            //    //categories.push({ key: "org", name: "组织", itemsKey: 'orgs', emptyItemKey: "orgEmpty", code: "orgCode", disabled: false });
-            //    //categories.push({ key: "phase", name: "学段", itemsKey: 'phases', emptyItemKey: "phaseEmpty", code: "phaseCode", disabled: false });
-            //    //categories.push({ key: "subject", name: "学科", itemsKey: 'subjects', emptyItemKey: "subjectEmpty", code: "subjectCode", disabled: false });
-            //    //categories.push({ key: "grade", name: "年级", itemsKey: 'grades', emptyItemKey: "gradeEmpty", code: "gradeCode", disabled: false });
-            //    //meta.categories[4].disabled = true; //隐藏年级的示例
-            //    return meta;
-            //});
+            mainApp.service('nbDicCatalogMeta', function () {
+                console.log('customize meta => if necessary!');
+                meta.categories[1].disabled = true; //隐藏组织的示例
+                meta.categories[3].sort = 4; 
+                meta.categories[4].sort = 3; 
+                return meta;
+            });
             mainApp.factory('dicCatalogMockService', ['$http', function ($http) {
                 
                 var getDicCatalogsUrl = 'dicCatalogsJson.js';
@@ -67,27 +61,16 @@
                 };
             }
             ]);
-        }());
-    </script>
-    <script>
-        (function () {
-            'use strict';
-            var mainApp = zqnb.mainApp;
-            var dicHelper = zqnb.createDicHelper();
 
             mainApp.controller('demoCtrl', function ($scope, dicCatalogMockService) {
 
                 console.log('demoCtrl');
                 dicCatalogMockService.initAsync(function (dicCatalog) {
-                    //console.log('----------dicCatalog');
-                    //////mock InUse
-                    ////dicCatalog.Phases[0].InUse = false;
-                    //console.log(dicCatalog);
-                    
+
                     var config = {
-                        //initQueryCodes: { orgType: "XueXiao-342", org: "whsz" },
+                        //initQueryCodes: { orgType: "XueXiao-342", /*org: "ab889c79-309b-49d7-a1da-20d5bd94a1ca"*/ },
                         initQueryCodes: null,
-                        dicCatalogMeta: null,
+                        dicCatalogMeta: meta,
                         dicCatalog: dicCatalog
                     };
 

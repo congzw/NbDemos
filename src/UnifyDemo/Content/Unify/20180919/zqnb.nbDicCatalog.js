@@ -1,41 +1,29 @@
 ﻿(function () {
     'use strict';
     var mainApp = zqnb.mainApp;
+
     mainApp.directive('nbDicCatalog', function ($injector) {
         //console.log('nbDicCatalog call!!!!!!');
 
         var nbDicCatalogMetaKey = "nbDicCatalogMeta";
         //use customize meta, if find one!
-        var categories = function() {
-            //todo refactor name : dicItemMetas
-            var items = [];
-            items.push({ code: "orgType", itemKey: "orgType", name: "类型", itemsKey: 'orgTypes', emptyItemKey: "orgTypeEmpty", disabled: false });
-            items.push({ code: "org", itemKey: "org", name: "组织", itemsKey: 'orgs', emptyItemKey: "orgEmpty", disabled: false });
-            items.push({ code: "phase", itemKey: "phase", name: "学段", itemsKey: 'phases', emptyItemKey: "phaseEmpty", disabled: false });
-            items.push({ code: "subject", itemKey: "subject", name: "学科", itemsKey: 'subjects', emptyItemKey: "subjectEmpty", disabled: false });
-            items.push({ code: "grade", itemKey: "grade", name: "年级", itemsKey: 'grades', emptyItemKey: "gradeEmpty", disabled: false });
-            return items;
-        }();
-        var hiddenPropertyName = 'Hidden';
+        var dicMeta = null;
         if ($injector.has(nbDicCatalogMetaKey)) {
-            var nbDicCatalogMeta = $injector.get(nbDicCatalogMetaKey);
-            //console.log(nbDicCatalogMeta);
-            if (nbDicCatalogMeta) {
-                //console.log('----------nbDicCatalogMeta');
-                //console.log(nbDicCatalogMeta);
-                if (nbDicCatalogMeta.categories) {
-                    categories = nbDicCatalogMeta.categories;
-                    //console.log('use customize meta: ');
-                    //console.log(categories);
-                }
-                if (nbDicCatalogMeta.hidePropertyName) {
-                    hiddenPropertyName = nbDicCatalogMeta.hidePropertyName;
-                }
-            }
+            dicMeta = $injector.get(nbDicCatalogMetaKey);
+            console.log('>>>>>>use customize meta: ');
+            console.log(dicMeta);
+        } else {
+            var helper = zqnb.createDicHelper();
+            dicMeta = helper.createCatalogMeta(); //set by default
         }
-
+        
+        var hiddenPropertyName = dicMeta.hidePropertyName;
+        var categories =  dicMeta.categories.sort(function (a, b) { return a.sort - b.sort });
 
         var createCategoryTemplate1 = function (category) {
+            if (category.disabled === true) {
+                return "";
+            }
             var categoryCode = category.code;
             var name = category.name;
             var itemsKey = category.itemsKey;
@@ -61,6 +49,9 @@
                 '  </div>';
         };
         var createCategoryTemplate2 = function (category) {
+            if (category.disabled === true) {
+                return "";
+            }
             var categoryCode = category.code;
             var name = category.name;
             var itemsKey = category.itemsKey;

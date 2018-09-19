@@ -3,15 +3,15 @@
 
     //private
     var knownCategoryCodes = function () {
-            var codes = {
-                orgType: 'orgType',
-                org: 'org',
-                phase: 'phase',
-                subject: 'subject',
-                grade: 'grade'
-            };
-            return codes;
-        }(),
+        var codes = {
+            orgType: 'orgType',
+            org: 'org',
+            phase: 'phase',
+            subject: 'subject',
+            grade: 'grade'
+        };
+        return codes;
+    }(),
         createEmptyItem = function () { return { Code: "", Name: "全部" }; },
         getProperty = function (model, propName) {
             //Access property case-insensitively
@@ -160,11 +160,11 @@
         createCategories = function () {
             var items = [];
             //code as registry, should never changed!
-            items.push({ code: knownCategoryCodes.orgType, itemKey: "orgType", name: "类型", itemsKey: 'orgTypes', emptyItemKey: "orgTypeEmpty", disabled: false });
-            items.push({ code: knownCategoryCodes.org, itemKey: "org", name: "组织", itemsKey: 'orgs', emptyItemKey: "orgEmpty", disabled: false });
-            items.push({ code: knownCategoryCodes.phase, itemKey: "phase", name: "学段", itemsKey: 'phases', emptyItemKey: "phaseEmpty", disabled: false });
-            items.push({ code: knownCategoryCodes.subject, itemKey: "subject", name: "学科", itemsKey: 'subjects', emptyItemKey: "subjectEmpty", disabled: false });
-            items.push({ code: knownCategoryCodes.grade, itemKey: "grade", name: "年级", itemsKey: 'grades', emptyItemKey: "gradeEmpty", disabled: false });
+            items.push({ code: "orgType", itemKey: "orgType", name: "类型", itemsKey: 'orgTypes', emptyItemKey: "orgTypeEmpty", disabled: false, sort: 0 });
+            items.push({ code: "org", itemKey: "org", name: "组织", itemsKey: 'orgs', emptyItemKey: "orgEmpty", disabled: false, sort: 1 });
+            items.push({ code: "phase", itemKey: "phase", name: "学段", itemsKey: 'phases', emptyItemKey: "phaseEmpty", disabled: false, sort: 2 });
+            items.push({ code: "subject", itemKey: "subject", name: "学科", itemsKey: 'subjects', emptyItemKey: "subjectEmpty", disabled: false, sort: 3 });
+            items.push({ code: "grade", itemKey: "grade", name: "年级", itemsKey: 'grades', emptyItemKey: "gradeEmpty", disabled: false, sort: 4 });
             return items;
         },
         createCatalogMeta = function () {
@@ -200,7 +200,7 @@
             var initQueryCodes = config.initQueryCodes;
             var dicCatalogMeta = config.dicCatalogMeta;
             if (!dicCatalogMeta) {
-                dicCatalogMeta = createCatalogMeta();
+                throw { name: 'config.dicCatalogMeta should not null!' };
             }
             var categories = dicCatalogMeta.categories;
             var autoAppendEmpty = dicCatalogMeta.autoAppendEmpty;
@@ -251,50 +251,6 @@
                     }
                 });
                 return results;
-            };
-            var hiddenByRelation = function (theVm, categoryCode, showShowFunc) {
-                var category = getCategory(categoryCode);
-                var items = theVm[category.itemsKey];
-
-                //refresh hidden
-                items.forEach(function (item) {
-                    item[hidePropertyName] = true;
-                    var shouldShow = showShowFunc(theVm, item);
-                    if (shouldShow) {
-                        item[hidePropertyName] = false;
-                    }
-                    //if (categoryCode === 'grade') {
-                    //    console.log('hiddenByRelation: ' + item.Name + '=> shouldShow:' + shouldShow);
-                    //}
-                });
-
-                //如果当前选中（非全部选项）被隐藏，则重置为全部
-                var currentItem = theVm.selectResult[categoryCode];
-                if (currentItem[hidePropertyName]) {
-                    //console.log('当前选中（非全部选项）被隐藏 => 重置为全部： ' + categoryCode);
-                    var emptyItem = theVm[category.emptyItemKey];
-                    theVm.selectResult[categoryCode] = emptyItem;
-                }
-            };
-            var hiddenGradeByRelationCustomize = function (theVm, showShowFunc) {
-                //refresh hidden              
-                var category = getCategory(knownCategoryCodes.grade);
-                var grades = theVm[category.itemsKey];
-                grades.forEach(function (grade) {
-                    if (grade[hidePropertyName]) {
-                        //本来就是隐藏的，忽略
-                        //console.log('return ! ' + grade.Name + ' => Hidden:' + grade[hidePropertyName]);
-                        return;
-                    }
-                    if (theVm.selectResult.phase.Code === "") {
-                        //全部学段，忽略
-                        //console.log('return ! ' + grade.Name + ' => Hidden:' + grade[hidePropertyName]);
-                        return;
-                    }
-                    var shouldShow = showShowFunc(theVm, grade);
-                    grade[hidePropertyName] = !shouldShow;
-                    //console.log('check with customize: ' + grade.Name + ' => ' + shouldShow);
-                });
             };
             var shouldShowOrgTypeOrg = function (theVm, org) {
                 var currentOrgType = theVm.selectResult.orgType;
@@ -415,6 +371,92 @@
                 //console.log('>>>>>> shouldShowPhaseSubjectGrade: ' + codeItem.Code + " => " + shouldShow);
                 //console.log("refresh phase subject grades: " + currentPhase.Name + ',' + currentSubject.Name + ',' + grade.Name + ' ' + shouldShow);
                 return shouldShow;
+            };
+            var shouldShowPhaseGradeSubject = function (theVm, subject) {
+
+                //【学科（全部）】按钮永远显示
+                if (isEmptyItem(subject)) {
+                    return true;
+                }
+
+                var currentPhase = theVm.selectResult.phase;
+                var currentGrade = theVm.selectResult.grade;
+                if (isEmptyItem(currentPhase) || isEmptyItem(currentGrade)) {
+                    //console.log('>>>>>> shouldShowPhaseGradeSubject: 1');
+                    return true;
+                }
+
+                //按关系查找
+                var codeItem = createCodeItem(currentPhase.Code, subject.Code, currentGrade.Code);
+                var shouldShow = containItem(theVm.visiablePhaseSubjectGrades, codeItem);
+                //console.log('>>>>>> shouldShowPhaseGradeSubject: ' + codeItem.Code + " => " + shouldShow);
+                return shouldShow;
+            };
+            var hiddenByRelation = function (theVm, categoryCode, showShowFunc) {
+                var category = getCategory(categoryCode);
+                var items = theVm[category.itemsKey];
+
+                //refresh hidden
+                items.forEach(function (item) {
+                    item[hidePropertyName] = true;
+                    var shouldShow = showShowFunc(theVm, item);
+                    if (shouldShow) {
+                        item[hidePropertyName] = false;
+                    }
+                    //if (categoryCode === 'grade') {
+                    //    console.log('hiddenByRelation: ' + item.Name + '=> shouldShow:' + shouldShow);
+                    //}
+                });
+
+                //如果当前选中（非全部选项）被隐藏，则重置为全部
+                var currentItem = theVm.selectResult[categoryCode];
+                if (currentItem[hidePropertyName]) {
+                    //console.log('当前选中（非全部选项）被隐藏 => 重置为全部： ' + categoryCode);
+                    var emptyItem = theVm[category.emptyItemKey];
+                    theVm.selectResult[categoryCode] = emptyItem;
+                }
+            };
+            var hiddenGradeByRelationCustomize = function (theVm) {
+                //refresh hidden
+                var subjectCategory = getCategory(knownCategoryCodes.subject);
+                var gradeCategory = getCategory(knownCategoryCodes.grade);
+                if (subjectCategory.sort <= gradeCategory.sort) {
+                    //console.log(">>>>>> subject grade");
+                    var grades = theVm[gradeCategory.itemsKey];
+                    grades.forEach(function (grade) {
+                        if (grade[hidePropertyName]) {
+                            //本来就是隐藏的，忽略
+                            //console.log('return ! ' + grade.Name + ' => Hidden:' + grade[hidePropertyName]);
+                            return;
+                        }
+                        if (theVm.selectResult.phase.Code === "") {
+                            //全部学段，忽略
+                            //console.log('return ! ' + grade.Name + ' => Hidden:' + grade[hidePropertyName]);
+                            return;
+                        }
+                        var shouldShow = shouldShowPhaseSubjectGrade(theVm, grade);
+                        grade[hidePropertyName] = !shouldShow;
+                        //console.log('check with customize: ' + grade.Name + ' => ' + shouldShow);
+                    });
+                } else {
+                    //console.log(">>>>>> grade subject");
+                    var subjects = theVm[subjectCategory.itemsKey];
+                    subjects.forEach(function (subject) {
+                        if (subject[hidePropertyName]) {
+                            //本来就是隐藏的，忽略
+                            //console.log('return ! ' + subject.Name + ' => Hidden:' + subject[hidePropertyName]);
+                            return;
+                        }
+                        if (theVm.selectResult.phase.Code === "") {
+                            //全部，忽略
+                            //console.log('return ! ' + subject.Name + ' => Hidden:' + subject[hidePropertyName]);
+                            return;
+                        }
+                        var shouldShow = shouldShowPhaseGradeSubject(theVm, subject);
+                        subject[hidePropertyName] = !shouldShow;
+                        //console.log('check with customize: ' + subject.Name + ' => ' + shouldShow);
+                    });
+                }
             };
 
             var vm = {
@@ -645,7 +687,6 @@
                 hiddenByRelation(vm, knownCategoryCodes.grade, shouldShowPhaseGrade);
                 //console.log('shouldShowPhaseGrade');
                 hiddenGradeByRelationCustomize(vm, shouldShowPhaseSubjectGrade); //二次筛选
-                //console.log('shouldShowPhaseSubjectGrade');
                 //console.log('----- updateView end ');
             };
 
