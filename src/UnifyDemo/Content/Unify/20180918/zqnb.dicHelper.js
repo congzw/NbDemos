@@ -493,8 +493,8 @@
 
                 var visiableOrgTypePhases = [];
                 var orgTypePhases = getProperty(dicCatalog, "orgTypePhases");
-                console.log('>>>>>> orgTypePhases');
-                console.log(orgTypePhases);
+                //console.log('>>>>>> orgTypePhases');
+                //console.log(orgTypePhases);
                 orgTypePhases.forEach(function (orgTypePhase) {
                     //console.log(orgTypePhase);
                     addCodeItemIfNotExist(visiableOrgTypePhases, createCodeItem(orgTypePhase.LeftDicItemCode, orgTypePhase.RightDicItemCode));
@@ -701,7 +701,6 @@
                         var codeValue = queryCodes[prop];
                         var category = getCategory(prop);
                         var categoryCode = category.code;
-                        var categoryKey = category.itemKey;
                         var categoryItemsKey = category.itemsKey;
                         var items = getProperty(vm, categoryItemsKey);
                         var theItem = findItem(items, codeValue);

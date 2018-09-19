@@ -9,11 +9,11 @@
         var categories = function() {
             //todo refactor name : dicItemMetas
             var items = [];
-            items.push({ key: "orgType", name: "类型", itemsKey: 'orgTypes', code: "orgTypeCode", disabled: false });
-            items.push({ key: "org", name: "组织", itemsKey: 'orgs', code: "orgCode", disabled: false });
-            items.push({ key: "phase", name: "学段", itemsKey: 'phases', code: "phaseCode", disabled: false });
-            items.push({ key: "subject", name: "学科", itemsKey: 'subjects', code: "subjectCode", disabled: false });
-            items.push({ key: "grade", name: "年级", itemsKey: 'grades', code: "gradeCode", disabled: false });
+            items.push({ code: "orgType", itemKey: "orgType", name: "类型", itemsKey: 'orgTypes', emptyItemKey: "orgTypeEmpty", disabled: false });
+            items.push({ code: "org", itemKey: "org", name: "组织", itemsKey: 'orgs', emptyItemKey: "orgEmpty", disabled: false });
+            items.push({ code: "phase", itemKey: "phase", name: "学段", itemsKey: 'phases', emptyItemKey: "phaseEmpty", disabled: false });
+            items.push({ code: "subject", itemKey: "subject", name: "学科", itemsKey: 'subjects', emptyItemKey: "subjectEmpty", disabled: false });
+            items.push({ code: "grade", itemKey: "grade", name: "年级", itemsKey: 'grades', emptyItemKey: "gradeEmpty", disabled: false });
             return items;
         }();
         var hiddenPropertyName = 'Hidden';
