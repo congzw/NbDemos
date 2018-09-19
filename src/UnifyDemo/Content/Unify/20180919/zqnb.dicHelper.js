@@ -292,10 +292,8 @@
                         return;
                     }
                     var shouldShow = showShowFunc(theVm, grade);
-                    if (shouldShow) {
-                        //console.log('check with customize: ' + grade.Name + ' => ' + shouldShow);
-                        grades[hidePropertyName] = false;
-                    }
+                    grade[hidePropertyName] = !shouldShow;
+                    //console.log('check with customize: ' + grade.Name + ' => ' + shouldShow);
                 });
             };
             var shouldShowOrgTypeOrg = function (theVm, org) {
@@ -401,7 +399,6 @@
 
                 //【年级（全部）】按钮永远显示
                 if (isEmptyItem(grade)) {
-                    console.log('>>>>>>shouldShowPhaseSubjectGrade 1 (empty grade)');
                     return true;
                 }
 
@@ -409,17 +406,14 @@
                 var currentSubject = theVm.selectResult.subject;
                 //当前全部学段、学科，或未知学段、学科类型，所有【年级】永远显示
                 if (isEmptyItem(currentPhase) || isEmptyItem(currentSubject)) {
-                    console.log('>>>>>>shouldShowPhaseSubjectGrade 1');
                     return true;
                 }
 
                 //按关系查找
                 var codeItem = createCodeItem(currentPhase.Code, currentSubject.Code, grade.Code);
                 var shouldShow = containItem(theVm.visiablePhaseSubjectGrades, codeItem);
-                console.log('>>>>>>shouldShowPhaseSubjectGrade 2');
-                if (shouldShow) {
-                    //console.log("refresh phase subject grades: " + currentPhase.Name + ',' + currentSubject.Name + ',' + grade.Name + ' ' + shouldShow);
-                }
+                //console.log('>>>>>> shouldShowPhaseSubjectGrade: ' + codeItem.Code + " => " + shouldShow);
+                //console.log("refresh phase subject grades: " + currentPhase.Name + ',' + currentSubject.Name + ',' + grade.Name + ' ' + shouldShow);
                 return shouldShow;
             };
 
