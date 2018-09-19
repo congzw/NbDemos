@@ -2,24 +2,46 @@
     'use strict';
 
     //private
-    var copyData = function (data) {
-
-        //// Shallow copy
-        //var newObject = jQuery.extend({}, oldObject);
-        //// Deep copy
-        //var newObject = jQuery.extend(true, {}, oldObject);
-
-        if (Array.isArray(data)) {
-            var newArr = [];
-            for (var i = 0; i < data.length; i++) {
-                newArr.push(copyData(data[i]));
+    var knownCategoryCodes = function () {
+            var codes = {
+                orgType: 'orgType',
+                org: 'org',
+                phase: 'phase',
+                subject: 'subject',
+                grade: 'grade'
+            };
+            return codes;
+        }(),
+        createEmptyItem = function () { return { Code: "", Name: "全部" }; },
+        getProperty = function (model, propName) {
+            //Access property case-insensitively
+            var lowerPropName = (propName + "").toLowerCase();
+            for (var prop in model) {
+                //console.log('find prop' + propName + ':' + prop);
+                if (model.hasOwnProperty(prop) && lowerPropName === (prop + "").toLowerCase()) {
+                    return model[prop];
+                }
             }
+            return undefined;
+        },
+        copyData = function (data) {
 
-            return newArr;
-        }
-        var newData = jQuery.extend(true, {}, data);
-        return newData;
-    },
+            //// Shallow copy
+            //var newObject = jQuery.extend({}, oldObject);
+            //// Deep copy
+            //var newObject = jQuery.extend(true, {}, oldObject);
+
+            if (Array.isArray(data)) {
+                var newArr = [];
+                for (var i = 0; i < data.length; i++) {
+                    newArr.push(copyData(data[i]));
+                }
+
+                return newArr;
+            }
+            var newData = jQuery.extend(true, {}, data);
+            return newData;
+        },
         equalIgnoreCase = function (str, str2) {
             if (str === null || str2 === null) {
                 return true;
@@ -75,9 +97,6 @@
             }
             return result;
         },
-        createEmptyItem = function () {
-            return { Code: "", Name: "全部" };
-        },
         createArrayCode = function (arr) {
             if (arr.length === 0) {
                 return '';
@@ -90,17 +109,6 @@
             var code = createArrayCode(arr);
             var codeItem = { Code: code };
             return codeItem;
-        },
-        getProperty = function (model, propName) {
-            //Access property case-insensitively
-            var lowerPropName = (propName + "").toLowerCase();
-            for (var prop in model) {
-                //console.log('find prop' + propName + ':' + prop);
-                if (model.hasOwnProperty(prop) && lowerPropName === (prop + "").toLowerCase()) {
-                    return model[prop];
-                }
-            }
-            return undefined;
         },
         addCodeItemIfNotExist = function (codeItems, codeItem) {
             if (!containItem(codeItems, codeItem)) {
@@ -149,16 +157,6 @@
 
             return initItems;
         },
-        knownCategoryCodes = function () {
-            var codes = {
-                orgType: 'orgType',
-                org: 'org',
-                phase: 'phase',
-                subject: 'subject',
-                grade: 'grade'
-            };
-            return codes;
-        }(),
         createCategories = function () {
             var items = [];
             //code as registry, should never changed!
@@ -235,34 +233,15 @@
                 //console.log(item);
                 return item.Code === '';
             };
-            var shouldShowSubjectFromPhase = function (theVm, currentPhase, currentSubject) {
-
-                //【学科（全部）】按钮永远显示
-                if (isEmptyItem(currentSubject)) {
-                    return true;
+            var getOrgTypeCodeForFilterPhases = function (theVm) {
+                var currentOrg = theVm.selectResult.org;
+                if (!isEmptyItem(currentOrg)) {
+                    //console.log('>>>>smart change OrgTypeCode: ' + currentOrg.OrgTypeCode);
+                    return currentOrg.OrgTypeCode;
                 }
-                //按关系查找
-                var codeItem = createCodeItem(currentPhase.Code, currentSubject.Code);
-                var shouldShow = containItem(theVm.visiablePhaseSubjects, codeItem);
-                //if (shouldShow) {
-                //    console.log("refresh phase subjects: " + currentPhase.Name + ',' + subject.Name + ' ' + shouldShow);
-                //}
-                return shouldShow;
-            }
-            var shouldShowGradeFromPhase = function (theVm, currentPhase, currentGrade) {
 
-                //【年级（全部）】按钮永远显示
-                if (isEmptyItem(currentGrade)) {
-                    return true;
-                }
-                //按关系查找
-                var codeItem = createCodeItem(currentPhase.Code, currentGrade.Code);
-                var shouldShow = containItem(theVm.visiablePhaseGrades, codeItem);
-                //if (shouldShow) {
-                //    console.log("refresh phase grades: " + currentPhase.Name + ',' + grade.Name + ' ' + shouldShow);
-                //}
-                return shouldShow;
-            }
+                return theVm.selectResult.orgType.Code;
+            };
             var getCurrentShowPhases = function (theVm) {
                 var phases = getDicCatalogItems(theVm, knownCategoryCodes.phase);
                 var results = [];
@@ -296,15 +275,6 @@
                     var emptyItem = theVm[category.emptyItemKey];
                     theVm.selectResult[categoryCode] = emptyItem;
                 }
-            };
-            var getOrgTypeCodeForFilterPhases = function (theVm) {
-                var currentOrg = theVm.selectResult.org;
-                if (!isEmptyItem(currentOrg)) {
-                    //console.log('>>>>smart change OrgTypeCode: ' + currentOrg.OrgTypeCode);
-                    return currentOrg.OrgTypeCode;
-                }
-
-                return theVm.selectResult.orgType.Code;
             };
             var hiddenGradeByRelationCustomize = function (theVm, showShowFunc) {
                 //refresh hidden              
@@ -344,7 +314,7 @@
                 return shouldShow;
             };
             var shouldShowOrgTypePhase = function (theVm, phase) {
-                
+
                 //【全部】按钮永远显示
                 if (isEmptyItem(phase)) {
                     return true;
@@ -358,6 +328,34 @@
                 var shouldShow = containItem(theVm.visiableOrgTypePhases, createCodeItem(theOrgTypeCode, phase.Code));
                 return shouldShow;
             };
+            var shouldShowSubjectFromPhase = function (theVm, currentPhase, currentSubject) {
+
+                //【学科（全部）】按钮永远显示
+                if (isEmptyItem(currentSubject)) {
+                    return true;
+                }
+                //按关系查找
+                var codeItem = createCodeItem(currentPhase.Code, currentSubject.Code);
+                var shouldShow = containItem(theVm.visiablePhaseSubjects, codeItem);
+                //if (shouldShow) {
+                //    console.log("refresh phase subjects: " + currentPhase.Name + ',' + subject.Name + ' ' + shouldShow);
+                //}
+                return shouldShow;
+            }
+            var shouldShowGradeFromPhase = function (theVm, currentPhase, currentGrade) {
+
+                //【年级（全部）】按钮永远显示
+                if (isEmptyItem(currentGrade)) {
+                    return true;
+                }
+                //按关系查找
+                var codeItem = createCodeItem(currentPhase.Code, currentGrade.Code);
+                var shouldShow = containItem(theVm.visiablePhaseGrades, codeItem);
+                //if (shouldShow) {
+                //    console.log("refresh phase grades: " + currentPhase.Name + ',' + grade.Name + ' ' + shouldShow);
+                //}
+                return shouldShow;
+            }
             var shouldShowPhaseSubject = function (theVm, subject) {
                 var currentPhase = theVm.selectResult.phase;
                 //当前上级类型为【全部】，所有【学段】永远显示
@@ -400,20 +398,25 @@
                 return shouldShowGradeFromPhase(theVm, currentPhase, grade);
             };
             var shouldShowPhaseSubjectGrade = function (theVm, grade) {
+
+                //【年级（全部）】按钮永远显示
+                if (isEmptyItem(grade)) {
+                    console.log('>>>>>>shouldShowPhaseSubjectGrade 1 (empty grade)');
+                    return true;
+                }
+
                 var currentPhase = theVm.selectResult.phase;
                 var currentSubject = theVm.selectResult.subject;
                 //当前全部学段、学科，或未知学段、学科类型，所有【年级】永远显示
-                if (isEmptyItem(currentPhase) || !currentPhase.Code || isEmptyItem(currentSubject) || !currentSubject.Code) {
-                    return true;
-                }
-                //【年级（全部）】按钮永远显示
-                if (isEmptyItem(grade)) {
+                if (isEmptyItem(currentPhase) || isEmptyItem(currentSubject)) {
+                    console.log('>>>>>>shouldShowPhaseSubjectGrade 1');
                     return true;
                 }
 
                 //按关系查找
                 var codeItem = createCodeItem(currentPhase.Code, currentSubject.Code, grade.Code);
                 var shouldShow = containItem(theVm.visiablePhaseSubjectGrades, codeItem);
+                console.log('>>>>>>shouldShowPhaseSubjectGrade 2');
                 if (shouldShow) {
                     //console.log("refresh phase subject grades: " + currentPhase.Name + ',' + currentSubject.Name + ',' + grade.Name + ' ' + shouldShow);
                 }
@@ -569,8 +572,8 @@
                             if (theOne.HideGradeCodes.trim()) {
                                 hideGradeCodeArray = theOne.HideGradeCodes.split(',');
                             }
-                            for (var j = 0; j < subject.Grades.length; j++) {
-                                var grade = subject.Grades[j];
+                            for (var j = 0; j < subject.grades.length; j++) {
+                                var grade = subject.grades[j];
                                 grade.InUse = !hasCode(grade.Code, hideGradeCodeArray);
                             }
                         }
@@ -600,39 +603,12 @@
                         thePhase.subjects.forEach(function (theSubject) {
                             theSubject.grades = copyData(theGradesForPhase);
                         });
-                        setCustomziePhaseSubjects(thePhase, thePhase.Subjects, customizePhaseSubjects);
+                        setCustomziePhaseSubjects(thePhase, thePhase.subjects, customizePhaseSubjects);
                     });
 
                     initVisiableDics(thePhases);
                 };
                 resetPhaseSubjectGrade(dicCatalog);
-
-                //dicCatalog.dicSettings.forEach(function (phase) {
-                //    if (!phase.InUse) {
-                //        return;
-                //    }
-
-                //    phase.Grades.forEach(function (grade) {
-                //        if (!grade.InUse) {
-                //            return;
-                //        }
-                //        addCodeItemIfNotExist(visiablePhaseGrades, createCodeItem(phase.Code, grade.Code));
-                //    });
-
-                //    phase.Subjects.forEach(function (subject) {
-                //        if (!subject.InUse) {
-                //            return;
-                //        }
-                //        addCodeItemIfNotExist(visiablePhaseSubjects, createCodeItem(phase.Code, subject.Code));
-
-                //        subject.Grades.forEach(function (grade) {
-                //            if (!grade.InUse) {
-                //                return;
-                //            }
-                //            addCodeItemIfNotExist(visiablePhaseSubjectGrades, createCodeItem(phase.Code, subject.Code, grade.Code));
-                //        });
-                //    });
-                //});
 
                 vm.visiableOrgTypeOrgs = visiableOrgTypeOrgs;
                 vm.visiableOrgTypePhases = visiableOrgTypePhases;
