@@ -2,18 +2,18 @@
     'use strict';
 
     //common
-    var getProperty = function (model, propName) {
-        //Access property case-insensitively
-        var lowerPropName = (propName + "").toLowerCase();
-        for (var prop in model) {
-            //console.log('find prop' + propName + ':' + prop);
-            if (model.hasOwnProperty(prop) && lowerPropName === (prop + "").toLowerCase()) {
-                return model[prop];
+    var getProperty = function(model, propName) {
+            //Access property case-insensitively
+            var lowerPropName = (propName + "").toLowerCase();
+            for (var prop in model) {
+                //console.log('find prop' + propName + ':' + prop);
+                if (model.hasOwnProperty(prop) && lowerPropName === (prop + "").toLowerCase()) {
+                    return model[prop];
+                }
             }
-        }
-        return undefined;
-    },
-        copyData = function (data) {
+            return undefined;
+        },
+        copyData = function(data) {
 
             //// Shallow copy
             //var newObject = jQuery.extend({}, oldObject);
@@ -31,7 +31,7 @@
             var newData = jQuery.extend(true, {}, data);
             return newData;
         },
-        equalIgnoreCase = function (str, str2) {
+        equalIgnoreCase = function(str, str2) {
             if (str === null || str2 === null) {
                 return true;
             }
@@ -43,17 +43,20 @@
             }
             return (str2.toUpperCase() === str.toUpperCase());
         },
-        createArrayCode = function () {
-        var arr = Array.from(arguments);
-        if (arr.length === 0) {
-            throw {
-                message: "invalid arguments: ",
-                data: arguments
+        createArrayCode = function() {
+            var arr = Array.from(arguments);
+            if (arr.length === 0) {
+                throw {
+                    message: "invalid arguments: ",
+                    data: arguments
+                }
             }
-        }
-        var code = arr.join(',');
-        return code;
-    };
+            var code = arr.join(',');
+            return code;
+        },
+        throwException = function(message, data) {
+            throw { exception : message, data : data };
+        };
 
     //dic
     var knownCategoryCodes = function () {
@@ -208,13 +211,28 @@
             var initQueryCodes = config.initQueryCodes;
             var dicCatalogMeta = config.dicCatalogMeta;
             if (!dicCatalogMeta) {
-                throw { name: 'config.dicCatalogMeta should not null!' };
+                throwException("config.dicCatalogMeta should not null!", config);
             }
+
             var categories = dicCatalogMeta.categories;
             var autoAppendEmpty = dicCatalogMeta.autoAppendEmpty;
             var getCategory = dicCatalogMeta.getCategory;
             var hidePropertyName = dicCatalogMeta.hidePropertyName;
-
+            var vm = {
+                _metas: dicCatalogMeta,
+                //选择结果
+                selectResult: {
+                    display: function () {
+                        var items = [];
+                        for (var i = 0; i < categories.length; i++) {
+                            var category = categories[i];
+                            items.push(vm.selectResult[category.code].Name);
+                        }
+                        return items;
+                    }
+                }
+            };
+            
             //private methods
             var getDicCatalogItems = function (dicCatalog, categoryCode) {
                 var category = getCategory(categoryCode);
@@ -464,24 +482,6 @@
                         subject[hidePropertyName] = !shouldShow;
                         //console.log('check with customize: ' + subject.Name + ' => ' + shouldShow);
                     });
-                }
-            };
-
-            var vm = {
-                _metas: dicCatalogMeta,
-                //选择结果
-                selectResult: {
-                    display: function () {
-                        //console.log('display');
-                        //console.log(dicCatalogVm.selectResult);
-                        //return [this.orgType.Name, this.org.Name, this.phase.Name, this.subject.Name, this.grade.Name];
-                        var items = [];
-                        for (var i = 0; i < categories.length; i++) {
-                            var category = categories[i];
-                            items.push(vm.selectResult[category.code].Name);
-                        }
-                        return items;
-                    }
                 }
             };
 
