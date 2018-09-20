@@ -222,6 +222,7 @@
     <Content Include="Content\libs\MyClock\MyClock.js" />
     <Content Include="Content\libs\MyClock\demo.html" />
     <Content Include="Content\libs\MockDate\MockDate.js" />
+    <Content Include="Content\libs\MyClock\temp.js" />
     <Content Include="Content\libs\SweetAlert\index.html" />
     <Content Include="Content\libs\SweetAlert\source\dist\sweetalert-dev.js" />
     <Content Include="Content\libs\SweetAlert\source\dist\sweetalert.css" />
