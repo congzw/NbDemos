@@ -264,6 +264,11 @@
                     }
                 });
             },
+            getDicCatalogItems = function (theDicCatalog, categoryCode) {
+                var category = getCategory(categoryCode);
+                var items = getProperty(theDicCatalog, category.itemsKey);
+                return items;
+            },
             initRelations = function (theDicCatalog, theVm) {
                 if (!theDicCatalog) {
                     throwException("invalid DicCatalog!", theDicCatalog);
@@ -446,11 +451,6 @@
             };
             
             //private methods
-            var getDicCatalogItems = function (theDicCatalog, categoryCode) {
-                var category = getCategory(categoryCode);
-                var items = getProperty(theDicCatalog, category.itemsKey);
-                return items;
-            };
             var isEmptyItem = function (item) {
                 //console.log(item);
                 return item.Code === '';
