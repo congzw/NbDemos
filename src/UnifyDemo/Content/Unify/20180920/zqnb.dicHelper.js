@@ -232,6 +232,17 @@
                     }
                 }
             };
+
+            var setupEmptyCategories = function () {
+                //setup empty default properties with categories
+                categories.forEach(function (category) {
+                    var emptyItem = createEmptyItem();
+                    vm[category.itemsKey] = null;
+                    vm[category.emptyItemKey] = emptyItem;
+                    vm.selectResult[category.code] = emptyItem;
+                });
+            };
+            setupEmptyCategories();
             
             //private methods
             var getDicCatalogItems = function (dicCatalog, categoryCode) {
@@ -485,17 +496,6 @@
                 }
             };
 
-            var setupCategories = function () {
-                //setup properties with categories
-                for (var i = 0; i < categories.length; i++) {
-                    var emptyItem = createEmptyItem();
-                    var category = categories[i];
-                    vm[category.itemsKey] = null;
-                    vm[category.emptyItemKey] = emptyItem;
-                    vm.selectResult[category.code] = emptyItem;
-                }
-            };
-            setupCategories();
 
             //初始化字典项
             var initItems = function (dicCatalog) {
