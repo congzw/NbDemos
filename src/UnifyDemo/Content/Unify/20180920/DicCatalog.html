@@ -38,13 +38,13 @@
             var meta = dicHelper.createCatalogMeta();
             
             var mainApp = zqnb.mainApp;
-            mainApp.service('nbDicCatalogMeta', function () {
-                console.log('customize meta => if necessary!');
-                meta.categories[1].disabled = true; //隐藏组织的示例
-                meta.categories[3].sort = 4; 
-                meta.categories[4].sort = 3; 
-                return meta;
-            });
+            //mainApp.service('nbDicCatalogMeta', function () {
+            //    console.log('customize meta => if necessary!');
+            //    meta.categories[1].disabled = true; //隐藏组织的示例
+            //    meta.categories[3].sort = 4; 
+            //    meta.categories[4].sort = 3; 
+            //    return meta;
+            //});
             mainApp.factory('dicCatalogMockService', ['$http', function ($http) {
                 
                 var getDicCatalogsUrl = 'dicCatalogsJson.js';
