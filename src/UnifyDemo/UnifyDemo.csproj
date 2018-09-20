@@ -110,6 +110,10 @@
     <Content Include="Content\scripts\zqnb.mainApp.js" />
     <Content Include="Content\scripts\zqnb.mainApp.unify.js" />
     <Content Include="Content\scripts\_temp.js" />
+    <Content Include="Content\Unify\20180920\DicCatalog.html" />
+    <Content Include="Content\Unify\20180920\dicCatalogsJson.js" />
+    <Content Include="Content\Unify\20180920\zqnb.dicHelper.js" />
+    <Content Include="Content\Unify\20180920\zqnb.nbDicCatalog.js" />
     <Content Include="Content\Unify\20180919\DicCatalog.html" />
     <Content Include="Content\Unify\20180919\dicCatalogsJson.js" />
     <Content Include="Content\Unify\20180919\zqnb.dicHelper.js" />
@@ -604,6 +608,7 @@
     <Content Include="Content\Unify\20180917\readme.md" />
     <Content Include="Content\Unify\20180918\readme.md" />
     <Content Include="Content\Unify\20180919\readme.md" />
+    <Content Include="Content\Unify\20180920\readme.md" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
