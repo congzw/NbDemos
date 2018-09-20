@@ -2,18 +2,18 @@
     'use strict';
 
     //common
-    var getProperty = function(model, propName) {
-            //Access property case-insensitively
-            var lowerPropName = (propName + "").toLowerCase();
-            for (var prop in model) {
-                //console.log('find prop' + propName + ':' + prop);
-                if (model.hasOwnProperty(prop) && lowerPropName === (prop + "").toLowerCase()) {
-                    return model[prop];
-                }
+    var getProperty = function (model, propName) {
+        //Access property case-insensitively
+        var lowerPropName = (propName + "").toLowerCase();
+        for (var prop in model) {
+            //console.log('find prop' + propName + ':' + prop);
+            if (model.hasOwnProperty(prop) && lowerPropName === (prop + "").toLowerCase()) {
+                return model[prop];
             }
-            return undefined;
-        },
-        copyData = function(data) {
+        }
+        return undefined;
+    },
+        copyData = function (data) {
 
             //// Shallow copy
             //var newObject = jQuery.extend({}, oldObject);
@@ -31,7 +31,7 @@
             var newData = jQuery.extend(true, {}, data);
             return newData;
         },
-        equalIgnoreCase = function(str, str2) {
+        equalIgnoreCase = function (str, str2) {
             if (str === null || str2 === null) {
                 return true;
             }
@@ -43,7 +43,7 @@
             }
             return (str2.toUpperCase() === str.toUpperCase());
         },
-        createArrayCode = function() {
+        createArrayCode = function () {
             var arr = Array.from(arguments);
             if (arr.length === 0) {
                 throw {
@@ -54,8 +54,8 @@
             var code = arr.join(',');
             return code;
         },
-        throwException = function(message, data) {
-            throw { exception : message, data : data };
+        throwException = function (message, data) {
+            throw { exception: message, data: data };
         };
 
     //dic
@@ -69,6 +69,16 @@
         };
         return codes;
     }(),
+        createCategories = function () {
+            var items = [];
+            //code as registry, should never changed!
+            items.push({ code: "orgType", itemKey: "orgType", name: "类型", itemsKey: 'orgTypes', emptyItemKey: "orgTypeEmpty", disabled: false, sort: 0 });
+            items.push({ code: "org", itemKey: "org", name: "组织", itemsKey: 'orgs', emptyItemKey: "orgEmpty", disabled: false, sort: 1 });
+            items.push({ code: "phase", itemKey: "phase", name: "学段", itemsKey: 'phases', emptyItemKey: "phaseEmpty", disabled: false, sort: 2 });
+            items.push({ code: "subject", itemKey: "subject", name: "学科", itemsKey: 'subjects', emptyItemKey: "subjectEmpty", disabled: false, sort: 3 });
+            items.push({ code: "grade", itemKey: "grade", name: "年级", itemsKey: 'grades', emptyItemKey: "gradeEmpty", disabled: false, sort: 4 });
+            return items;
+        },
         createEmptyItem = function () {
             return { Code: "", Name: "全部" };
         },
@@ -126,58 +136,6 @@
                 codeItems.push(codeItem);
             }
         },
-        createInitItems = function (items, emptyItem) {
-            if (!items || items.length === 0) {
-                return null;
-            }
-
-            //fix orders
-            if (items[0].SortNum) {
-                items = items.sort(function (a, b) { return a.SortNum - b.SortNum });
-            }
-
-            //var copyItems = copyData(items);
-            //if (emptyItem) {
-            //    //arrName.splice(1, 0, 'newName1');
-            //    ////1: index number, 0: number of element to remove, newName1: new element
-            //    copyItems.splice(0, 0, emptyItem);
-            //}
-            //console.log(copyItems);
-
-            var initItems = [];
-            if (emptyItem) {
-                initItems.push(emptyItem);
-            }
-            for (var i = 0; i < items.length; i++) {
-                var current = items[i];
-                var copy = { Code: current.Code, Name: current.Name };
-
-                //hack for org
-                if (current.ParentCode) {
-                    copy.ParentCode = current.ParentCode;
-                }
-                if (current.OrgTypeCode) {
-                    copy.OrgTypeCode = current.OrgTypeCode;
-                }
-
-                //filter disabled 
-                if (current.InUse === undefined || current.InUse) {
-                    initItems.push(copy);
-                }
-            }
-
-            return initItems;
-        },
-        createCategories = function () {
-            var items = [];
-            //code as registry, should never changed!
-            items.push({ code: "orgType", itemKey: "orgType", name: "类型", itemsKey: 'orgTypes', emptyItemKey: "orgTypeEmpty", disabled: false, sort: 0 });
-            items.push({ code: "org", itemKey: "org", name: "组织", itemsKey: 'orgs', emptyItemKey: "orgEmpty", disabled: false, sort: 1 });
-            items.push({ code: "phase", itemKey: "phase", name: "学段", itemsKey: 'phases', emptyItemKey: "phaseEmpty", disabled: false, sort: 2 });
-            items.push({ code: "subject", itemKey: "subject", name: "学科", itemsKey: 'subjects', emptyItemKey: "subjectEmpty", disabled: false, sort: 3 });
-            items.push({ code: "grade", itemKey: "grade", name: "年级", itemsKey: 'grades', emptyItemKey: "gradeEmpty", disabled: false, sort: 4 });
-            return items;
-        },
         createCatalogMeta = function () {
             var categories = createCategories();
             return {
@@ -203,68 +161,272 @@
         },
         createDicCatalogVm = function (config) {
             if (!config) {
-                return null;
+                throwException("invalid config!", config);
             }
-
-            //private helper functions
-            var dicCatalog = config.dicCatalog;
-            var initQueryCodes = config.initQueryCodes;
-            var dicCatalogMeta = config.dicCatalogMeta;
-            if (!dicCatalogMeta) {
+            if (!config.dicCatalogMeta) {
                 throwException("config.dicCatalogMeta should not null!", config);
             }
 
-            var categories = dicCatalogMeta.categories;
-            var autoAppendEmpty = dicCatalogMeta.autoAppendEmpty;
-            var getCategory = dicCatalogMeta.getCategory;
-            var hidePropertyName = dicCatalogMeta.hidePropertyName;
-            var vm = {
-                _metas: dicCatalogMeta,
-                //选择结果
-                selectResult: {
-                    display: function () {
+            //private vars & alias 
+            var dicCatalog = config.dicCatalog,
+                initQueryCodes = config.initQueryCodes,
+                dicCatalogMeta = config.dicCatalogMeta,
+                categories = dicCatalogMeta.categories,
+                autoAppendEmpty = dicCatalogMeta.autoAppendEmpty,
+                getCategory = dicCatalogMeta.getCategory,
+                hidePropertyName = dicCatalogMeta.hidePropertyName,
+                selectResult = function () {
+                    var result = {};
+                    result.display = function () {
                         var items = [];
                         for (var i = 0; i < categories.length; i++) {
                             var category = categories[i];
-                            items.push(vm.selectResult[category.code].Name);
+                            items.push(result[category.code].Name);
                         }
                         return items;
-                    }
-                }
-            };
+                    };
+                    return result;
+                }();
 
-            var setupEmptyCategories = function () {
+            //private method
+            var setupEmptyCategories = function (theVm) {
                 //setup empty default properties with categories
                 categories.forEach(function (category) {
                     var emptyItem = createEmptyItem();
-                    vm[category.itemsKey] = null;
-                    vm[category.emptyItemKey] = emptyItem;
-                    vm.selectResult[category.code] = emptyItem;
+                    theVm[category.itemsKey] = null;
+                    theVm[category.emptyItemKey] = emptyItem;
+                    theVm.selectResult[category.code] = emptyItem;
                 });
+            },
+            initItems = function (theDicCatalog, theVm) {
+                if (!theDicCatalog) {
+                    throwException("invalid DicCatalog!", theDicCatalog);
+                }
+                if (!theVm) {
+                    throwException("invalid Vm!", theVm);
+                }
+
+                var fixOrgModels = function (orgs) {
+                    var fixOrgs = [];
+                    for (var i = 0; i < orgs.length; i++) {
+                        var current = orgs[i];
+                        fixOrgs.push({ Code: current.Id, Name: current.Name, OrgTypeCode: current.OrgTypeCode, ParentCode: current.ParentId });
+                    }
+                    return fixOrgs;
+                };
+                var createInitItems = function (items, emptyItem) {
+                    if (!items || items.length === 0) {
+                        return null;
+                    }
+
+                    //fix orders
+                    if (items[0].SortNum) {
+                        items = items.sort(function (a, b) { return a.SortNum - b.SortNum });
+                    }
+
+                    var initItems = [];
+                    if (emptyItem) {
+                        initItems.push(emptyItem);
+                    }
+
+                    items.forEach(function (item) {
+                        var copy = { Code: item.Code, Name: item.Name };
+                        //hack for org
+                        if (item.ParentCode) {
+                            copy.ParentCode = item.ParentCode;
+                        }
+                        if (item.OrgTypeCode) {
+                            copy.OrgTypeCode = item.OrgTypeCode;
+                        }
+
+                        //filter disabled 
+                        if (item.InUse === undefined || item.InUse) {
+                            initItems.push(copy);
+                        }
+                    });
+                    for (var i = 0; i < items.length; i++) {
+                    }
+
+                    return initItems;
+                };
+
+                categories.forEach(function (category) {
+                    var categoryItemsKey = category.itemsKey;
+                    var categoryEmptyItemKey = category.emptyItemKey;
+                    var items = getProperty(theDicCatalog, categoryItemsKey);
+                    if (items) {
+                        //hack for orgs
+                        if (equalIgnoreCase(category.code, knownCategoryCodes.org)) {
+                            items = fixOrgModels(items);
+                        }
+                        var appendEmptyItem = autoAppendEmpty ? theVm[categoryEmptyItemKey] : null;
+                        theVm[categoryItemsKey] = createInitItems(items, appendEmptyItem);
+                    }
+                });
+            },
+            initRelations = function (theDicCatalog, theVm) {
+                if (!theDicCatalog) {
+                    throwException("invalid DicCatalog!", theDicCatalog);
+                }
+                if (!theVm) {
+                    throwException("invalid Vm!", theVm);
+                }
+                //dic relations
+                //orgType, org
+                //orgType, phase
+                //phase, subject
+                //phase, grade
+                //phase, subject, grade(phase, grade, subject)
+                //customize!
+
+                var visiableOrgTypeOrgs = [];
+                var orgTypes = getDicCatalogItems(theDicCatalog, knownCategoryCodes.orgType);
+                var orgs = getDicCatalogItems(theDicCatalog, knownCategoryCodes.org);
+                orgTypes.forEach(function (orgType) {
+                    orgs.forEach(function (org) {
+                        if (org.OrgTypeCode === "" || equalIgnoreCase(org.OrgTypeCode, orgType.Code)) {
+                            //组织类型空，或者二者匹配
+                            addCodeItemIfNotExist(visiableOrgTypeOrgs, createCodeItem(orgType.Code, org.Id));
+                        }
+                    });
+                });
+
+                var visiableOrgTypePhases = [];
+                var orgTypePhases = getProperty(theDicCatalog, "orgTypePhases");
+                //console.log('>>>>>> orgTypePhases');
+                //console.log(orgTypePhases);
+                orgTypePhases.forEach(function (orgTypePhase) {
+                    //console.log(orgTypePhase);
+                    addCodeItemIfNotExist(visiableOrgTypePhases, createCodeItem(orgTypePhase.LeftDicItemCode, orgTypePhase.RightDicItemCode));
+                });
+
+                var visiablePhaseSubjects = [];
+                var visiablePhaseGrades = [];
+                var visiablePhaseSubjectGrades = [];
+
+                var initVisiableDics = function (phases) {
+                    //console.log('--initVisiableDics-----');
+                    //console.log(phases);
+                    phases.forEach(function (phase) {
+                        phase.grades.forEach(function (grade) {
+                            if (!grade.InUse) {
+                                return;
+                            }
+                            addCodeItemIfNotExist(visiablePhaseGrades, createCodeItem(phase.Code, grade.Code));
+                        });
+
+                        phase.subjects.forEach(function (subject) {
+                            if (!subject.InUse) {
+                                return;
+                            }
+                            addCodeItemIfNotExist(visiablePhaseSubjects, createCodeItem(phase.Code, subject.Code));
+
+                            subject.grades.forEach(function (grade) {
+                                if (!grade.InUse) {
+                                    return;
+                                }
+                                addCodeItemIfNotExist(visiablePhaseSubjectGrades, createCodeItem(phase.Code, subject.Code, grade.Code));
+                            });
+                        });
+                    });
+                };
+
+                var createHashTable = function (getItemKeyFunc, items) {
+                    var table = {};
+                    for (var i = 0; i < items.length; i++) {
+                        var item = items[i];
+                        var key = getItemKeyFunc(item);
+                        table[key] = item;
+                    }
+                    return table;
+                };
+                var hasCode = function (code, codes) {
+                    for (var i = 0; i < codes.length; i++) {
+                        if (codes[i] === code) {
+                            return true;
+                        }
+                    }
+                    return false;
+                };
+                var setCustomziePhaseSubjects = function (phase, subjects, customizePhaseSubjects) {
+                    //set customizes if necessary
+                    if (customizePhaseSubjects == null || customizePhaseSubjects.length === 0) {
+                        return;
+                    }
+
+                    var getCustomizePhaseSubjectKey = function (item) {
+                        return item.PhaseCode + ',' + item.SubjectCode;
+                    };
+                    //for better preformance, convert to hashtable
+                    var customizePhaseSubjectTable = createHashTable(getCustomizePhaseSubjectKey, customizePhaseSubjects);
+
+                    for (var i = 0; i < subjects.length; i++) {
+                        var subject = subjects[i];
+                        var customizePhaseSubjectKey = getCustomizePhaseSubjectKey({ PhaseCode: phase.Code, SubjectCode: subject.Code });
+                        var theOne = customizePhaseSubjectTable[customizePhaseSubjectKey];
+                        if (theOne) {
+                            subject.Name = theOne.CustomizeName;
+                            subject.SortNum = theOne.CustomizeSortNum;
+                            subject.InUse = theOne.CustomizeInUse;
+                            var hideGradeCodeArray = [];
+                            if (theOne.HideGradeCodes.trim()) {
+                                hideGradeCodeArray = theOne.HideGradeCodes.split(',');
+                            }
+                            for (var j = 0; j < subject.grades.length; j++) {
+                                var grade = subject.grades[j];
+                                grade.InUse = !hasCode(grade.Code, hideGradeCodeArray);
+                            }
+                        }
+                    }
+                    //fix orders
+                    subjects.sort(function (a, b) { return a.SortNum - b.SortNum });
+                };
+                var resetPhaseSubjectGrade = function (dicCatalog) {
+                    //console.log('--------resetPhaseSubjectGrade----------');
+                    //console.log(dicCatalog);
+                    //set children: Phase.Subjects, Phase.Subject.Grades
+                    var phases = getDicCatalogItems(dicCatalog, knownCategoryCodes.phase);
+                    var subjects = getDicCatalogItems(dicCatalog, knownCategoryCodes.subject);
+                    var grades = getDicCatalogItems(dicCatalog, knownCategoryCodes.grade);
+                    var phaseSubjects = getProperty(dicCatalog, "phaseSubjects");
+                    var phaseGrades = getProperty(dicCatalog, "phaseGrades");
+                    var customizePhaseSubjects = getProperty(dicCatalog, "customizePhaseSubjects");
+                    var thePhases = copyData(phases);
+                    thePhases.forEach(function (thePhase) {
+                        var theSubjectsForPhase = findRightItemsForLeft(phaseSubjects, subjects, thePhase.Code);
+                        thePhase.subjects = copyData(theSubjectsForPhase);
+
+                        var theGradesForPhase = findRightItemsForLeft(phaseGrades, grades, thePhase.Code);
+                        thePhase.grades = copyData(theGradesForPhase);
+
+                        //set grades for subject
+                        thePhase.subjects.forEach(function (theSubject) {
+                            theSubject.grades = copyData(theGradesForPhase);
+                        });
+                        setCustomziePhaseSubjects(thePhase, thePhase.subjects, customizePhaseSubjects);
+                    });
+
+                    initVisiableDics(thePhases);
+                };
+                resetPhaseSubjectGrade(theDicCatalog);
+
+                theVm.visiableOrgTypeOrgs = visiableOrgTypeOrgs;
+                theVm.visiableOrgTypePhases = visiableOrgTypePhases;
+                theVm.visiablePhaseSubjects = visiablePhaseSubjects;
+                theVm.visiablePhaseGrades = visiablePhaseGrades;
+                theVm.visiablePhaseSubjectGrades = visiablePhaseSubjectGrades;
+
+                //console.log('initRelation');
+                //console.log(dicVm);
             };
-            setupEmptyCategories();
-            
+
+
+
             //private methods
-            var getDicCatalogItems = function (dicCatalog, categoryCode) {
+            var getDicCatalogItems = function (theDicCatalog, categoryCode) {
                 var category = getCategory(categoryCode);
-                //var items = dicCatalog[category.itemsKey];
-                var items = getProperty(dicCatalog, category.itemsKey);
-                if (items !== undefined) {
-                    return items;
-                }
-                //auto fix
-                var fixResult = getProperty(dicCatalog, category.itemsKey);
-                //console.log('>>>>>>> auto fix category.itemsKey: ' + category.itemsKey);
-                //console.log(fixResult);
-                return fixResult;
-            };
-            var fixOrgModels = function (orgs) {
-                var fixOrgs = [];
-                for (var i = 0; i < orgs.length; i++) {
-                    var current = orgs[i];
-                    fixOrgs.push({ Code: current.Id, Name: current.Name, OrgTypeCode: current.OrgTypeCode, ParentCode: current.ParentId });
-                }
-                return fixOrgs;
+                var items = getProperty(theDicCatalog, category.itemsKey);
+                return items;
             };
             var isEmptyItem = function (item) {
                 //console.log(item);
@@ -497,173 +659,18 @@
             };
 
 
+            var vm = {
+                _metas: dicCatalogMeta,
+                //选择结果
+                selectResult: selectResult
+            };
+
+            //初始化结果项、空项、集合项
+            setupEmptyCategories(vm);
             //初始化字典项
-            var initItems = function (dicCatalog) {
-                if (!dicCatalog) {
-                    return;
-                }
-                for (var i = 0; i < categories.length; i++) {
-                    var category = categories[i];
-                    var categoryItemsKey = category.itemsKey;
-                    var categoryEmptyItemKey = category.emptyItemKey;
-                    var items = getProperty(dicCatalog, categoryItemsKey);
-                    if (items) {
-                        //hack for orgs
-                        if (equalIgnoreCase(categoryItemsKey, "orgs")) {
-                            items = fixOrgModels(items);
-                        }
-                        var appendEmptyItem = autoAppendEmpty ? vm[categoryEmptyItemKey] : null;
-                        vm[categoryItemsKey] = createInitItems(items, appendEmptyItem);
-                    }
-                }
-            };
-            initItems(dicCatalog);
-
+            initItems(dicCatalog, vm);
             //初始化字典项的关系
-            var initRelations = function (dicCatalog) {
-
-                //dic relations
-                var visiableOrgTypeOrgs = [];
-                var orgTypes = getDicCatalogItems(dicCatalog, knownCategoryCodes.orgType);
-                var orgs = getDicCatalogItems(dicCatalog, knownCategoryCodes.org);
-                orgTypes.forEach(function (orgType) {
-                    orgs.forEach(function (org) {
-                        if (org.OrgTypeCode === "" || equalIgnoreCase(org.OrgTypeCode, orgType.Code)) {
-                            //组织类型空，或者二者匹配
-                            addCodeItemIfNotExist(visiableOrgTypeOrgs, createCodeItem(orgType.Code, org.Id));
-                        }
-                    });
-                });
-
-                var visiableOrgTypePhases = [];
-                var orgTypePhases = getProperty(dicCatalog, "orgTypePhases");
-                //console.log('>>>>>> orgTypePhases');
-                //console.log(orgTypePhases);
-                orgTypePhases.forEach(function (orgTypePhase) {
-                    //console.log(orgTypePhase);
-                    addCodeItemIfNotExist(visiableOrgTypePhases, createCodeItem(orgTypePhase.LeftDicItemCode, orgTypePhase.RightDicItemCode));
-                });
-
-                var visiablePhaseSubjects = [];
-                var visiablePhaseGrades = [];
-                var visiablePhaseSubjectGrades = [];
-
-                var initVisiableDics = function (phases) {
-                    //console.log('--initVisiableDics-----');
-                    //console.log(phases);
-                    phases.forEach(function (phase) {
-                        phase.grades.forEach(function (grade) {
-                            if (!grade.InUse) {
-                                return;
-                            }
-                            addCodeItemIfNotExist(visiablePhaseGrades, createCodeItem(phase.Code, grade.Code));
-                        });
-
-                        phase.subjects.forEach(function (subject) {
-                            if (!subject.InUse) {
-                                return;
-                            }
-                            addCodeItemIfNotExist(visiablePhaseSubjects, createCodeItem(phase.Code, subject.Code));
-
-                            subject.grades.forEach(function (grade) {
-                                if (!grade.InUse) {
-                                    return;
-                                }
-                                addCodeItemIfNotExist(visiablePhaseSubjectGrades, createCodeItem(phase.Code, subject.Code, grade.Code));
-                            });
-                        });
-                    });
-                };
-
-                var createHashTable = function (getItemKeyFunc, items) {
-                    var table = {};
-                    for (var i = 0; i < items.length; i++) {
-                        var item = items[i];
-                        var key = getItemKeyFunc(item);
-                        table[key] = item;
-                    }
-                    return table;
-                };
-                var hasCode = function (code, codes) {
-                    for (var i = 0; i < codes.length; i++) {
-                        if (codes[i] === code) {
-                            return true;
-                        }
-                    }
-                    return false;
-                };
-                var setCustomziePhaseSubjects = function (phase, subjects, customizePhaseSubjects) {
-                    //set customizes if necessary
-                    if (customizePhaseSubjects == null || customizePhaseSubjects.length === 0) {
-                        return;
-                    }
-
-                    var getCustomizePhaseSubjectKey = function (item) {
-                        return item.PhaseCode + ',' + item.SubjectCode;
-                    };
-                    //for better preformance, convert to hashtable
-                    var customizePhaseSubjectTable = createHashTable(getCustomizePhaseSubjectKey, customizePhaseSubjects);
-
-                    for (var i = 0; i < subjects.length; i++) {
-                        var subject = subjects[i];
-                        var customizePhaseSubjectKey = getCustomizePhaseSubjectKey({ PhaseCode: phase.Code, SubjectCode: subject.Code });
-                        var theOne = customizePhaseSubjectTable[customizePhaseSubjectKey];
-                        if (theOne) {
-                            subject.Name = theOne.CustomizeName;
-                            subject.SortNum = theOne.CustomizeSortNum;
-                            subject.InUse = theOne.CustomizeInUse;
-                            var hideGradeCodeArray = [];
-                            if (theOne.HideGradeCodes.trim()) {
-                                hideGradeCodeArray = theOne.HideGradeCodes.split(',');
-                            }
-                            for (var j = 0; j < subject.grades.length; j++) {
-                                var grade = subject.grades[j];
-                                grade.InUse = !hasCode(grade.Code, hideGradeCodeArray);
-                            }
-                        }
-                    }
-                    //fix orders
-                    subjects.sort(function (a, b) { return a.SortNum - b.SortNum });
-                };
-                var resetPhaseSubjectGrade = function (dicCatalog) {
-                    //console.log('--------resetPhaseSubjectGrade----------');
-                    //console.log(dicCatalog);
-                    //set children: Phase.Subjects, Phase.Subject.Grades
-                    var phases = getDicCatalogItems(dicCatalog, knownCategoryCodes.phase);
-                    var subjects = getDicCatalogItems(dicCatalog, knownCategoryCodes.subject);
-                    var grades = getDicCatalogItems(dicCatalog, knownCategoryCodes.grade);
-                    var phaseSubjects = getProperty(dicCatalog, "phaseSubjects");
-                    var phaseGrades = getProperty(dicCatalog, "phaseGrades");
-                    var customizePhaseSubjects = getProperty(dicCatalog, "customizePhaseSubjects");
-                    var thePhases = copyData(phases);
-                    thePhases.forEach(function (thePhase) {
-                        var theSubjectsForPhase = findRightItemsForLeft(phaseSubjects, subjects, thePhase.Code);
-                        thePhase.subjects = copyData(theSubjectsForPhase);
-
-                        var theGradesForPhase = findRightItemsForLeft(phaseGrades, grades, thePhase.Code);
-                        thePhase.grades = copyData(theGradesForPhase);
-
-                        //set grades for subject
-                        thePhase.subjects.forEach(function (theSubject) {
-                            theSubject.grades = copyData(theGradesForPhase);
-                        });
-                        setCustomziePhaseSubjects(thePhase, thePhase.subjects, customizePhaseSubjects);
-                    });
-
-                    initVisiableDics(thePhases);
-                };
-                resetPhaseSubjectGrade(dicCatalog);
-
-                vm.visiableOrgTypeOrgs = visiableOrgTypeOrgs;
-                vm.visiableOrgTypePhases = visiableOrgTypePhases;
-                vm.visiablePhaseSubjects = visiablePhaseSubjects;
-                vm.visiablePhaseGrades = visiablePhaseGrades;
-                vm.visiablePhaseSubjectGrades = visiablePhaseSubjectGrades;
-
-                //console.log('initRelation');
-                //console.log(dicVm);
-            };
-            initRelations(dicCatalog);
+            initRelations(dicCatalog, vm);
 
             //是否是空的集合（或只有【全部】按钮），或者被配置为禁用
             vm.isEmptyItems = function (category) {
