@@ -681,6 +681,21 @@
                 }
             };
 
+            var onUpdating_OrgTypeOrgs = function (theVm) {
+                hiddenByRelation(theVm, knownCategoryCodes.org, shouldShowOrgTypeOrg);
+            };
+            var onUpdating_OrgTypePhases = function (theVm) {
+                hiddenByRelation(theVm, knownCategoryCodes.phase, shouldShowOrgTypePhase);
+            };
+            var onUpdating_PhaseSubjects = function (theVm) {
+                hiddenByRelation(theVm, knownCategoryCodes.subject, shouldShowPhaseSubject);
+            };
+            var onUpdating_PhaseGrades = function (theVm) {
+                hiddenByRelation(theVm, knownCategoryCodes.grade, shouldShowPhaseGrade);
+            };
+            var onUpdating_PhaseSubjectGrades = function (theVm) {
+                hiddenGradeByRelationCustomize(theVm, shouldShowPhaseSubjectGrade); 
+            };
 
             var vm = {
                 //元信息
@@ -707,15 +722,17 @@
                 updateView: function () {
                     //console.log('----- updateView start ');
                     //console.log('override this to updateView by customize logic');
-                    hiddenByRelation(this, knownCategoryCodes.org, shouldShowOrgTypeOrg);
-                    //console.log('shouldShowOrgTypeOrg');
-                    hiddenByRelation(this, knownCategoryCodes.phase, shouldShowOrgTypePhase);
-                    //console.log('shouldShowOrgTypePhase');
-                    hiddenByRelation(this, knownCategoryCodes.subject, shouldShowPhaseSubject);
-                    //console.log('shouldShowPhaseSubject');
-                    hiddenByRelation(this, knownCategoryCodes.grade, shouldShowPhaseGrade);
-                    //console.log('shouldShowPhaseGrade');
-                    hiddenGradeByRelationCustomize(this, shouldShowPhaseSubjectGrade); //二次筛选
+
+                    //console.log('onUpdating_OrgTypeOrgs');
+                    onUpdating_OrgTypeOrgs(this);
+                    //console.log('onUpdating_OrgTypePhases');
+                    onUpdating_OrgTypePhases(this);
+                    //console.log('onUpdating_PhaseSubjects');
+                    onUpdating_PhaseSubjects(this);
+                    //console.log('onUpdating_PhaseGrades');
+                    onUpdating_PhaseGrades(this);
+                    //console.log('onUpdating_PhaseSubjectGrades');
+                    onUpdating_PhaseSubjectGrades(this);
                     //console.log('----- updateView end ');
                 },
                 //选择项改变后，通知刷新视图模型的事件
