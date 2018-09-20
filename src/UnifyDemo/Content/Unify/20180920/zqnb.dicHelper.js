@@ -1,29 +1,18 @@
 ﻿(function (_) {
     'use strict';
 
-    //private
-    var knownCategoryCodes = function () {
-        var codes = {
-            orgType: 'orgType',
-            org: 'org',
-            phase: 'phase',
-            subject: 'subject',
-            grade: 'grade'
-        };
-        return codes;
-    }(),
-        createEmptyItem = function () { return { Code: "", Name: "全部" }; },
-        getProperty = function (model, propName) {
-            //Access property case-insensitively
-            var lowerPropName = (propName + "").toLowerCase();
-            for (var prop in model) {
-                //console.log('find prop' + propName + ':' + prop);
-                if (model.hasOwnProperty(prop) && lowerPropName === (prop + "").toLowerCase()) {
-                    return model[prop];
-                }
+    //common
+    var getProperty = function (model, propName) {
+        //Access property case-insensitively
+        var lowerPropName = (propName + "").toLowerCase();
+        for (var prop in model) {
+            //console.log('find prop' + propName + ':' + prop);
+            if (model.hasOwnProperty(prop) && lowerPropName === (prop + "").toLowerCase()) {
+                return model[prop];
             }
-            return undefined;
-        },
+        }
+        return undefined;
+    },
         copyData = function (data) {
 
             //// Shallow copy
@@ -54,6 +43,32 @@
             }
             return (str2.toUpperCase() === str.toUpperCase());
         },
+        createArrayCode = function () {
+        var arr = Array.from(arguments);
+        if (arr.length === 0) {
+            throw {
+                message: "invalid arguments: ",
+                data: arguments
+            }
+        }
+        var code = arr.join(',');
+        return code;
+    };
+
+    //dic
+    var knownCategoryCodes = function () {
+        var codes = {
+            orgType: 'orgType',
+            org: 'org',
+            phase: 'phase',
+            subject: 'subject',
+            grade: 'grade'
+        };
+        return codes;
+    }(),
+        createEmptyItem = function () {
+            return { Code: "", Name: "全部" };
+        },
         isItemCodeEquals = function (item, code) {
             if (!item || !code) {
                 return false;
@@ -63,12 +78,12 @@
         sameCodeItem = function (item1, item2) {
             return item1 === item2 || equalIgnoreCase(item1.Code, item2.Code);
         },
-        containItem = function (items, itemToCheck) {
-            if (!items || !itemToCheck) {
+        containItem = function (items, item) {
+            if (!items || !item) {
                 return false;
             }
             for (var i = 0; i < items.length; i++) {
-                if (sameCodeItem(items[i], itemToCheck)) {
+                if (sameCodeItem(items[i], item)) {
                     return true;
                 }
             }
@@ -96,13 +111,6 @@
                 }
             }
             return result;
-        },
-        createArrayCode = function (arr) {
-            if (arr.length === 0) {
-                return '';
-            }
-            var code = arr.join(',');
-            return code;
         },
         createCodeItem = function () {
             var arr = Array.from(arguments);
@@ -730,13 +738,6 @@
     var dicHelper = function () {
         //public
         return {
-            equalIgnoreCase: equalIgnoreCase,
-            sameCodeItem: sameCodeItem,
-            containItem: containItem,
-            findItemByCode: findItemByCode,
-            createArrayCode: createArrayCode,
-            createCodeItem: createCodeItem,
-            createInitItems: createInitItems,
             createCatalogMeta: createCatalogMeta,
             createDicCatalogVm: createDicCatalogVm
         };
