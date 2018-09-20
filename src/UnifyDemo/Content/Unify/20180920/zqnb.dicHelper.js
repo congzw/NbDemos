@@ -418,10 +418,33 @@
 
                 //console.log('initRelation');
                 //console.log(dicVm);
+            },
+            setSelectResultByQueryCodes = function (queryCodes, theVm) {
+                var needRefresh = false;
+                for (var prop in queryCodes) {
+                    if (queryCodes.hasOwnProperty(prop)) {
+                        var codeValue = queryCodes[prop];
+                        var category = getCategory(prop);
+                        var categoryCode = category.code;
+                        var categoryItemsKey = category.itemsKey;
+                        var items = getProperty(theVm, categoryItemsKey);
+                        var theItem = findItemByCode(items, codeValue);
+                        var categoryEmptyItemKey = category.emptyItemKey;
+                        var theEmptyItem = theVm[categoryEmptyItemKey];
+                        if (theItem !== null) {
+                            theVm.selectResult[categoryCode] = theItem;
+                        } else {
+                            theVm.selectResult[categoryCode] = theEmptyItem;
+                        }
+                        //console.log('set query result: ' + categoryKey + theVm.selectResult[categoryCode].Code + ',' + theVm.selectResult[categoryCode].Name);
+                        needRefresh = true;
+                    }
+                }
+                if (needRefresh) {
+                    theVm.updateView();
+                }
             };
-
-
-
+            
             //private methods
             var getDicCatalogItems = function (theDicCatalog, categoryCode) {
                 var category = getCategory(categoryCode);
@@ -660,9 +683,49 @@
 
 
             var vm = {
+                //元信息
                 _metas: dicCatalogMeta,
-                //选择结果
-                selectResult: selectResult
+                //选择的结果
+                selectResult: selectResult,
+                //是否是空的集合（或只有【全部】按钮），或者被配置为禁用
+                isEmptyItems : function (category) {
+                    var categoryItem = getCategory(category);
+                    if (categoryItem) {
+                        return categoryItem.disabled;
+                    }
+                    //theVm.phases, theVm.orgs, ...
+                    var currentItems = this[categoryItem.itemsKey];
+                    if (!currentItems) {
+                        return false;
+                    }
+                    if (currentItems.length === 0 || (currentItems.length === 1 && currentItems[0].Code === '')) {
+                        return false;
+                    }
+                    return true;
+                },
+                //刷新视图模型的状态（根据内置的关系）
+                updateView: function () {
+                    //console.log('----- updateView start ');
+                    //console.log('override this to updateView by customize logic');
+                    hiddenByRelation(this, knownCategoryCodes.org, shouldShowOrgTypeOrg);
+                    //console.log('shouldShowOrgTypeOrg');
+                    hiddenByRelation(this, knownCategoryCodes.phase, shouldShowOrgTypePhase);
+                    //console.log('shouldShowOrgTypePhase');
+                    hiddenByRelation(this, knownCategoryCodes.subject, shouldShowPhaseSubject);
+                    //console.log('shouldShowPhaseSubject');
+                    hiddenByRelation(this, knownCategoryCodes.grade, shouldShowPhaseGrade);
+                    //console.log('shouldShowPhaseGrade');
+                    hiddenGradeByRelationCustomize(this, shouldShowPhaseSubjectGrade); //二次筛选
+                    //console.log('----- updateView end ');
+                },
+                //选择项改变后，通知刷新视图模型的事件
+                onSelectResultChanged : function (category, newItem, oldItem) {
+                    //console.log('use onSelectResultChanged event to notify ui, if needed => ' + category + 'old : ' + oldItem.Code + ' -> new: ' + newItem.Code);
+                    if (!category) {
+                        return;
+                    }
+                    this.updateView();
+                }
             };
 
             //初始化结果项、空项、集合项
@@ -671,74 +734,8 @@
             initItems(dicCatalog, vm);
             //初始化字典项的关系
             initRelations(dicCatalog, vm);
-
-            //是否是空的集合（或只有【全部】按钮），或者被配置为禁用
-            vm.isEmptyItems = function (category) {
-                var categoryItem = getCategory(category);
-                if (categoryItem) {
-                    return categoryItem.disabled;
-                }
-                //theVm.phases, theVm.orgs, ...
-                var currentItems = vm[categoryItem.itemsKey];
-                if (!currentItems) {
-                    return false;
-                }
-                if (currentItems.length === 0 || (currentItems.length === 1 && currentItems[0].Code === '')) {
-                    return false;
-                }
-                return true;
-            };
-
-            vm.updateView = function () {
-                //console.log('----- updateView start ');
-                //console.log('override this to updateView by customize logic');
-
-                hiddenByRelation(vm, knownCategoryCodes.org, shouldShowOrgTypeOrg);
-                //console.log('shouldShowOrgTypeOrg');
-                hiddenByRelation(vm, knownCategoryCodes.phase, shouldShowOrgTypePhase);
-                //console.log('shouldShowOrgTypePhase');
-                hiddenByRelation(vm, knownCategoryCodes.subject, shouldShowPhaseSubject);
-                //console.log('shouldShowPhaseSubject');
-                hiddenByRelation(vm, knownCategoryCodes.grade, shouldShowPhaseGrade);
-                //console.log('shouldShowPhaseGrade');
-                hiddenGradeByRelationCustomize(vm, shouldShowPhaseSubjectGrade); //二次筛选
-                //console.log('----- updateView end ');
-            };
-
-            vm.onSelectResultChanged = function (category, newItem, oldItem) {
-                //console.log('use onSelectResultChanged event to notify ui, if needed => ' + category + 'old : ' + oldItem.Code + ' -> new: ' + newItem.Code);
-                if (!category) {
-                    return;
-                }
-                vm.updateView();
-            };
-
-            var setSelectResultByQueryCodes = function (queryCodes) {
-                var needRefresh = false;
-                for (var prop in queryCodes) {
-                    if (queryCodes.hasOwnProperty(prop)) {
-                        var codeValue = queryCodes[prop];
-                        var category = getCategory(prop);
-                        var categoryCode = category.code;
-                        var categoryItemsKey = category.itemsKey;
-                        var items = getProperty(vm, categoryItemsKey);
-                        var theItem = findItemByCode(items, codeValue);
-                        var categoryEmptyItemKey = category.emptyItemKey;
-                        var theEmptyItem = vm[categoryEmptyItemKey];
-                        if (theItem !== null) {
-                            vm.selectResult[categoryCode] = theItem;
-                        } else {
-                            vm.selectResult[categoryCode] = theEmptyItem;
-                        }
-                        //console.log('set query result: ' + categoryKey + vm.selectResult[categoryCode].Code + ',' + vm.selectResult[categoryCode].Name);
-                        needRefresh = true;
-                    }
-                }
-                if (needRefresh) {
-                    vm.updateView();
-                }
-            };
-            setSelectResultByQueryCodes(initQueryCodes);
+            //初始化选中参数
+            setSelectResultByQueryCodes(initQueryCodes, vm);
             return vm;
         };
 
