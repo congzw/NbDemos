@@ -69,6 +69,30 @@
         };
         return codes;
     }(),
+        allPhaseOrgTypeCodes = function () {
+            var orgTypeCodes = [];
+            orgTypeCodes.push("");
+            orgTypeCodes.push("JiaoYuJu");
+            orgTypeCodes.push("JiaoYuJu-Qu");
+            orgTypeCodes.push("JiaoYuJu-Shi");
+            orgTypeCodes.push("JiGou-KeShi");
+            orgTypeCodes.push("LogicOrg");
+            return orgTypeCodes;
+        }(),
+        hasCode = function (code, codes) {
+            for (var i = 0; i < codes.length; i++) {
+                if (equalIgnoreCase(codes[i], code)) {
+                    return true;
+                }
+            }
+            return false;
+        },
+        isSpecailOrgTypeCodes = function (orgTypeCode) {
+            if (!orgTypeCode) {
+                return true;
+            }
+            return hasCode(orgTypeCode, allPhaseOrgTypeCodes);
+        },
         createCategories = function () {
             var items = [];
             //code as registry, should never changed!
@@ -259,14 +283,6 @@
                     var items = getProperty(theDicCatalog, category.itemsKey);
                     return items;
                 },
-                hasCode = function (code, codes) {
-                    for (var i = 0; i < codes.length; i++) {
-                        if (codes[i] === code) {
-                            return true;
-                        }
-                    }
-                    return false;
-                },
                 setCustomziePhaseSubjects = function (phase, subjects, customizePhaseSubjects) {
                     //set customizes if necessary
                     if (customizePhaseSubjects == null || customizePhaseSubjects.length === 0) {
@@ -334,7 +350,7 @@
                         var relations = [];
                         orgTypes.forEach(function (orgType) {
                             orgs.forEach(function (org) {
-                                if (org.OrgTypeCode === "" || equalIgnoreCase(org.OrgTypeCode, orgType.Code)) {
+                                if (!org.OrgTypeCode || equalIgnoreCase(org.OrgTypeCode, orgType.Code)) {
                                     //组织类型空，或者二者匹配
                                     relations.push({ LeftDicItemCode: orgType.Code, RightDicItemCode: org.Id });
                                 }
@@ -404,47 +420,45 @@
                     theVm.phaseTrees = phaseTrees;
                 },
                 setSelectResultByQueryCodes = function (queryCodes, theVm) {
-                var needRefresh = false;
-                for (var prop in queryCodes) {
-                    if (queryCodes.hasOwnProperty(prop)) {
-                        var codeValue = queryCodes[prop];
-                        var category = getCategory(prop);
-                        var categoryCode = category.code;
-                        var categoryItemsKey = category.itemsKey;
-                        var items = getProperty(theVm, categoryItemsKey);
-                        var theItem = findItemByCode(items, codeValue);
-                        var categoryEmptyItemKey = category.emptyItemKey;
-                        var theEmptyItem = theVm[categoryEmptyItemKey];
-                        if (theItem !== null) {
-                            theVm.selectResult[categoryCode] = theItem;
-                        } else {
-                            theVm.selectResult[categoryCode] = theEmptyItem;
+                    var needRefresh = false;
+                    for (var prop in queryCodes) {
+                        if (queryCodes.hasOwnProperty(prop)) {
+                            var codeValue = queryCodes[prop];
+                            var category = getCategory(prop);
+                            var categoryCode = category.code;
+                            var categoryItemsKey = category.itemsKey;
+                            var items = getProperty(theVm, categoryItemsKey);
+                            var theItem = findItemByCode(items, codeValue);
+                            var categoryEmptyItemKey = category.emptyItemKey;
+                            var theEmptyItem = theVm[categoryEmptyItemKey];
+                            if (theItem !== null) {
+                                theVm.selectResult[categoryCode] = theItem;
+                            } else {
+                                theVm.selectResult[categoryCode] = theEmptyItem;
+                            }
+                            //console.log('set query result: ' + categoryKey + theVm.selectResult[categoryCode].Code + ',' + theVm.selectResult[categoryCode].Name);
+                            needRefresh = true;
                         }
-                        //console.log('set query result: ' + categoryKey + theVm.selectResult[categoryCode].Code + ',' + theVm.selectResult[categoryCode].Name);
-                        needRefresh = true;
                     }
-                }
-                if (needRefresh) {
-                    theVm.updateView();
-                }
-            };
+                    if (needRefresh) {
+                        theVm.updateViewModel();
+                    }
+                };
 
             //private methods
-            var getOrgTypeCode = function(orgs, orgId) {
-                var org = findItemByCode(orgs, orgId);
-                if (!org) {
-                    return org.OrgTypeCode;
-                }
-                return "";
-            };
             var getOrgTypeCodeForFilterPhases = function (theVm) {
+                var filterUseOrgTypeCode = theVm.selectResult.orgType.Code;
                 var currentOrg = theVm.selectResult.org;
                 if (!isEmptyItem(currentOrg)) {
                     //console.log('>>>>smart change OrgTypeCode: ' + currentOrg.OrgTypeCode);
-                    return currentOrg.OrgTypeCode;
+                    //console.log(currentOrg);
+                    filterUseOrgTypeCode = currentOrg.OrgTypeCode;
                 }
 
-                return theVm.selectResult.orgType.Code;
+                if (!filterUseOrgTypeCode) {
+                    return "";
+                }
+                return filterUseOrgTypeCode;
             };
             var getCurrentShowPhases = function (theVm) {
                 var phases = getDicCatalogItems(theVm, knownCategoryCodes.phase);
@@ -480,11 +494,11 @@
                 }
                 var theOrgTypeCode = getOrgTypeCodeForFilterPhases(theVm);
                 //当前上级类型为【全部】，所有【学段】永远显示
-                if (theOrgTypeCode === "" || theOrgTypeCode === "JiaoYuJu" || theOrgTypeCode === "JiGou-KeShi" || theOrgTypeCode === "LogicOrg") {
+                if (isSpecailOrgTypeCodes(theOrgTypeCode)) {
                     return true;
                 }
                 //按关系查找
-                //var shouldShow = containItem(theVm.visiableOrgTypePhases, createCodeItem(theOrgTypeCode, phase.Code));
+                //console.log('>>>>filterUseOrgTypeCode: ' + theOrgTypeCode + " -> " + phase.Code);
                 var shouldShow = theVm.relations.relationOrgTypePhases[createArrayCode(theOrgTypeCode, phase.Code)] === true;
                 return shouldShow;
             };
@@ -613,9 +627,6 @@
                     if (shouldShow) {
                         item[hidePropertyName] = false;
                     }
-                    //if (categoryCode === 'grade') {
-                    //    console.log('hiddenByRelation: ' + item.Name + '=> shouldShow:' + shouldShow);
-                    //}
                 });
 
                 //如果当前选中（非全部选项）被隐藏，则重置为全部
@@ -684,7 +695,7 @@
             var onUpdating_PhaseSubjectGrades = function (theVm) {
                 hiddenGradeByRelationCustomize(theVm, shouldShowPhaseSubjectGrade);
             };
-            
+
             var vm = {
                 //元信息
                 _metas: dicCatalogMeta,
@@ -707,9 +718,9 @@
                     return true;
                 },
                 //刷新视图模型的状态（根据内置的关系）
-                updateView: function () {
-                    //console.log('----- updateView start ');
-                    //console.log('override this to updateView by customize logic');
+                updateViewModel: function () {
+                    //console.log('----- updateViewModel start ');
+                    //console.log('override this to updateViewModel by customize logic');
 
                     //console.log('onUpdating_OrgTypeOrgs');
                     onUpdating_OrgTypeOrgs(this);
@@ -721,7 +732,7 @@
                     onUpdating_PhaseGrades(this);
                     //console.log('onUpdating_PhaseSubjectGrades');
                     onUpdating_PhaseSubjectGrades(this);
-                    //console.log('----- updateView end ');
+                    //console.log('----- updateViewModel end ');
                 },
                 //选择项改变后，通知刷新视图模型的事件
                 onSelectResultChanged: function (category, newItem, oldItem) {
@@ -729,7 +740,7 @@
                     if (!category) {
                         return;
                     }
-                    this.updateView();
+                    this.updateViewModel();
                 },
                 getCategoryItems: function (theQueryCode, categoryCode, withEmptyItem) {
                     var theVm = this;
@@ -742,9 +753,9 @@
                     setSelectResultByQueryCodes(theQueryCode, theVm);
                     var items = getDicCatalogItems(theVm, categoryCode);
                     var filterItems = [];
-                    items.forEach(function(item) {
+                    items.forEach(function (item) {
                         if (isEmptyItem(item)) {
-                            if ( withEmptyItem === true) {
+                            if (withEmptyItem === true) {
                                 filterItems.push(item);
                             }
                         } else {
@@ -756,6 +767,23 @@
                     });
                     return filterItems;
                 },
+                getCurrentOrgTypes: function (theQueryCode, withEmptyItem) {
+                    return getCategoryItems(theQueryCode, knownCategoryCodes.orgType, withEmptyItem);
+                },
+                getCurrentOrgs: function (theQueryCode, withEmptyItem) {
+                    return getCategoryItems(theQueryCode, knownCategoryCodes.org, withEmptyItem);
+                },
+                getCurrentPhases: function (theQueryCode, withEmptyItem) {
+                    return getCategoryItems(theQueryCode, knownCategoryCodes.phase, withEmptyItem);
+                },
+                getCurrentSubjects: function (theQueryCode, withEmptyItem) {
+                    return getCategoryItems(theQueryCode, knownCategoryCodes.subject, withEmptyItem);
+                },
+                getCurrentGrades: function (theQueryCode, withEmptyItem) {
+                    return getCategoryItems(theQueryCode, knownCategoryCodes.grade, withEmptyItem);
+                },
+
+                //以下不建议继续使用！
                 getOrgs: function (orgTypeCode) {
                     //建议直接只是用getCategoryItems；为了保持兼容保留
                     return getCategoryItems({ orgType: orgTypeCode }, knownCategoryCodes.org);
