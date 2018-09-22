@@ -1,0 +1,40 @@
+﻿@{
+    var assets = UnifyHelper.GetAssetPath();
+    var title = ViewBag.Title ?? "NbPages";
+}
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+<head>
+    @UnifyHelper.Head_Meta()
+    <title>@title</title>
+    @UnifyHelper.Head_Css_Global_Compulsory()
+    @UnifyHelper.Head_Css_Plugins()
+    @UnifyHelper.Head_Css_Theme()
+    <!-- CSS Customization -->
+    <link rel="stylesheet" href="@assets/css/custom.css">
+</head>
+<body>
+    <div class="wrapper">
+        <div class="container">
+            @RenderBody()
+        </div>
+    </div><!--/wrapper-->
+    @UnifyHelper.Js_Global_Compulsory()
+    @UnifyHelper.Js_Plugins()
+    <!-- JS Customization -->
+    <script type="text/javascript" src="@assets/js/custom.js"></script>
+    <!-- JS Page Level -->
+    <script type="text/javascript" src="@assets/js/app.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+            App.init();
+        });
+    </script>
+    @Html.RenderDelayed()
+    @UnifyHelper.Js_Global_Fix()
+</body>
+</html>

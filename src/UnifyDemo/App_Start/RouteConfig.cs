@@ -12,6 +12,12 @@ namespace UnifyDemo
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+            
+            routes.MapRoute(
+                name: "Default_Pages",
+                url: "Pages/{category}/{view}",
+                defaults: new { controller = "Pages", action = "Show", category = "", view = "Default" }
+            );
 
             routes.MapRoute(
                 name: "Default",

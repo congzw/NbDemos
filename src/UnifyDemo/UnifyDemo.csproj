@@ -511,6 +511,7 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\PagesController.cs" />
     <Compile Include="Helpers\DashRouteHandler.cs" />
     <Compile Include="Helpers\HtmlHelperExtensions.cs" />
     <Compile Include="Helpers\HtmlRenderExtensions.cs" />
@@ -615,6 +616,10 @@
     <Content Include="Content\Unify\20180919\readme.md" />
     <Content Include="Content\Unify\20180920\readme.md" />
     <Content Include="Content\Unify\20180921\readme.md" />
+    <Content Include="Views\Pages\Default.cshtml" />
+    <Content Include="Views\Pages\_Layout.cshtml" />
+    <Content Include="Views\Pages\_ViewStart.cshtml" />
+    <Content Include="Views\Pages\UploadCourse\Demo.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
