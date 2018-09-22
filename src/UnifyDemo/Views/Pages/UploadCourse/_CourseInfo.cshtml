@@ -9,26 +9,26 @@
     </div>
     <div class="row">
         <div class="col-xs-8">
-            <form class="form-horizontal" role="form" name="PresFrom">
-                <div class="form-group" ng-class="{'has-success':PresFrom.Title.$valid,'has-error':PresFrom.Title.$dirty&&PresFrom.Title.$invalid}">
+            <form class="form-horizontal" role="form" name="<FormName>">
+                <div class="form-group" ng-class="{'has-success':<FormName>.Title.$valid,'has-error':<FormName>.Title.$dirty && <FormName>.Title.$invalid}">
                     <label class="col-xs-2 control-label" ng-class="">标题：</label>
                     <div class="col-xs-9">
-                        <input type="text" class="form-control" ng-click="Titleclick()" name="Title" ng-model="uploadModel.Title" ng-minlength="1" ng-maxlength="100" required />
-                        <div class="help-block" ng-if="PresFrom.Title.$dirty&&PresFrom.Title.$invalid">请输入1-100位字符。</div>
+                        <input type="text" class="form-control" name="Title" ng-model="uploadModel.Title" ng-minlength="1" ng-maxlength="100" required/>
+                        <div class="help-block" ng-if="<FormName>.Title.$dirty && <FormName>.Title.$invalid">请输入1-100位字符。</div>
                     </div>
                     <div class="help-block inline">必填</div>
                 </div>
 
-                <div class="form-group" ng-class="{'has-success':PresFrom.UserName.$dirty && PresFrom.UserName.$valid,'has-error':PresFrom.UserName.$dirty && PresFrom.UserName.$invalid}">
+                <div class="form-group" ng-class="{'has-success':<FormName>.UserName.$dirty && <FormName>.UserName.$valid,'has-error':<FormName>.UserName.$dirty && <FormName>.UserName.$invalid}">
                     <label class="col-xs-2 control-label">主讲人：</label>
                     <div class="col-xs-9">
                         <input type="text" name="UserName" class="form-control" ng-model="uploadModel.Teacher" ng-minlength="1" ng-maxlength="30" required/>
-                        <div class="help-block" ng-show="PresFrom.UserName.$dirty&&PresFrom.UserName.$invalid">请输入1-30位字符。</div>
+                        <div class="help-block" ng-show="<FormName>.UserName.$dirty && <FormName>.UserName.$invalid">请输入1-30位字符。</div>
                     </div>
                     <div class="help-block col-xs-reset inline">必填</div>
                 </div>
 
-                <div class="form-group" ng-class="{'has-success':PresFrom.Subject.$dirty && uploadModel.SubjectCode != '','has-error':(PresFrom.Subject.$dirty && uploadModel.SubjectCode == '')||PresFrom.Subject.$dirty && PresFrom.Subject.$invalid}">
+                <div class="form-group" ng-class="{'has-success':<FormName>.Subject.$dirty && uploadModel.SubjectCode != '','has-error':(<FormName>.Subject.$dirty && uploadModel.SubjectCode == '') || <FormName>.Subject.$dirty && <FormName>.Subject.$invalid}">
                     <label class="col-xs-2 control-label">学科：</label>
                     <div class="col-xs-9">
                         <select class="form-control" name="Subject" ng-model="uploadModel.SubjectName">
@@ -38,7 +38,7 @@
                     </div>
                 </div>
 
-                <div class="form-group" ng-class="{'has-success':PresFrom.Grade.$dirty && uploadModel.GradeCode != '','has-error':(PresFrom.Grade.$dirty && uploadModel.GradeCode == '')||PresFrom.Grade.$dirty && PresFrom.Grade.$invalid}">
+                <div class="form-group" ng-class="{'has-success':<FormName>.Grade.$dirty && uploadModel.GradeCode != '','has-error':(<FormName>.Grade.$dirty && uploadModel.GradeCode == '')||<FormName>.Grade.$dirty && <FormName>.Grade.$invalid}">
                     <label class="col-xs-2 control-label">年级：</label>
                     <div class="col-xs-9">
                         <select class="form-control" name="Grade" ng-model="uploadModel.GradeName">
@@ -48,21 +48,78 @@
                     </div>
                 </div>
 
-                <div class="form-group" ng-class="{'has-success': PresFrom.Description.$dirty && PresFrom.Description.$valid, 'has-error':PresFrom.Description.$dirty && PresFrom.Description.$invalid}">
+                <div class="form-group" ng-class="{'has-success': <FormName>.Description.$dirty && <FormName>.Description.$valid, 'has-error':<FormName>.Description.$dirty && <FormName>.Description.$invalid}">
                     <label class="col-xs-2 control-label">简介：</label>
                     <div class="col-xs-9">
                         <textarea class="form-control" rows="3" name="Description" ng-model="uploadModel.Description" ng-maxlength="150" placeholder="输入150位以下字符"></textarea>
-                        <div class="help-block" ng-show="PresFrom.Description.$dirty && PresFrom.Description.$invalid">请输入150位以下字符。</div>
+                        <div class="help-block" ng-show="<FormName>.Description.$dirty && <FormName>.Description.$invalid">请输入150位以下字符。</div>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <div class="col-xs-offset-2 col-xs-9">
-                        <button class="nb-BtnCommit" type="button" ng-click="createSave()" ng-disabled="!PresFrom.$dirty||PresFrom.$invalid">保存</button>
+                        <button class="nb-BtnCommit" type="button" ng-click="createSave()" ng-disabled="!<FormName>.$dirty||<FormName>.$invalid">保存</button>
                     </div>
                 </div>
             </form>
         </div>
     </div>
-    <hr />
+    <hr/>
 </div>
+@functions
+{
+    public class AngularFormMeta
+    {
+        public AngularFormMeta()
+        {
+            RequiredText = "*";
+        }
+        
+        public string FormName { get; set; }
+        public string ModelName { get; set; }
+
+        public string RequiredText { get; set; }
+    }
+
+    public class AngularFormProperty
+    {
+        public string PropertyName { get; set; }
+        public string PropertyText { get; set; }
+        public int? MinLength { get; set; }
+        public int? MaxLength { get; set; }
+        public bool? Required { get; set; }
+        public string TipMessage { get; set; }
+    }
+    
+    public class AngularModelFormHelper
+    {
+        public static string FormGroupTemplate = @"
+<div class=""form-group"" ng-class=""{'has-success':<FormName>.Title.$valid,'has-error':<FormName>.Title.$dirty && <FormName>.Title.$invalid}"">
+    <label class=""col-xs-2 control-label"" ng-class="""">标题：</label>
+    <div class=""col-xs-9"">
+        <input type=""text"" class=""form-control"" name=""Title"" ng-model=""uploadModel.Title"" ng-minlength=""1"" ng-maxlength=""100"" required/>
+        <div class=""help-block"" ng-if=""<FormName>.Title.$dirty && <FormName>.Title.$invalid"">请输入1-100位字符。</div>
+    </div>
+    <div class=""help-block inline"">*</div>
+</div>";
+    }
+
+
+    public static string CreateFormGroup(string formName)
+    {
+        return null;
+    }
+
+    public static void Init()
+    {
+        //<div class="form-group" ng-class="{'has-success':<FormName>.Title.$valid,'has-error':<FormName>.Title.$dirty && <FormName>.Title.$invalid}">
+        //    <label class="col-xs-2 control-label" ng-class="">标题：</label>
+        //    <div class="col-xs-9">
+        //        <input type="text" class="form-control" name="Title" ng-model="uploadModel.Title" ng-minlength="1" ng-maxlength="100" required/>
+        //        <div class="help-block" ng-if="<FormName>.Title.$dirty && <FormName>.Title.$invalid">请输入1-100位字符。</div>
+        //    </div>
+        //    <div class="help-block inline">必填</div>
+        //</div>
+        
+    }
+}
