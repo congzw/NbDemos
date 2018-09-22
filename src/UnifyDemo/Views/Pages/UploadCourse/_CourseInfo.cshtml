@@ -1,0 +1,68 @@
+﻿<div>
+    <div class="alert alert-danger">
+        <strong>
+            <i class="ace-icon fa fa-hand-o-right icon-animated-hand-pointer red"></i>
+            注意!
+        </strong>
+        请填写资源信息，资源才会生效.
+        <br>
+    </div>
+    <div class="row">
+        <div class="col-xs-8">
+            <form class="form-horizontal" role="form" name="PresFrom">
+                <div class="form-group" ng-class="{'has-success':PresFrom.Title.$valid,'has-error':PresFrom.Title.$dirty&&PresFrom.Title.$invalid}">
+                    <label class="col-xs-2 control-label" ng-class="">标题：</label>
+                    <div class="col-xs-9">
+                        <input type="text" class="form-control" ng-click="Titleclick()" name="Title" ng-model="uploadModel.Title" ng-minlength="1" ng-maxlength="100" required />
+                        <div class="help-block" ng-if="PresFrom.Title.$dirty&&PresFrom.Title.$invalid">请输入1-100位字符。</div>
+                    </div>
+                    <div class="help-block inline">必填</div>
+                </div>
+
+                <div class="form-group" ng-class="{'has-success':PresFrom.UserName.$dirty && PresFrom.UserName.$valid,'has-error':PresFrom.UserName.$dirty && PresFrom.UserName.$invalid}">
+                    <label class="col-xs-2 control-label">主讲人：</label>
+                    <div class="col-xs-9">
+                        <input type="text" name="UserName" class="form-control" ng-model="uploadModel.Teacher" ng-minlength="1" ng-maxlength="30" required/>
+                        <div class="help-block" ng-show="PresFrom.UserName.$dirty&&PresFrom.UserName.$invalid">请输入1-30位字符。</div>
+                    </div>
+                    <div class="help-block col-xs-reset inline">必填</div>
+                </div>
+
+                <div class="form-group" ng-class="{'has-success':PresFrom.Subject.$dirty && uploadModel.SubjectCode != '','has-error':(PresFrom.Subject.$dirty && uploadModel.SubjectCode == '')||PresFrom.Subject.$dirty && PresFrom.Subject.$invalid}">
+                    <label class="col-xs-2 control-label">学科：</label>
+                    <div class="col-xs-9">
+                        <select class="form-control" name="Subject" ng-model="uploadModel.SubjectName">
+                            <option value="" ng-selected="''==uploadModel.SubjectCode">请选择学科</option>
+                            <option ng-repeat="item in subjects" ng-selected="item.Code==uploadModel.SubjectCode" value="{{item.Name}}">{{item.Name}}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group" ng-class="{'has-success':PresFrom.Grade.$dirty && uploadModel.GradeCode != '','has-error':(PresFrom.Grade.$dirty && uploadModel.GradeCode == '')||PresFrom.Grade.$dirty && PresFrom.Grade.$invalid}">
+                    <label class="col-xs-2 control-label">年级：</label>
+                    <div class="col-xs-9">
+                        <select class="form-control" name="Grade" ng-model="uploadModel.GradeName">
+                            <option value="" ng-selected="''==uploadModel.GradeCode">请选择年级</option>
+                            <option ng-repeat="item in grades" ng-selected="item.Code==uploadModel.GradeCode" value="{{item.Name}}">{{item.Name}}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group" ng-class="{'has-success': PresFrom.Description.$dirty && PresFrom.Description.$valid, 'has-error':PresFrom.Description.$dirty && PresFrom.Description.$invalid}">
+                    <label class="col-xs-2 control-label">简介：</label>
+                    <div class="col-xs-9">
+                        <textarea class="form-control" rows="3" name="Description" ng-model="uploadModel.Description" ng-maxlength="150" placeholder="输入150位以下字符"></textarea>
+                        <div class="help-block" ng-show="PresFrom.Description.$dirty && PresFrom.Description.$invalid">请输入150位以下字符。</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-offset-2 col-xs-9">
+                        <button class="nb-BtnCommit" type="button" ng-click="createSave()" ng-disabled="!PresFrom.$dirty||PresFrom.$invalid">保存</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <hr />
+</div>

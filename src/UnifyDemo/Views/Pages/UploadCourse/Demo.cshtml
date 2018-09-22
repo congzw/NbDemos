@@ -2,4 +2,32 @@
     ViewBag.Title = "Course Upload";
 }
 
+@section styles
+{
+    @*<link href="~/Content/Unify/assets/plugins/sky-forms-pro/skyforms/css/sky-forms.css" rel="stylesheet" />*@
+}
+
+@using (Html.Delayed())
+{
+    @*<script src="~/Content/Libs/JqueryFileUpload/js/vendor/jquery.ui.widget.js"></script>
+    <script src="~/Content/Libs/JqueryFileUpload/js/load-image.min.js"></script>
+    <script src="~/Content/Libs/JqueryFileUpload/js/canvas-to-blob.min.js"></script>
+    <script src="~/Content/Libs/JqueryFileUpload/js/jquery.iframe-transport.js"></script>
+    <script src="~/Content/Libs/JqueryFileUpload/js/jquery.fileupload.js"></script>
+    <script src="~/Content/Libs/JqueryFileUpload/js/jquery.fileupload-process.js"></script>
+    <script src="~/Content/Libs/JqueryFileUpload/js/jquery.fileupload-image.js"></script>
+    <script src="~/Content/Libs/JqueryFileUpload/js/jquery.fileupload-audio.js"></script>
+    <script src="~/Content/Libs/JqueryFileUpload/js/jquery.fileupload-video.js"></script>
+    <script src="~/Content/Libs/JqueryFileUpload/js/jquery.fileupload-validate.js"></script>
+    <script src="~/Content/Libs/JqueryFileUpload/js/jquery.fileupload-angular.js"></script>*@
+    <script>
+        (function () {
+            //alert("demo");
+        })();
+    </script>
+}
+
 <h2>DEMO</h2>
+<hr/>
+
+@Html.Partial("UploadCourse/_CourseInfo")

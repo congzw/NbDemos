@@ -620,6 +620,8 @@
     <Content Include="Views\Pages\_Layout.cshtml" />
     <Content Include="Views\Pages\_ViewStart.cshtml" />
     <Content Include="Views\Pages\UploadCourse\Demo.cshtml" />
+    <Content Include="Views\Pages\UploadCourse\_Template.cshtml" />
+    <Content Include="Views\Pages\UploadCourse\_CourseInfo.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
