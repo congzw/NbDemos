@@ -1,0 +1,37 @@
+﻿@{
+    var angularSupport = this.GetAngularSupport();
+    var ngCloakCss = angularSupport ? "ng-cloak" : string.Empty;
+}
+<!DOCTYPE html>
+<html class="@ngCloakCss">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - RequireJs DEMO</title>
+    @if (angularSupport)
+    {
+        <link href="~/Content/css/angular-csp.css" rel="stylesheet" />
+    }
+    <link href="~/Content/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/libs/toastr/toastr.css" rel="stylesheet" />
+    <script src="~/content/libs/require.js"></script>
+    <script src="~/Content/scripts/config.js"></script>
+    @if (angularSupport)
+    {
+        <script src="~/Content/scripts/configForAngular.js"></script>
+    }
+</head>
+<body>
+    <div class="container">
+        @Html.Partial("_Nav")
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - RequireJs DEMO</p>
+        </footer>
+    </div>
+    @RenderSection("scripts", required: false)
+    @Html.Partial("_Debug")
+</body>
+</html>

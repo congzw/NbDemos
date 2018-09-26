@@ -1,0 +1,14 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<h2>Home Index {{1 + 1}}</h2>
+<div ng-controller="demoCtrl">
+    <p ng-bind="message">
+    </p>
+</div>
+
+@section scripts
+{
+    <script src="~/Content/scripts/home.index.js"></script>
+}

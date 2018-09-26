@@ -58,6 +58,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "multi tenancy", "multi tena
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleMultiTenancy", "SimpleMultiTenancy\SimpleMultiTenancy.csproj", "{416C7597-29E9-4FA0-A547-455E942216DE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RequireJsDemoMvc", "RequireJsDemoMvc\RequireJsDemoMvc.csproj", "{D288967B-0A29-49E1-9C73-EF4F44AFEACD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -136,6 +138,10 @@ Global
 		{416C7597-29E9-4FA0-A547-455E942216DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{416C7597-29E9-4FA0-A547-455E942216DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{416C7597-29E9-4FA0-A547-455E942216DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D288967B-0A29-49E1-9C73-EF4F44AFEACD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D288967B-0A29-49E1-9C73-EF4F44AFEACD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D288967B-0A29-49E1-9C73-EF4F44AFEACD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D288967B-0A29-49E1-9C73-EF4F44AFEACD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -158,5 +164,6 @@ Global
 		{BCE5B7DF-CD45-4021-81B6-266868DDF03D} = {025D6C2A-2142-499D-BEC9-B8CE5CB8496F}
 		{F495F5BD-6194-44B1-BCD4-51FC4FEB2FFF} = {34F20017-5BD2-418F-977D-6667F6162A88}
 		{416C7597-29E9-4FA0-A547-455E942216DE} = {39360384-D1A5-4FFE-8911-89942A90E2A0}
+		{D288967B-0A29-49E1-9C73-EF4F44AFEACD} = {025D6C2A-2142-499D-BEC9-B8CE5CB8496F}
 	EndGlobalSection
 EndGlobal
