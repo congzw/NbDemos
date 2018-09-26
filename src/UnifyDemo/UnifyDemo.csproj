@@ -508,6 +508,9 @@
     <Content Include="Content\Unify\yi_live.html" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <Content Include="Views\Pages\UploadCourse\courseUpload.js" />
+    <Content Include="Views\Pages\UploadCourse\mediaUpload.js" />
+    <Content Include="Views\Pages\UploadCourse\zqnb.resourceTypeHelper.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
