@@ -124,6 +124,34 @@
     <Content Include="Content\libs\ace\assets\js\ace-require.js" />
     <Content Include="Content\libs\ace\assets\js\ace-small.js" />
     <Content Include="Content\libs\ace\assets\js\ace.js" />
+    <Content Include="Content\libs\ace\assets\js\src\ace.ajax-content.js" />
+    <Content Include="Content\libs\ace\assets\js\src\ace.auto-container.js" />
+    <Content Include="Content\libs\ace\assets\js\src\ace.auto-padding.js" />
+    <Content Include="Content\libs\ace\assets\js\src\ace.basics.js" />
+    <Content Include="Content\libs\ace\assets\js\src\ace.js" />
+    <Content Include="Content\libs\ace\assets\js\src\ace.onpage-help.js" />
+    <Content Include="Content\libs\ace\assets\js\src\ace.scrolltop.js" />
+    <Content Include="Content\libs\ace\assets\js\src\ace.searchbox-autocomplete.js" />
+    <Content Include="Content\libs\ace\assets\js\src\ace.settings-rtl.js" />
+    <Content Include="Content\libs\ace\assets\js\src\ace.settings-skin.js" />
+    <Content Include="Content\libs\ace\assets\js\src\ace.settings.js" />
+    <Content Include="Content\libs\ace\assets\js\src\ace.sidebar-scroll-1.js" />
+    <Content Include="Content\libs\ace\assets\js\src\ace.sidebar-scroll-2.js" />
+    <Content Include="Content\libs\ace\assets\js\src\ace.sidebar.js" />
+    <Content Include="Content\libs\ace\assets\js\src\ace.submenu-hover.js" />
+    <Content Include="Content\libs\ace\assets\js\src\ace.touch-drag.js" />
+    <Content Include="Content\libs\ace\assets\js\src\ace.widget-box.js" />
+    <Content Include="Content\libs\ace\assets\js\src\ace.widget-on-reload.js" />
+    <Content Include="Content\libs\ace\assets\js\src\elements.aside.js" />
+    <Content Include="Content\libs\ace\assets\js\src\elements.colorpicker.js" />
+    <Content Include="Content\libs\ace\assets\js\src\elements.fileinput.js" />
+    <Content Include="Content\libs\ace\assets\js\src\elements.onpage-help.js" />
+    <Content Include="Content\libs\ace\assets\js\src\elements.scroller.js" />
+    <Content Include="Content\libs\ace\assets\js\src\elements.spinner.js" />
+    <Content Include="Content\libs\ace\assets\js\src\elements.treeview.js" />
+    <Content Include="Content\libs\ace\assets\js\src\elements.typeahead.js" />
+    <Content Include="Content\libs\ace\assets\js\src\elements.wizard.js" />
+    <Content Include="Content\libs\ace\assets\js\src\elements.wysiwyg.js" />
     <Content Include="Content\libs\ace\components\bootstrap\dist\css\bootstrap-theme.css" />
     <Content Include="Content\libs\ace\components\bootstrap\dist\css\bootstrap-theme.min.css" />
     <Content Include="Content\libs\ace\components\bootstrap\dist\css\bootstrap.css" />
@@ -201,6 +229,11 @@
     <Content Include="Content\libs\ace\components\bootstrap\dist\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\libs\ace\components\bootstrap\dist\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="Content\libs\ace\components\bootstrap\dist\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Views\Shared\_Ace\_AceLayout.cshtml" />
+    <Content Include="note-Ace.md" />
+    <Content Include="Content\libs\ace\assets\js\src\readme" />
+    <Content Include="Content\libs\ace\assets\js\src\scripts.json" />
+    <Content Include="Views\Home\RequireJS.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -210,7 +243,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Shared\_Ace\" />
+    <Folder Include="Content\scripts\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
