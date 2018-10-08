@@ -124,6 +124,13 @@
     <Content Include="Content\libs\ace\assets\js\ace-require.js" />
     <Content Include="Content\libs\ace\assets\js\ace-small.js" />
     <Content Include="Content\libs\ace\assets\js\ace.js" />
+    <Content Include="Content\libs\ace\components\bootstrap\dist\css\bootstrap-theme.css" />
+    <Content Include="Content\libs\ace\components\bootstrap\dist\css\bootstrap-theme.min.css" />
+    <Content Include="Content\libs\ace\components\bootstrap\dist\css\bootstrap.css" />
+    <Content Include="Content\libs\ace\components\bootstrap\dist\css\bootstrap.min.css" />
+    <Content Include="Content\libs\ace\components\bootstrap\dist\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\libs\ace\components\bootstrap\dist\js\bootstrap.js" />
+    <Content Include="Content\libs\ace\components\bootstrap\dist\js\bootstrap.min.js" />
     <Content Include="Content\libs\ace\components\dropzone\dist\basic.css" />
     <Content Include="Content\libs\ace\components\dropzone\dist\dropzone-amd-module.js" />
     <Content Include="Content\libs\ace\components\dropzone\dist\dropzone.css" />
@@ -141,8 +148,14 @@
     <Content Include="Content\libs\ace\components\jquery.1x\dist\jquery.min.js" />
     <Content Include="Content\libs\ace\components\jquery.1x\dist\jquery.slim.js" />
     <Content Include="Content\libs\ace\components\jquery.1x\dist\jquery.slim.min.js" />
+    <Content Include="Content\libs\ace\components\jquery\dist\jquery.js" />
+    <Content Include="Content\libs\ace\components\jquery\dist\jquery.min.js" />
+    <Content Include="Content\libs\ace\components\jquery\dist\jquery.slim.js" />
+    <Content Include="Content\libs\ace\components\jquery\dist\jquery.slim.min.js" />
+    <Content Include="Content\libs\ace\components\requirejs\require.js" />
     <Content Include="Content\libs\ace\components\_mod\jquery.nestable\jquery.nestable.js" />
     <Content Include="Content\libs\ace\components\_mod\jquery.nestable\jquery.nestable.min.js" />
+    <Content Include="Content\libs\ace\html\require.html" />
     <Content Include="Content\libs\angular\angular.js" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
@@ -184,6 +197,10 @@
     <Content Include="Views\Home\UploadModal.cshtml" />
     <Content Include="Views\Home\Dropzone.cshtml" />
     <Content Include="Views\Home\AngularUpload.cshtml" />
+    <Content Include="Content\libs\ace\components\bootstrap\dist\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\libs\ace\components\bootstrap\dist\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Content\libs\ace\components\bootstrap\dist\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Content\libs\ace\components\bootstrap\dist\fonts\glyphicons-halflings-regular.woff2" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -193,6 +210,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Shared\_Ace\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
