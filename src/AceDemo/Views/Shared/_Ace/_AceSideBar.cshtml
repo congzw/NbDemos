@@ -32,6 +32,8 @@
         </div>
     </div><!-- /.sidebar-shortcuts -->
 
+    @nav_topItems()
+
     <ul class="nav nav-list">
         <li class="">
             <a href="javascript:void(0)">
@@ -63,12 +65,24 @@
                 </li>
 
                 <li class="">
-                    <a href="javascript:void(0)">
-                        <i class="menu-icon fa fa-caret-right"></i>
-                        TODO
+                    <a href="#" class="dropdown-toggle">
+                        <i class="menu-icon fa fa-pencil orange"></i>
+                        4th level
+                        <b class="arrow fa fa-angle-down"></b>
                     </a>
 
                     <b class="arrow"></b>
+
+                    <ul class="submenu">
+                        <li class="">
+                            <a href="#">
+                                <i class="menu-icon fa fa-plus purple"></i>
+                                Add Product
+                            </a>
+
+                            <b class="arrow"></b>
+                        </li>
+                    </ul>
                 </li>
             </ul>
         </li>
@@ -82,3 +96,98 @@
     </div>
 
 </div>
+
+@helper nav_topItems()
+{
+    IList<MenuVo> menus = MenuVo.GetDemoMenus();
+    if (menus.Count == 0)
+    {
+        return;
+    }
+    <ul class="nav nav-list">
+        @foreach (var menu in menus)
+        {
+            var herfCss = menu.Children.Count > 0 ? "dropdown-toggle" :"";
+            <li class="">
+                <a href="#" class="@herfCss">
+                    <i class="menu-icon fa fa-leaf"></i>
+                    <span class="menu-text">
+                        @menu.Text
+                    </span>
+                    @if (menu.Children.Count > 0)
+                    {<b class="arrow fa fa-angle-down"></b>}
+                </a>
+                <b class="arrow"></b>
+                <!-- optional arrow for minimized menu & hover submenu -->
+                @nav_subItems(menu.Children)
+            </li>
+        }
+    </ul>
+}
+
+@helper nav_subItems(IList<MenuVo> menus)
+{
+    if (menus.Count == 0)
+    {
+        return;
+    }
+    <ul class="submenu">
+        @foreach (var menu in menus)
+        {
+            var herfCss = menu.Children.Count > 0 ? "dropdown-toggle" : "";
+            <li class="">
+                <a href="#" class="@herfCss">
+                    <i class="menu-icon fa fa-leaf"></i>
+                    @menu.Text
+                    @if (menu.Children.Count > 0)
+                    {<b class="arrow fa fa-angle-down"></b>}
+                </a>
+                <b class="arrow"></b>
+                @nav_subItems(menu.Children)
+            </li>
+        }
+    </ul>
+}
+
+@functions
+{
+    public class MenuVo
+    {
+        public MenuVo()
+        {
+            Children = new List<MenuVo>();
+        }
+
+        public string Text { get; set; }
+
+        public List<MenuVo> Children { get; set; }
+
+        public static List<MenuVo> GetDemoMenus()
+        {
+            var list = new List<MenuVo>();
+            for (int i = 1; i <= 2; i++)
+            {
+                var menuVo = new MenuVo() { Text = "Top" + i.ToString("00") };
+                list.Add(menuVo);
+                for (int j = 1; j <= 2; j++)
+                {
+                    var child = new MenuVo() { Text = "Sub" + i.ToString("00") + "." + j.ToString("00") };
+                    menuVo.Children.Add(child);
+                    for (int k = 1; k <= 2; k++)
+                    {
+                        var child2 = new MenuVo() { Text = "Sub" + i.ToString("00") + "." + j.ToString("00") + "."+ k.ToString("00")};
+                        child.Children.Add(child2);
+                        for (int m = 1; m <= 2; m++)
+                        {
+                            var child3 = new MenuVo() { Text = "_." + m.ToString("00") };
+                            child2.Children.Add(child3);
+                        }
+                    }
+                }
+            }
+
+            return list;
+        }
+    }
+
+}
