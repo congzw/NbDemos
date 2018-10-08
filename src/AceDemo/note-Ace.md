@@ -17,3 +17,14 @@
 - elements.scroller.js
 - elements.fileinput.js
 - ...
+
+
+## Layout
+
+1) Navbar
+2) Sidebar
+3) Breadcrumbs (inside "main-content")
+4) Page content (inside "main-content")
+5) Settings box (inside "page-content")
+6) Footer
+

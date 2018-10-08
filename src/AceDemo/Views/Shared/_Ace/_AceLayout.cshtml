@@ -26,51 +26,70 @@
     <!-- require-js-->
     <script src="@ace/components/requirejs/require.js"></script>
     <script>
-    (function () {
-        "use strict";
+        (function () {
+            "use strict";
 
-        require.config({
-            baseUrl: '@rootUrl',
-            waitSeconds: 2000,
-            paths: {
-                'jquery': '@ace/components/jquery/dist/jquery.min'
-                , 'bootstrap': '@ace/components/bootstrap/dist/js/bootstrap.min'
-                , 'ace': '@ace/assets/js/ace'
-                , 'ace-elements': '@ace/assets/js/ace-elements'
-                , 'ace-extra': '@ace/assets/js/ace-extra'
-            },
-            shim: {
-                'bootstrap': {
-                    deps: ['jquery']
+            require.config({
+                baseUrl: '@rootUrl',
+                waitSeconds: 2000,
+                paths: {
+                    'jquery': '@ace/components/jquery/dist/jquery.min'
+                    , 'bootstrap': '@ace/components/bootstrap/dist/js/bootstrap.min'
+                    , 'ace': '@ace/assets/js/ace'
+                    , 'ace-elements': '@ace/assets/js/ace-elements'
+                    , 'ace-extra': '@ace/assets/js/ace-extra'
                 },
-                'ace': {
-                    deps: ['jquery', 'bootstrap']
-                },
-                'ace-elements': {
-                    deps: ['ace']
+                shim: {
+                    'bootstrap': {
+                        deps: ['jquery']
+                    },
+                    'ace': {
+                        deps: ['jquery', 'bootstrap']
+                    },
+                    'ace-elements': {
+                        deps: ['ace']
+                    }
                 }
-            }
-        });
-        require(['jquery', 'bootstrap', 'ace', 'ace-extra', 'ace-elements'], function ($) {
-            //try, to hide possible errors in case ace.demo is not available
-            try {
-                ace.demo.init(true);//true means the call is not from inside a jQuery document ready event
-            } catch (e) { }
-
-            /**
-            //you can restore state of elements now (ace-extra.js is loaded)
-            $('.ace-save-state').each(function() {
-                ace.settings.loadState(this);
             });
+            require(['jquery', 'bootstrap', 'ace', 'ace-extra', 'ace-elements'], function ($) {
+                //try, to hide possible errors in case ace.demo is not available
+                try {
+                    ace.demo.init(true);//true means the call is not from inside a jQuery document ready event
+                } catch (e) { }
 
-            //or as soon as you render an element such as sidebar, etc ...
-              ace.settings.loadState('sidebar');
-            */
-        });
-    })();
-</script>
+                /**
+                //you can restore state of elements now (ace-extra.js is loaded)
+                $('.ace-save-state').each(function() {
+                    ace.settings.loadState(this);
+                });
+
+                //or as soon as you render an element such as sidebar, etc ...
+                  ace.settings.loadState('sidebar');
+                */
+            });
+        })();
+    </script>
 </head>
 <body class="no-skin">
-    @RenderBody()
+    @Html.Partial("_Ace/_AceNavBar")
+    <div class="main-container" id="main-container">
+        @Html.Partial("_Ace/_AceSideBar")
+
+        <div class="main-content">
+            <div class="breadcrumbs">
+                @Html.Partial("_Ace/_AceBreadcrumbs")
+            </div>
+
+            <div class="page-content">
+                @Html.Partial("_Ace/_AceSettingBox")
+                <div class="row">
+                    <div class="col-xs-12">
+                        @RenderBody()
+                    </div>
+                </div>
+            </div>
+        </div>
+        @Html.Partial("_Ace/_AceFooter")
+    </div>
 </body>
 </html>

@@ -234,6 +234,11 @@
     <Content Include="Content\libs\ace\assets\js\src\readme" />
     <Content Include="Content\libs\ace\assets\js\src\scripts.json" />
     <Content Include="Views\Home\RequireJS.cshtml" />
+    <Content Include="Views\Shared\_Ace\_AceNavBar.cshtml" />
+    <Content Include="Views\Shared\_Ace\_AceSideBar.cshtml" />
+    <Content Include="Views\Shared\_Ace\_AceBreadcrumbs.cshtml" />
+    <Content Include="Views\Shared\_Ace\_AceSettingBox.cshtml" />
+    <Content Include="Views\Shared\_Ace\_AceFooter.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
