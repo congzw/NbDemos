@@ -39,7 +39,7 @@
         {
             var herfCss = menu.Children.Count > 0 ? "dropdown-toggle" : "";
             <li class="">
-                <a href="#" class="@herfCss">
+                <a href="#" class="@herfCss" id="@menu.Id">
                     <i class="menu-icon fa fa-leaf"></i>
                     <span class="menu-text">
                         @menu.Text
@@ -66,7 +66,7 @@
         {
             var herfCss = menu.Children.Count > 0 ? "dropdown-toggle" : "";
             <li class="">
-                <a href="#" class="@herfCss">
+                <a href="#" class="@herfCss" id="@menu.Id">
                     <i class="menu-icon fa fa-leaf"></i>
                     @menu.Text
                     @if (menu.Children.Count > 0)
@@ -88,28 +88,33 @@
             Children = new List<MenuVo>();
         }
 
+        public string Id { get; set; }
         public string Text { get; set; }
 
         public List<MenuVo> Children { get; set; }
 
         public static List<MenuVo> GetDemoMenus()
         {
+            var splitChar = "_";
             var list = new List<MenuVo>();
             for (int i = 1; i <= 2; i++)
             {
                 var menuVo = new MenuVo() { Text = "Top" + i.ToString("00") };
+                menuVo.Id = menuVo.Text;
                 list.Add(menuVo);
                 for (int j = 1; j <= 2; j++)
                 {
-                    var child = new MenuVo() { Text = "Sub" + i.ToString("00") + "." + j.ToString("00") };
+                    var child = new MenuVo() { Text = "Sub" + i.ToString("00") + splitChar + j.ToString("00") };
+                    child.Id = child.Text;
                     menuVo.Children.Add(child);
                     for (int k = 1; k <= 2; k++)
                     {
-                        var child2 = new MenuVo() { Text = "Sub" + i.ToString("00") + "." + j.ToString("00") + "." + k.ToString("00") };
+                        var child2 = new MenuVo() { Text = child.Text + splitChar + k.ToString("00") };
                         child.Children.Add(child2);
                         for (int m = 1; m <= 2; m++)
                         {
-                            var child3 = new MenuVo() { Text = "_." + m.ToString("00") };
+                            var child3 = new MenuVo() { Text = child2.Text + splitChar + m.ToString("00") };
+                            child3.Id = child3.Text;
                             child2.Children.Add(child3);
                         }
                     }

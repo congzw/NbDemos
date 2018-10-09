@@ -6,7 +6,17 @@
     @AceNavHelper.nav_shortcut()
     @AceNavHelper.nav_topItems()
 
-    <ul class="nav nav-list">
+    <script>
+        require(['ace_nav'], function (ace_nav) {
+            "use strict";
+            //console.log('enter ace_nav => ');
+            //mock current page
+            var breadcrumbs = ace_nav.activeNavItem('Sub01_02_02_02');
+            ace_nav.updateBreadcrumbs(breadcrumbs);
+        });
+    </script>
+
+    @*<ul class="nav nav-list">
         <li class="">
             <a href="javascript:void(0)">
                 <i class="menu-icon fa fa-tachometer"></i>
@@ -30,12 +40,28 @@
                 <li class="">
                     <a href="javascript:void(0)">
                         <i class="menu-icon fa fa-caret-right"></i>
-                        TODO
+                        <span class="menu-text">
+                            TODO
+                            <span class="badge badge-info">4</span>
+                        </span>
                     </a>
 
                     <b class="arrow"></b>
                 </li>
 
+                <li class="">
+                    <a href="javascript:void(0)">
+                        <i class="menu-icon fa fa-caret-right"></i>
+                        <span class="menu-text">
+                            TODO
+                            <span class="label label-transparent tooltip-error" title="some title for tooltip!">
+                                <i class="red ace-icon fa fa-exclamation-triangle"></i>
+                            </span>
+                        </span>
+                    </a>
+
+                    <b class="arrow"></b>
+                </li>
                 <li class="">
                     <a href="#" class="dropdown-toggle">
                         <i class="menu-icon fa fa-pencil orange"></i>
@@ -51,14 +77,13 @@
                                 <i class="menu-icon fa fa-plus purple"></i>
                                 Add Product
                             </a>
-
                             <b class="arrow"></b>
                         </li>
                     </ul>
                 </li>
             </ul>
         </li>
-    </ul><!-- /.nav-list -->
+    </ul>*@
 
     <div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
         <i class="ace-icon fa fa-angle-double-left ace-save-state"

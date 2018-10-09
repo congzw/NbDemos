@@ -185,6 +185,8 @@
     <Content Include="Content\libs\ace\components\_mod\jquery.nestable\jquery.nestable.min.js" />
     <Content Include="Content\libs\ace\html\require.html" />
     <Content Include="Content\libs\angular\angular.js" />
+    <Content Include="Content\scripts\ace_main.js" />
+    <Content Include="Content\scripts\ace_nav.js" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Views\Shared\blank.html" />
@@ -199,6 +201,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\AceMenu.cs" />
     <Compile Include="Helpers\HtmlHelperExtensions.cs" />
     <Compile Include="Helpers\HtmlRenderExtensions.cs" />
     <Compile Include="Helpers\Settings.cs" />
@@ -251,7 +254,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Content\scripts\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -1,7 +1,8 @@
 ﻿@{
     var title = ViewBag.Title ?? "NbCloud";
     var ace = AceHelper.GetAcePath();
-    var rootUrl = this.Href("~");
+    var rootPath = this.Href("~");
+    var contentPath = this.Href("~/Content");
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -22,47 +23,18 @@
     <script>
         (function () {
             "use strict";
-
-            require.config({
-                baseUrl: '@rootUrl',
-                waitSeconds: 2000,
-                paths: {
-                    'jquery': '@ace/components/jquery/dist/jquery.min'
-                    , 'bootstrap': '@ace/components/bootstrap/dist/js/bootstrap.min'
-                    , 'ace': '@ace/assets/js/ace'
-                    , 'ace-elements': '@ace/assets/js/ace-elements'
-                    , 'ace-extra': '@ace/assets/js/ace-extra'
-                },
-                shim: {
-                    'bootstrap': {
-                        deps: ['jquery']
-                    },
-                    'ace': {
-                        deps: ['jquery', 'bootstrap']
-                    },
-                    'ace-elements': {
-                        deps: ['ace']
-                    }
-                }
-            });
-            require(['jquery', 'bootstrap', 'ace', 'ace-extra', 'ace-elements'], function ($) {
-                //try, to hide possible errors in case ace.demo is not available
-                try {
-                    ace.demo.init(true);//true means the call is not from inside a jQuery document ready event
-                } catch (e) { }
-
-                /**
-                //you can restore state of elements now (ace-extra.js is loaded)
-                $('.ace-save-state').each(function() {
-                    ace.settings.loadState(this);
-                });
-
-                //or as soon as you render an element such as sidebar, etc ...
-                  ace.settings.loadState('sidebar');
-                */
+            define('ace_const', [], function () {
+                var ace_const = {
+                    rootPath: '@rootPath',
+                    contentPath: '@contentPath',
+                    acePath: '@ace'
+                };
+                //console.log(ace_const);
+                return ace_const;
             });
         })();
     </script>
+    <script src="~/Content/scripts/ace_main.js"></script>
 </head>
 <body class="no-skin">
     @Html.Partial("_Ace/_AceNavBar")
@@ -79,6 +51,10 @@
                 <div class="row">
                     <div class="col-xs-12">
                         @RenderBody()
+
+                        <div id="test">
+                            <h2>DEMO</h2>
+                        </div>
                     </div>
                 </div>
             </div>
