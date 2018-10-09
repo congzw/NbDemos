@@ -1,4 +1,4 @@
-﻿@helper nav_shortcut()
+﻿@helper sidebar_shortcut()
 {
     return;
     <div class="sidebar-shortcuts" id="sidebar-shortcuts">
@@ -26,7 +26,7 @@
     </div>
 }
 
-@helper nav_topItems()
+@helper sidebar_topMenus()
 {
     //todo get from source
     IList<MenuVo> menus = MenuVo.GetDemoMenus();
@@ -49,13 +49,13 @@
                 </a>
                 <b class="arrow"></b>
                 <!-- optional arrow for minimized menu & hover submenu -->
-                @nav_subItems(menu.Children)
+                @sidebar_subMenus(menu.Children)
             </li>
         }
     </ul>
 }
 
-@helper nav_subItems(IList<MenuVo> menus)
+@helper sidebar_subMenus(IList<MenuVo> menus)
 {
     if (menus.Count == 0)
     {
@@ -73,9 +73,81 @@
                     {<b class="arrow fa fa-angle-down"></b>}
                 </a>
                 <b class="arrow"></b>
-                @nav_subItems(menu.Children)
+                @sidebar_subMenus(menu.Children)
             </li>
         }
+    </ul>
+}
+
+@helper sidebar_demoMenus()
+{
+    <ul class="nav nav-list">
+        <li class="">
+            <a href="javascript:void(0)">
+                <i class="menu-icon fa fa-tachometer"></i>
+                <span class="menu-text"> Dashboard </span>
+            </a>
+
+            <b class="arrow"></b>
+        </li>
+
+        <li class="">
+            <a href="javascript:void(0)" class="dropdown-toggle">
+                <i class="menu-icon fa fa-desktop"></i>
+                <span class="menu-text"> UI Elements </span>
+
+                <b class="arrow fa fa-angle-down"></b>
+            </a>
+
+            <b class="arrow"></b>
+
+            <ul class="submenu">
+                <li class="">
+                    <a href="javascript:void(0)">
+                        <i class="menu-icon fa fa-caret-right"></i>
+                        <span class="menu-text">
+                            TODO
+                            <span class="badge badge-info">4</span>
+                        </span>
+                    </a>
+
+                    <b class="arrow"></b>
+                </li>
+
+                <li class="">
+                    <a href="javascript:void(0)">
+                        <i class="menu-icon fa fa-caret-right"></i>
+                        <span class="menu-text">
+                            TODO
+                            <span class="label label-transparent tooltip-error" title="some title for tooltip!">
+                                <i class="red ace-icon fa fa-exclamation-triangle"></i>
+                            </span>
+                        </span>
+                    </a>
+
+                    <b class="arrow"></b>
+                </li>
+                <li class="">
+                    <a href="#" class="dropdown-toggle">
+                        <i class="menu-icon fa fa-pencil orange"></i>
+                        4th level
+                        <b class="arrow fa fa-angle-down"></b>
+                    </a>
+
+                    <b class="arrow"></b>
+
+                    <ul class="submenu">
+                        <li class="">
+                            <a href="#">
+                                <i class="menu-icon fa fa-plus purple"></i>
+                                Add Product
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
     </ul>
 }
 
