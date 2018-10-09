@@ -188,6 +188,9 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Views\Shared\blank.html" />
+    <Content Include="Views\Shared\_Ace\_AceSideBar.cshtml">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -235,10 +238,10 @@
     <Content Include="Content\libs\ace\assets\js\src\scripts.json" />
     <Content Include="Views\Home\RequireJS.cshtml" />
     <Content Include="Views\Shared\_Ace\_AceNavBar.cshtml" />
-    <Content Include="Views\Shared\_Ace\_AceSideBar.cshtml" />
     <Content Include="Views\Shared\_Ace\_AceBreadcrumbs.cshtml" />
     <Content Include="Views\Shared\_Ace\_AceSettingBox.cshtml" />
     <Content Include="Views\Shared\_Ace\_AceFooter.cshtml" />
+    <Content Include="App_Code\AceNavHelper.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
