@@ -94,6 +94,7 @@
     <Content Include="Content\libs\bootstrap\js\bootstrap.js" />
     <Content Include="Content\libs\bootstrap\js\bootstrap.min.js" />
     <Content Include="Content\libs\bootstrap\js\npm.js" />
+    <Content Include="Content\libs\exportFiles\exportCsv.js" />
     <Content Include="Content\libs\FlipClock\assets\custom.css" />
     <Content Include="Content\libs\FlipClock\assets\customMiddle.css" />
     <Content Include="Content\libs\FlipClock\assets\flipclock.css" />
@@ -247,6 +248,7 @@
     <Content Include="Content\libs\SweetAlert\source\lib\modules\set-params.js" />
     <Content Include="Content\libs\SweetAlert\source\lib\modules\utils.js" />
     <Content Include="Content\libs\SweetAlert\source\lib\sweetalert.js" />
+    <Content Include="Content\libs\exportFiles\exportCsvDemo.html" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Web.config" />

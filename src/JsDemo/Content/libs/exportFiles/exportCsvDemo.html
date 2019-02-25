@@ -1,0 +1,34 @@
+﻿<!doctype html>
+<html>
+<head>
+    <title>demo</title>
+</head>
+<body>
+
+<a href='#' onclick='exportCsv.downloadCSV({ filename: "stock-data.csv", data: stockData });'>Download CSV</a>
+
+    <script src="exportCsv.js"></script>
+    <script type="text/javascript">
+
+        var stockData = [
+            {
+                Symbol: "AAPL",
+                Company: "Apple Inc.",
+                Price: "132.54"
+            },
+            {
+                Symbol: "INTC",
+                Company: "Intel Corporation",
+                Price: "33.45"
+            },
+            {
+                Symbol: "GOOG",
+                Company: "Google Inc",
+                Price: "554.52"
+            }
+        ];
+
+        console.log(exportCsv);
+    </script>
+</body>
+</html>
